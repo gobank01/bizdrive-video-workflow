@@ -1,5 +1,22 @@
 # Changelog
 
+## v52
+
+Record the accepted BGM audibility intent.
+
+```text
+Documented that BGM 5% should be barely audible
+Added rule that BGM should be felt more than heard
+Added QA checks for melody not pulling attention from speech
+Updated WORKFLOW.md, STEPS.md, MOTION_BGM.md, BGM_LIBRARY.md, CONFIG.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+The user confirmed that the tested 5% BGM is barely audible and that this is desirable. The workflow should preserve this intent: speech clarity comes first, and BGM is only there to keep the clip from feeling dry.
+```
+
 ## v51
 
 Require BGM QA on the real final MP4.

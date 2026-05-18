@@ -33,6 +33,8 @@
 [ ] BGM source/license is documented if used
 [ ] BGM is licensed/royalty-free/generated-with-rights if used
 [ ] BGM starts at 5% default unless user approved a different level
+[ ] BGM is barely audible and felt more than heard
+[ ] BGM melody does not pull attention from the speech
 [ ] BGM mix command/report exists if BGM is used
 [ ] BGM loop/fade is smooth if used
 [ ] voice remains clearly louder than BGM if used

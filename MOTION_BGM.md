@@ -59,6 +59,7 @@ QA:
 BGM ต้องช่วยให้คลิปดูมีพลังขึ้น แต่เสียงพูดยังเป็นพระเอก
 bottom audio ยังคือ master
 BGM เป็น background mix เท่านั้น
+BGM ควรเป็น ambient bed ที่แทบไม่ได้ยิน ไม่ใช่เพลงที่คนตั้งใจฟัง
 ```
 
 กฎเลือกเพลง:
@@ -82,6 +83,7 @@ bgmFadeOut: 1.0s
 speechPriority: true
 bgmDefaultLevel: 5%
 bgmTargetUnderSpeech: very low, ambience only
+bgmAudibilityIntent: barely audible, felt more than heard
 suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudio: bottom polished voice + BGM mixed into final output
@@ -92,6 +94,8 @@ QA:
 ```text
 เสียงพูดต้องชัดกว่า BGM เสมอ
 BGM default ต้องเริ่มที่ 5% เว้นแต่ผู้ใช้อนุมัติให้ดังขึ้น
+BGM 5% ผ่านเมื่อแทบไม่ได้ยินแต่คลิปไม่แห้ง
+ถ้าได้ยิน melody ชัดจนเริ่มสนใจเพลง ให้ถือว่าดังเกิน
 BGM ห้ามกลบ consonant/คำท้ายประโยค
 BGM loop ต้องไม่สะดุดที่รอยต่อ
 BGM ต้อง fade out ตอนจบ

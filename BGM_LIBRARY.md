@@ -1,6 +1,6 @@
 # BGM Stock Library
 
-สถานะล่าสุด: v50 - default fallback คือ mixkit-480 Curiosity
+สถานะล่าสุด: v52 - BGM 5% เป็น ambient bed ที่แทบไม่ได้ยิน
 
 ## Goal
 
@@ -17,6 +17,7 @@ license page: https://mixkit.co/license/
 source page: https://mixkit.co/free-stock-music/corporate/
 count: 15 tracks
 default mix level: 5%
+audibility intent: barely audible, felt more than heard
 default fallback: mixkit-480 Curiosity
 tech fallback: mixkit-1167 Close Up
 calm fallback: mixkit-441 Meditation
@@ -91,6 +92,7 @@ calm_learning:
 [ ] source/license recorded
 [ ] no obvious vocal, audio tag, watermark, or distracting melody
 [ ] mixed at 5% unless user approves otherwise
+[ ] BGM is barely audible and does not become a noticeable song
 [ ] speech remains clearly louder than BGM
 [ ] BGM loop/fade is smooth
 [ ] final report lists track id, title, provider, source, license, and gain percent

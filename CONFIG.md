@@ -180,6 +180,8 @@ bgmAllowed: licensed, royalty-free, generated-with-usage-rights only
 bgmAvoid: vocals, audio tags, watermark, distracting melody
 speechPriority: true
 bgmDefaultLevel: 5%
+bgmAudibilityIntent: barely audible, felt more than heard
+bgmTooLoudRule: if the melody is clearly noticeable or pulls attention from speech, reduce below 5% or change track
 suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
 bgmLimiterLimit: 0.82
 duckingDuringSpeech: -6dB to -12dB if BGM distracts

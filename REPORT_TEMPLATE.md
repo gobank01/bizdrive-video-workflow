@@ -66,6 +66,8 @@ BGM mixed preview:
 BGM mixed output:
 BGM loop:
 BGM level percent:
+BGM audibility intent:
+BGM audibility QA:
 BGM gain/ducking:
 BGM mix report:
 notes:
