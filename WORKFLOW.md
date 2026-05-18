@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v53 VIDEO WORKFLOW - เพิ่ม Auto BGM Selector จาก title/transcript/context
+สถานะล่าสุด: v54 VIDEO WORKFLOW - เพิ่ม Auto Final BGM QA command
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -51,7 +51,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v53
+version: v54
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -76,6 +76,7 @@ BGM loudness intent: barely audible ambient bed, not a noticeable song
 BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check before generating
 BGM selector: npm run select:bgm
 BGM selector keywords: bgm-library/style-keywords-v53.json
+BGM final QA command: npm run qa:bgm
 BGM default fallback: mixkit-480 Curiosity
 BGM tech fallback: mixkit-1167 Close Up
 BGM calm fallback: mixkit-441 Meditation
@@ -108,7 +109,7 @@ BGM mix command: npm run mix:bgm
 21. Update HyperFrames composition.
 22. Run `npm run check`.
 23. Render full MP4.
-24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll.
+24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; if BGM is used, run `npm run qa:bgm` against the final MP4.
 25. Write final report.
 26. Update changelog/workflow version when rules change.
 
@@ -132,7 +133,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 ถ้าเปิด BGM ให้เช็ค `bgm-library/mixkit-stock-v50.json` ก่อน generate เพลงใหม่
 ถ้าเปิด BGM ให้รัน `npm run select:bgm` โดยใช้ title/transcript/context และเก็บ report
 ถ้าวิเคราะห์ title/transcript/context แล้วยังไม่ชัด ให้ใช้ default fallback `mixkit-480 Curiosity`
-ทดสอบ BGM ต้องทำกับ final MP4 จริงที่มี top/bottom/caption/B-roll แล้วเสมอ ไม่ใช่เฉพาะ bottom source
+ทดสอบ BGM ต้องทำกับ final MP4 จริงที่มี top/bottom/caption/B-roll แล้วเสมอ โดยใช้ `npm run qa:bgm`
 หลังแก้ index.html ต้องรัน npm run check
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
@@ -169,6 +170,7 @@ v50 ตั้ง `mixkit-480 Curiosity` เป็น default BGM fallback พร
 v51 เพิ่ม rule: BGM QA ต้อง mix/test กับ final MP4 จริง และเทียบ loudness/preview ก่อนหลัง
 v52 บันทึก user acceptance: BGM 5% ควรเป็น ambient bed ที่แทบไม่ได้ยิน เสียงพูดต้องชัดก่อนเสมอ
 v53 เพิ่ม `scripts/select-bgm.js`, `npm run select:bgm` และ keyword map ที่แก้ได้สำหรับเลือก BGM อัตโนมัติ
+v54 เพิ่ม `scripts/qa-bgm-final.js` และ `npm run qa:bgm` สำหรับเลือก/mix/preview/loudness QA กับ final MP4 จริงอัตโนมัติ
 
 ## How To Continue Development
 

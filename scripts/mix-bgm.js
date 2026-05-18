@@ -8,7 +8,7 @@ const DEFAULTS = {
   fadeOut: 1.0,
   gainPercent: 5,
   gainDb: percentToDb(5),
-  limiterLimit: 0.82,
+  limiterLimit: 0.80,
   duck: false,
   duckThreshold: 0.02,
   duckRatio: 6,
@@ -173,7 +173,7 @@ function main() {
   ];
 
   const report = {
-    version: 50,
+    version: 54,
     voice: args.voice,
     bgm: args.bgm,
     output: args.output,
@@ -231,7 +231,7 @@ Options:
   --duck true|false       Sidechain duck BGM under voice, default false
   --duck-threshold <n>    Sidechain threshold, default 0.02
   --duck-ratio <n>        Sidechain ratio, default 6
-  --limiter-limit <n>     Final limiter ceiling, default 0.82
+  --limiter-limit <n>     Final limiter ceiling, default 0.80
   --dry-run               Print ffmpeg command without rendering
 `);
 }

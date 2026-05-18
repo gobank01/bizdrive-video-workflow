@@ -61,6 +61,7 @@ BGM selected style:
 BGM stock id/title:
 BGM style match:
 BGM final real file test:
+BGM final QA report:
 BGM original final loudness:
 BGM mixed final loudness:
 BGM original preview:

@@ -163,6 +163,7 @@ bgmEnabled: optional
 bgmSource: assets/bgm/*
 bgmTrackedIndex: bgm-library/mixkit-stock-v50.json
 bgmSelectorCommand: npm run select:bgm
+bgmFinalQaCommand: npm run qa:bgm
 bgmSelectorKeywords: bgm-library/style-keywords-v53.json
 bgmRuntimeIndex: assets/bgm/index.json
 bgmRuntimeStockRoot: assets/bgm/stock/mixkit
@@ -185,7 +186,7 @@ bgmDefaultLevel: 5%
 bgmAudibilityIntent: barely audible, felt more than heard
 bgmTooLoudRule: if the melody is clearly noticeable or pulls attention from speech, reduce below 5% or change track
 suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
-bgmLimiterLimit: 0.82
+bgmLimiterLimit: 0.80
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudioMix: bottom polished voice + BGM
 mixCommand: npm run mix:bgm

@@ -12,6 +12,7 @@
     "generate:broll": "node scripts/generate-openrouter-broll.js",
     "generate:broll:test-models": "node scripts/openrouter-broll-library.js",
     "mix:bgm": "node scripts/mix-bgm.js",
+    "qa:bgm": "node scripts/qa-bgm-final.js",
     "select:bgm": "node scripts/select-bgm.js",
     "search:broll:test2-v35-full": "node scripts/pexels-test2-v35-full-broll.js",
     "search:broll:test2-context": "node scripts/pexels-test2-context-broll.js",

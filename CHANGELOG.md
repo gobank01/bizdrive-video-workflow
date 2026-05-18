@@ -1,5 +1,22 @@
 # Changelog
 
+## v54
+
+Added automatic final MP4 BGM QA.
+
+```text
+Created scripts/qa-bgm-final.js
+Added npm script: qa:bgm
+Updated WORKFLOW.md, STEPS.md, BGM_LIBRARY.md, CONFIG.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+Tagged v53-auto-bgm-selector before continuing
+```
+
+Reason:
+
+```text
+The workflow already knows how to select and mix BGM, but final acceptance must happen on the real rendered MP4. This command automates selection, mixing, preview generation, loudness comparison, and JSON reporting in one repeatable step.
+```
+
 ## v53
 
 Added automatic BGM selection from title/transcript/context.
@@ -62,7 +79,7 @@ Set tech fallback to mixkit-1167 Close Up
 Set calm fallback to mixkit-441 Meditation
 Updated BGM index validation to require the fallback IDs
 Fixed BGM mix to use amix normalize=0 so voice loudness is preserved
-Set BGM mix limiter default to 0.84 with level=false for safer final peaks without auto-boosting
+Set BGM mix limiter default with level=false for safer final peaks without auto-boosting
 Updated WORKFLOW.md, BGM_LIBRARY.md, CONFIG.md, MOTION_BGM.md, STEPS.md, QA.md, and AGENTS.md
 ```
 

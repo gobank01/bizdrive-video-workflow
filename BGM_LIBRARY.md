@@ -1,6 +1,6 @@
 # BGM Stock Library
 
-สถานะล่าสุด: v53 - เพิ่ม Auto BGM Selector
+สถานะล่าสุด: v54 - เพิ่ม Auto Final BGM QA
 
 ## Goal
 
@@ -62,6 +62,32 @@ suggestedMixCommand
 ```
 
 แก้ keyword/style ได้ที่ `bgm-library/style-keywords-v53.json`
+
+## Auto Final QA
+
+หลัง render final MP4 แล้ว ใช้คำสั่งเดียวเพื่อเลือก BGM, mix, สร้าง preview และวัด loudness:
+
+```bash
+npm run qa:bgm -- \
+  --final ../stacked-output-v35-test2-full-context-softcut-broll-full-test.mp4 \
+  --title "หัวข้อคลิป" \
+  --context assets/context/test2-v35-full-context-index.json \
+  --transcript assets/transcript_test2.large-v3.json \
+  --output ../stacked-output-v54-bgm.mp4 \
+  --report reports/bgm-final-qa-v54.json
+```
+
+ผลลัพธ์ต้องมี:
+
+```text
+selectedStyle
+selectedTrack
+originalPreview
+mixedPreview
+originalLoudness
+mixedLoudness
+qa.status
+```
 
 ## Default Fallback
 

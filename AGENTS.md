@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v53
+## Bizdrive Workflow Docs — v54
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -69,7 +69,7 @@ When BGM is enabled, run `npm run select:bgm` with the title/transcript/context 
 
 If title/transcript/context is still unclear after analysis, use the default BGM fallback `mixkit-480 Curiosity` at 5%. If the clip is clearly tech but ambiguous, use `mixkit-1167 Close Up`. If speech is dense or teaching-heavy, use `mixkit-441 Meditation`.
 
-BGM QA must include the final rendered MP4 that contains top, bottom, captions, B-roll, and final audio. Testing only the bottom source is not enough. Compare original final MP4 vs BGM final MP4 loudness, create preview clips for listening, and report both paths.
+BGM QA must include the final rendered MP4 that contains top, bottom, captions, B-roll, and final audio. Testing only the bottom source is not enough. Use `npm run qa:bgm` whenever possible; it selects BGM, mixes the final MP4, creates original/mixed previews, measures loudness, and writes a final QA report.
 
 BGM at 5% is intentionally a barely audible ambient bed. It should make the clip feel less dry, not make the viewer notice a song. If the melody is clearly noticeable or competes with speech, reduce below 5% or choose a calmer track.
 
