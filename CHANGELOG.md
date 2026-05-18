@@ -1,5 +1,23 @@
 # Changelog
 
+## v53
+
+Added automatic BGM selection from title/transcript/context.
+
+```text
+Created scripts/select-bgm.js
+Created bgm-library/style-keywords-v53.json
+Added npm script: select:bgm
+Added minimumStyleScore fallback behavior for unclear titles/context
+Updated WORKFLOW.md, STEPS.md, BGM_LIBRARY.md, CONFIG.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+BGM should be chosen from the meaning of the clip, not by taste or random choice. The selector reads title, transcript, and context index, scores editable style keywords, chooses a stock track, and reports the reasons plus a suggested mix command.
+```
+
 ## v52
 
 Record the accepted BGM audibility intent.

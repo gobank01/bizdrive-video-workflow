@@ -1,0 +1,136 @@
+{
+  "version": 53,
+  "description": "Editable keyword map for automatic Bizdrive BGM style selection.",
+  "fallbackStyle": "default_fallback",
+  "minimumStyleScore": 8,
+  "stylePriority": [
+    "tech_explainer",
+    "product_demo",
+    "tutorial_screen",
+    "finance_business",
+    "high_energy_recap",
+    "calm_learning"
+  ],
+  "styles": {
+    "tech_explainer": {
+      "keywords": [
+        "ai",
+        "เอไอ",
+        "prompt",
+        "พร้อม",
+        "workflow",
+        "automation",
+        "agent",
+        "coding",
+        "code",
+        "api",
+        "model",
+        "data",
+        "chatgpt",
+        "claude",
+        "gemini",
+        "ตัดต่อด้วย ai",
+        "ระบบ",
+        "อัตโนมัติ",
+        "ไฟล์",
+        "ประมวลผล"
+      ],
+      "intent": "AI, workflow, software, automation, screen explanation"
+    },
+    "product_demo": {
+      "keywords": [
+        "demo",
+        "product",
+        "tool",
+        "app",
+        "feature",
+        "before after",
+        "screen",
+        "หน้าจอ",
+        "เครื่องมือ",
+        "ฟีเจอร์",
+        "ทดลอง",
+        "ตัวอย่าง",
+        "ผลลัพธ์",
+        "export",
+        "render"
+      ],
+      "intent": "Tool walkthrough, app feature, implementation demo"
+    },
+    "tutorial_screen": {
+      "keywords": [
+        "สอน",
+        "วิธี",
+        "step",
+        "ขั้นตอน",
+        "ทำตาม",
+        "tutorial",
+        "guide",
+        "how to",
+        "workflow",
+        "หน้าจอ",
+        "อธิบาย",
+        "ตั้งค่า",
+        "ใส่",
+        "แก้"
+      ],
+      "intent": "Step-by-step teaching, dense screen recording, calm explanation"
+    },
+    "finance_business": {
+      "keywords": [
+        "bizdrive",
+        "business",
+        "ธุรกิจ",
+        "ลงทุน",
+        "หุ้น",
+        "ปันผล",
+        "เงิน",
+        "ยอดขาย",
+        "กำไร",
+        "รายได้",
+        "strategy",
+        "case study",
+        "แผน",
+        "การตลาด",
+        "ลูกค้า"
+      ],
+      "intent": "Business, investing, strategy, case study"
+    },
+    "high_energy_recap": {
+      "keywords": [
+        "hook",
+        "recap",
+        "สรุป",
+        "เร็ว",
+        "ไว",
+        "แรง",
+        "สุด",
+        "ผลลัพธ์",
+        "ก่อนหลัง",
+        "b-roll",
+        "บีโรล",
+        "ตัดเร็ว",
+        "promo"
+      ],
+      "intent": "Strong hook, result reveal, fast B-roll, short promo"
+    },
+    "calm_learning": {
+      "keywords": [
+        "เรียน",
+        "เข้าใจ",
+        "สมาธิ",
+        "ยาว",
+        "ละเอียด",
+        "อธิบาย",
+        "ความรู้",
+        "คิด",
+        "วิเคราะห์",
+        "พื้นฐาน",
+        "calm",
+        "learning",
+        "reflective"
+      ],
+      "intent": "Long teaching, reflective explanation, low-distraction audio bed"
+    }
+  }
+}

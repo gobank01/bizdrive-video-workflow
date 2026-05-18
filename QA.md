@@ -28,6 +28,8 @@
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
 [ ] BGM stock index checked before generating new music if BGM is used
+[ ] npm run select:bgm report exists if BGM is used
+[ ] selected BGM style is based on title/transcript/context
 [ ] npm run check:bgm passes if BGM stock is used
 [ ] default fallback is mixkit-480 Curiosity if clip style is unclear
 [ ] BGM source/license is documented if used

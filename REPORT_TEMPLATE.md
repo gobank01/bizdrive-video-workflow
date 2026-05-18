@@ -56,6 +56,8 @@ true peak:
 BGM source:
 BGM source/license:
 BGM stock index:
+BGM selector report:
+BGM selected style:
 BGM stock id/title:
 BGM style match:
 BGM final real file test:

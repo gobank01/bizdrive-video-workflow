@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v52 VIDEO WORKFLOW - BGM 5% เป็น ambient bed ที่แทบไม่ได้ยิน
+สถานะล่าสุด: v53 VIDEO WORKFLOW - เพิ่ม Auto BGM Selector จาก title/transcript/context
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -51,7 +51,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v52
+version: v53
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -74,6 +74,8 @@ zoom motion: optional, subtle, top/B-roll emphasis
 BGM loop: optional, speech-first, default 5%, licensed/royalty-free/generated-with-rights only
 BGM loudness intent: barely audible ambient bed, not a noticeable song
 BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check before generating
+BGM selector: npm run select:bgm
+BGM selector keywords: bgm-library/style-keywords-v53.json
 BGM default fallback: mixkit-480 Curiosity
 BGM tech fallback: mixkit-1167 Close Up
 BGM calm fallback: mixkit-441 Meditation
@@ -101,7 +103,7 @@ BGM mix command: npm run mix:bgm
 16. QA B-roll and reject text/logo/brand/graphic failures.
 17. Re-encode selected B-roll.
 18. Build captions with Bizdrive style.
-19. If BGM is enabled, select from BGM stock first; generate only when no stock mood fits.
+19. If BGM is enabled, run `npm run select:bgm` to select from stock using title/transcript/context; generate only when no stock mood fits.
 20. Add optional zoom motion and BGM loop if enabled.
 21. Update HyperFrames composition.
 22. Run `npm run check`.
@@ -128,6 +130,7 @@ BGM ต้องอยู่ใต้เสียงพูดเสมอ defaul
 BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่ช่วยไม่ให้คลิปแห้ง ถ้า melody ชัดจนคนสนใจเพลงถือว่าดังเกิน
 ห้ามบอกว่าเพลงไม่มีลิขสิทธิ์ถ้าไม่มี license/source ยืนยัน
 ถ้าเปิด BGM ให้เช็ค `bgm-library/mixkit-stock-v50.json` ก่อน generate เพลงใหม่
+ถ้าเปิด BGM ให้รัน `npm run select:bgm` โดยใช้ title/transcript/context และเก็บ report
 ถ้าวิเคราะห์ title/transcript/context แล้วยังไม่ชัด ให้ใช้ default fallback `mixkit-480 Curiosity`
 ทดสอบ BGM ต้องทำกับ final MP4 จริงที่มี top/bottom/caption/B-roll แล้วเสมอ ไม่ใช่เฉพาะ bottom source
 หลังแก้ index.html ต้องรัน npm run check
@@ -165,6 +168,7 @@ v49 เพิ่ม `BGM_LIBRARY.md`, local Mixkit stock 15 tracks และ `np
 v50 ตั้ง `mixkit-480 Curiosity` เป็น default BGM fallback พร้อม tech/calm fallback และ test policy 5%
 v51 เพิ่ม rule: BGM QA ต้อง mix/test กับ final MP4 จริง และเทียบ loudness/preview ก่อนหลัง
 v52 บันทึก user acceptance: BGM 5% ควรเป็น ambient bed ที่แทบไม่ได้ยิน เสียงพูดต้องชัดก่อนเสมอ
+v53 เพิ่ม `scripts/select-bgm.js`, `npm run select:bgm` และ keyword map ที่แก้ได้สำหรับเลือก BGM อัตโนมัติ
 
 ## How To Continue Development
 

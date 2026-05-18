@@ -162,6 +162,8 @@ zoomFrameRule: transform inner media only, not frame/border wrapper
 bgmEnabled: optional
 bgmSource: assets/bgm/*
 bgmTrackedIndex: bgm-library/mixkit-stock-v50.json
+bgmSelectorCommand: npm run select:bgm
+bgmSelectorKeywords: bgm-library/style-keywords-v53.json
 bgmRuntimeIndex: assets/bgm/index.json
 bgmRuntimeStockRoot: assets/bgm/stock/mixkit
 bgmStockCount: 15

@@ -1,6 +1,6 @@
 # BGM Stock Library
 
-สถานะล่าสุด: v52 - BGM 5% เป็น ambient bed ที่แทบไม่ได้ยิน
+สถานะล่าสุด: v53 - เพิ่ม Auto BGM Selector
 
 ## Goal
 
@@ -10,6 +10,7 @@
 
 ```text
 tracked index: bgm-library/mixkit-stock-v50.json
+selector keywords: bgm-library/style-keywords-v53.json
 runtime index: assets/bgm/index.json
 runtime media: assets/bgm/stock/mixkit/*.mp3
 provider: Mixkit
@@ -29,7 +30,7 @@ calm fallback: mixkit-441 Meditation
 
 ```text
 1. อ่าน transcript/context ก่อน
-2. เลือก style ของคลิป
+2. รัน `npm run select:bgm` เพื่อเลือก style ของคลิปจาก title/transcript/context
 3. หา track ที่ `bestFor` ตรงกับ style
 4. เลือก energy ต่ำที่สุดที่ยังทำให้คลิปมีชีวิต
 5. mix ที่ 5% default ด้วย `npm run mix:bgm -- --gain-percent 5`
@@ -37,6 +38,30 @@ calm fallback: mixkit-441 Meditation
 7. ถ้า BGM กลบเสียงพูด ให้ลดลงหรือเปลี่ยนเพลง
 8. ถ้า stock ไม่มี mood ที่ตรง ค่อยใช้ OpenRouter/Lyria generate แล้วเพิ่มเข้า index
 ```
+
+## Auto Selector
+
+คำสั่ง:
+
+```bash
+npm run select:bgm -- \
+  --title "หัวข้อคลิป" \
+  --context assets/context/test2-v35-full-context-index.json \
+  --transcript assets/transcript_test2.large-v3.json \
+  --output reports/bgm-select-v53.json
+```
+
+ผลลัพธ์ต้องมี:
+
+```text
+selectedStyle
+selectedTrack
+alternatives
+reasons
+suggestedMixCommand
+```
+
+แก้ keyword/style ได้ที่ `bgm-library/style-keywords-v53.json`
 
 ## Default Fallback
 
