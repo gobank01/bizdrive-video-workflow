@@ -1,5 +1,26 @@
 # Changelog
 
+## v50
+
+Set the default BGM fallback and test policy.
+
+```text
+Set default fallback to mixkit-480 Curiosity
+Set tech fallback to mixkit-1167 Close Up
+Set calm fallback to mixkit-441 Meditation
+Updated BGM index validation to require the fallback IDs
+Fixed BGM mix to use amix normalize=0 so voice loudness is preserved
+Set BGM mix limiter default to 0.84 with level=false for safer final peaks without auto-boosting
+Updated WORKFLOW.md, BGM_LIBRARY.md, CONFIG.md, MOTION_BGM.md, STEPS.md, QA.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+When title/transcript/context is unclear, the workflow needs a safe default instead of stalling or choosing a random song. Curiosity is the least risky general-purpose stock track because it is corporate, relaxed, positive, and low-medium energy.
+The 5% test also showed that amix normalization was lowering the main voice, so the mix now preserves voice loudness and only adds BGM underneath.
+```
+
 ## v49
 
 Added a reusable royalty-free BGM stock library.
@@ -7,7 +28,7 @@ Added a reusable royalty-free BGM stock library.
 ```text
 Downloaded 15 Mixkit starter BGM tracks to assets/bgm/stock/mixkit
 Created BGM_LIBRARY.md
-Created bgm-library/mixkit-stock-v49.json with style tags and usage guidance
+Created initial bgm-library Mixkit stock index with style tags and usage guidance
 Created scripts/check-bgm-library.js
 Added npm script: check:bgm
 Updated WORKFLOW.md, STEPS.md, CONFIG.md, MOTION_BGM.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md

@@ -8,6 +8,7 @@ const DEFAULTS = {
   fadeOut: 1.0,
   gainPercent: 5,
   gainDb: percentToDb(5),
+  limiterLimit: 0.82,
   duck: false,
   duckThreshold: 0.02,
   duckRatio: 6,
@@ -24,6 +25,7 @@ function parseArgs(argv) {
     fadeOut: DEFAULTS.fadeOut,
     gainPercent: DEFAULTS.gainPercent,
     gainDb: DEFAULTS.gainDb,
+    limiterLimit: DEFAULTS.limiterLimit,
     duck: DEFAULTS.duck,
     duckThreshold: DEFAULTS.duckThreshold,
     duckRatio: DEFAULTS.duckRatio,
@@ -69,6 +71,9 @@ function parseArgs(argv) {
     } else if (arg === "--duck-ratio") {
       args.duckRatio = Number(next);
       i += 1;
+    } else if (arg === "--limiter-limit") {
+      args.limiterLimit = Number(next);
+      i += 1;
     } else if (arg === "--audio-bitrate") {
       args.audioBitrate = next;
       i += 1;
@@ -83,9 +88,10 @@ function parseArgs(argv) {
   for (const key of ["voice", "bgm", "output"]) {
     if (!args[key]) throw new Error(`Missing --${key}`);
   }
-  for (const key of ["fadeIn", "fadeOut", "gainDb", "duckThreshold", "duckRatio"]) {
+  for (const key of ["fadeIn", "fadeOut", "gainDb", "limiterLimit", "duckThreshold", "duckRatio"]) {
     if (!Number.isFinite(args[key])) throw new Error(`Invalid ${key}`);
   }
+  if (args.limiterLimit <= 0 || args.limiterLimit > 1) throw new Error("Invalid limiterLimit; use a value > 0 and <= 1");
   if (args.gainPercent !== null && (!Number.isFinite(args.gainPercent) || args.gainPercent <= 0 || args.gainPercent > 100)) {
     throw new Error("Invalid gainPercent; use a value > 0 and <= 100");
   }
@@ -131,9 +137,9 @@ function buildFilter(args, duration) {
   const bgmBase = `[1:a]volume=${bgmVolume},afade=t=in:st=0:d=${fadeIn},afade=t=out:st=${fadeOutStart}:d=${fadeOut}[bgm0]`;
 
   if (args.duck) {
-    return `${bgmBase};[bgm0][0:a]sidechaincompress=threshold=${args.duckThreshold}:ratio=${args.duckRatio}:attack=20:release=250[bgm];[0:a][bgm]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[a]`;
+    return `${bgmBase};[bgm0][0:a]sidechaincompress=threshold=${args.duckThreshold}:ratio=${args.duckRatio}:attack=20:release=250[bgm];[0:a][bgm]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false[a]`;
   }
-  return `${bgmBase};[0:a][bgm0]amix=inputs=2:duration=first:dropout_transition=0,alimiter=limit=0.95[a]`;
+  return `${bgmBase};[0:a][bgm0]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false[a]`;
 }
 
 function main() {
@@ -167,18 +173,19 @@ function main() {
   ];
 
   const report = {
-    version: 49,
+    version: 50,
     voice: args.voice,
     bgm: args.bgm,
     output: args.output,
     duration,
-    stockIndex: "bgm-library/mixkit-stock-v49.json",
+    stockIndex: "bgm-library/mixkit-stock-v50.json",
     sourcePolicy: "licensed/royalty-free/generated-with-usage-rights only; do not assume arbitrary music is copyright-free",
     gainPercent: args.gainPercent,
     effectiveGainPercent: Number(dbToPercent(args.gainDb).toFixed(3)),
     gainDb: args.gainDb,
     fadeIn: args.fadeIn,
     fadeOut: args.fadeOut,
+    limiterLimit: args.limiterLimit,
     duck: args.duck,
     duckThreshold: args.duckThreshold,
     duckRatio: args.duckRatio,
@@ -224,6 +231,7 @@ Options:
   --duck true|false       Sidechain duck BGM under voice, default false
   --duck-threshold <n>    Sidechain threshold, default 0.02
   --duck-ratio <n>        Sidechain ratio, default 6
+  --limiter-limit <n>     Final limiter ceiling, default 0.82
   --dry-run               Print ffmpeg command without rendering
 `);
 }

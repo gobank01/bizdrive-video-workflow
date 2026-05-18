@@ -1,9 +1,13 @@
 {
-  "version": 49,
+  "version": 50,
   "libraryName": "bizdrive-bgm-stock-mixkit-v49",
   "createdAt": "2026-05-18",
   "defaultMixLevelPercent": 5,
   "defaultMixGainDb": -26.0206,
+  "defaultFallbackTrackId": "mixkit-480",
+  "defaultFallbackTitle": "Curiosity",
+  "techFallbackTrackId": "mixkit-1167",
+  "calmFallbackTrackId": "mixkit-441",
   "provider": "Mixkit",
   "providerUrl": "https://mixkit.co/free-stock-music/corporate/",
   "licenseName": "Mixkit Stock Music Free License",
@@ -16,6 +20,12 @@
     "Use speech-first mixing at 5% by default.",
     "Reject or replace any track that has obvious vocals, audio tags, watermark, distracting melody, or license uncertainty.",
     "For final public/commercial work, spot-listen the chosen track under the actual voice before render."
+  ],
+  "fallbackPolicy": [
+    "If title/transcript/context is unclear, use mixkit-480 Curiosity.",
+    "If the clip is clearly tech but no better match is obvious, use mixkit-1167 Close Up.",
+    "If the clip has dense speech or long teaching, use mixkit-441 Meditation.",
+    "Always start at 5% and only raise the level after user approval."
   ],
   "styleGuide": {
     "tech_explainer": "AI, prompt, workflow, coding, software, automation, dashboard explanation",

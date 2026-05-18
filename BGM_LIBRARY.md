@@ -1,6 +1,6 @@
 # BGM Stock Library
 
-สถานะล่าสุด: v49 - Mixkit royalty-free starter stock 15 tracks
+สถานะล่าสุด: v50 - default fallback คือ mixkit-480 Curiosity
 
 ## Goal
 
@@ -9,7 +9,7 @@
 ## Current Library
 
 ```text
-tracked index: bgm-library/mixkit-stock-v49.json
+tracked index: bgm-library/mixkit-stock-v50.json
 runtime index: assets/bgm/index.json
 runtime media: assets/bgm/stock/mixkit/*.mp3
 provider: Mixkit
@@ -17,6 +17,9 @@ license page: https://mixkit.co/license/
 source page: https://mixkit.co/free-stock-music/corporate/
 count: 15 tracks
 default mix level: 5%
+default fallback: mixkit-480 Curiosity
+tech fallback: mixkit-1167 Close Up
+calm fallback: mixkit-441 Meditation
 ```
 
 ไฟล์ mp3 อยู่ใน `assets/` และถูก ignore จาก git เพื่อไม่ให้ repo หนัก แต่ index ถูก track ใน repo เพื่อใช้พัฒนาต่อและแจก workflow ได้
@@ -32,6 +35,23 @@ default mix level: 5%
 6. spot-listen ช่วง hook, ช่วง caption หนา, และท้ายประโยค
 7. ถ้า BGM กลบเสียงพูด ให้ลดลงหรือเปลี่ยนเพลง
 8. ถ้า stock ไม่มี mood ที่ตรง ค่อยใช้ OpenRouter/Lyria generate แล้วเพิ่มเข้า index
+```
+
+## Default Fallback
+
+ถ้า title/transcript/context ยังไม่ชัด หรือเลือกไม่ออก:
+
+```text
+default: mixkit-480 Curiosity
+reason: corporate, relaxed, positive, low-medium energy, ไม่แย่งเสียงพูด
+mix: 5%
+```
+
+fallback เฉพาะทาง:
+
+```text
+tech fallback: mixkit-1167 Close Up
+calm fallback: mixkit-441 Meditation
 ```
 
 ## Clip Style Map

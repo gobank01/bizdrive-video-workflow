@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import fs from "node:fs";
 
-const indexPath = process.argv[2] || "bgm-library/mixkit-stock-v49.json";
+const indexPath = process.argv[2] || "bgm-library/mixkit-stock-v50.json";
 
 function fail(message) {
   console.error(`check-bgm-library: ${message}`);
@@ -16,6 +16,7 @@ const tracks = Array.isArray(library.tracks) ? library.tracks : [];
 if (library.defaultMixLevelPercent !== 5) fail("defaultMixLevelPercent must be 5");
 if (!library.licenseUrl) fail("missing library licenseUrl");
 if (tracks.length < 10 || tracks.length > 20) fail(`expected 10-20 tracks, got ${tracks.length}`);
+if (!library.defaultFallbackTrackId) fail("missing defaultFallbackTrackId");
 
 const ids = new Set();
 const required = [
@@ -48,12 +49,23 @@ for (const track of tracks) {
   if (track.durationSeconds < 30) fail(`${track.id} duration is too short for loop stock`);
 }
 
+if (!ids.has(library.defaultFallbackTrackId)) {
+  fail(`defaultFallbackTrackId not found in tracks: ${library.defaultFallbackTrackId}`);
+}
+if (library.techFallbackTrackId && !ids.has(library.techFallbackTrackId)) {
+  fail(`techFallbackTrackId not found in tracks: ${library.techFallbackTrackId}`);
+}
+if (library.calmFallbackTrackId && !ids.has(library.calmFallbackTrackId)) {
+  fail(`calmFallbackTrackId not found in tracks: ${library.calmFallbackTrackId}`);
+}
+
 console.log(JSON.stringify({
   ok: true,
   indexPath,
   version: library.version,
   trackCount: tracks.length,
   defaultMixLevelPercent: library.defaultMixLevelPercent,
+  defaultFallbackTrackId: library.defaultFallbackTrackId,
   provider: library.provider,
   licenseUrl: library.licenseUrl
 }, null, 2));

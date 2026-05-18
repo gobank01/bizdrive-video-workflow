@@ -29,6 +29,7 @@
 [ ] zoom motion is subtle and does not move frame borders
 [ ] BGM stock index checked before generating new music if BGM is used
 [ ] npm run check:bgm passes if BGM stock is used
+[ ] default fallback is mixkit-480 Curiosity if clip style is unclear
 [ ] BGM source/license is documented if used
 [ ] BGM is licensed/royalty-free/generated-with-rights if used
 [ ] BGM starts at 5% default unless user approved a different level

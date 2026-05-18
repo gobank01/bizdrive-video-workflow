@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v49 VIDEO WORKFLOW - เพิ่ม BGM stock library 15 tracks พร้อม style map
+สถานะล่าสุด: v50 VIDEO WORKFLOW - ตั้ง default BGM fallback และทดสอบ 5%
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -51,7 +51,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v49
+version: v50
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -72,7 +72,10 @@ context index schema: schemas/context-index.schema.json
 key term checker: npm run check:keyterms
 zoom motion: optional, subtle, top/B-roll emphasis
 BGM loop: optional, speech-first, default 5%, licensed/royalty-free/generated-with-rights only
-BGM stock library: bgm-library/mixkit-stock-v49.json, 15 Mixkit tracks, check before generating
+BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check before generating
+BGM default fallback: mixkit-480 Curiosity
+BGM tech fallback: mixkit-1167 Close Up
+BGM calm fallback: mixkit-441 Meditation
 BGM mix command: npm run mix:bgm
 ```
 
@@ -121,7 +124,8 @@ B-roll ต้องไม่มี text/logo/watermark/other brand/distracting g
 zoom motion ต้อง subtle และใช้เพื่อ emphasis เท่านั้น
 BGM ต้องอยู่ใต้เสียงพูดเสมอ default 5% และต้องมีสิทธิ์ใช้งาน
 ห้ามบอกว่าเพลงไม่มีลิขสิทธิ์ถ้าไม่มี license/source ยืนยัน
-ถ้าเปิด BGM ให้เช็ค `bgm-library/mixkit-stock-v49.json` ก่อน generate เพลงใหม่
+ถ้าเปิด BGM ให้เช็ค `bgm-library/mixkit-stock-v50.json` ก่อน generate เพลงใหม่
+ถ้าวิเคราะห์ title/transcript/context แล้วยังไม่ชัด ให้ใช้ default fallback `mixkit-480 Curiosity`
 หลังแก้ index.html ต้องรัน npm run check
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
@@ -153,7 +157,8 @@ v45 เพิ่ม `KEYTERM_QA.md` และ `npm run check:keyterms`
 v46 เพิ่ม `MOTION_BGM.md`, zoom in/out rules และ BGM loop rules
 v47 เพิ่ม `scripts/mix-bgm.js` และ `npm run mix:bgm` สำหรับ mix BGM loop ใต้ bottom voice
 v48 ตั้ง BGM default เป็น 5% (`--gain-percent 5`) และเพิ่ม policy เรื่อง source/license ห้ามใช้เพลงที่สิทธิ์ไม่ชัดเจน
-v49 เพิ่ม `BGM_LIBRARY.md`, `bgm-library/mixkit-stock-v49.json`, local Mixkit stock 15 tracks และ `npm run check:bgm`
+v49 เพิ่ม `BGM_LIBRARY.md`, local Mixkit stock 15 tracks และ `npm run check:bgm`
+v50 ตั้ง `mixkit-480 Curiosity` เป็น default BGM fallback พร้อม tech/calm fallback และ test policy 5%
 
 ## How To Continue Development
 

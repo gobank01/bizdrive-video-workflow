@@ -161,11 +161,15 @@ zoomFrameRule: transform inner media only, not frame/border wrapper
 ```text
 bgmEnabled: optional
 bgmSource: assets/bgm/*
-bgmTrackedIndex: bgm-library/mixkit-stock-v49.json
+bgmTrackedIndex: bgm-library/mixkit-stock-v50.json
 bgmRuntimeIndex: assets/bgm/index.json
 bgmRuntimeStockRoot: assets/bgm/stock/mixkit
 bgmStockCount: 15
 bgmCheckCommand: npm run check:bgm
+bgmDefaultFallback: mixkit-480 Curiosity
+bgmDefaultFallbackPath: assets/bgm/stock/mixkit/mixkit-480-curiosity.mp3
+bgmTechFallback: mixkit-1167 Close Up
+bgmCalmFallback: mixkit-441 Meditation
 bgmSourcePolicy: user-provided licensed, royalty-free with documented terms, generated with usage rights, or internal verified stock only
 bgmAutoSource: allowed only when license/source is recorded before final render
 bgmSelectionOrder: local stock index -> generated OpenRouter/Lyria -> user-provided licensed track
@@ -177,6 +181,7 @@ bgmAvoid: vocals, audio tags, watermark, distracting melody
 speechPriority: true
 bgmDefaultLevel: 5%
 suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
+bgmLimiterLimit: 0.82
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudioMix: bottom polished voice + BGM
 mixCommand: npm run mix:bgm
