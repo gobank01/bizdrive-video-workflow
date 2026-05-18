@@ -58,6 +58,11 @@ BGM source/license:
 BGM stock index:
 BGM stock id/title:
 BGM style match:
+BGM final real file test:
+BGM original final loudness:
+BGM mixed final loudness:
+BGM original preview:
+BGM mixed preview:
 BGM mixed output:
 BGM loop:
 BGM level percent:

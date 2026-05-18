@@ -199,4 +199,6 @@ report JSON บันทึก command และค่า mix
 2. ตรวจ loudness อีกครั้ง
 3. ฟัง key phrases และท้ายประโยคว่า BGM ไม่กลบ
 4. ตรวจ loop/fade-out
+5. หลัง render final MP4 แล้ว ต้อง test BGM กับ final MP4 จริงอีกครั้ง
+6. เทียบ original final MP4 กับ BGM final MP4 ด้วย loudness และ preview 20s
 ```

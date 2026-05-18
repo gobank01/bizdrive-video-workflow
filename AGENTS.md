@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v50
+## Bizdrive Workflow Docs — v51
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -66,6 +66,8 @@ When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source. Defa
 Before generating or sourcing new BGM, check `bgm-library/mixkit-stock-v50.json` and run `npm run check:bgm`. Prefer a local stock track whose `bestFor` matches the clip style. Report whether the BGM was reused from stock or newly generated/downloaded.
 
 If title/transcript/context is still unclear after analysis, use the default BGM fallback `mixkit-480 Curiosity` at 5%. If the clip is clearly tech but ambiguous, use `mixkit-1167 Close Up`. If speech is dense or teaching-heavy, use `mixkit-441 Meditation`.
+
+BGM QA must include the final rendered MP4 that contains top, bottom, captions, B-roll, and final audio. Testing only the bottom source is not enough. Compare original final MP4 vs BGM final MP4 loudness, create preview clips for listening, and report both paths.
 
 ## Linting — Always Run After Changes
 

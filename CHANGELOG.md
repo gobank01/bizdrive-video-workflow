@@ -1,5 +1,22 @@
 # Changelog
 
+## v51
+
+Require BGM QA on the real final MP4.
+
+```text
+Added final-real-file BGM QA rule
+Required original final MP4 vs BGM final MP4 loudness comparison
+Required original/BGM preview clips for listening comparison
+Updated WORKFLOW.md, STEPS.md, QA.md, MOTION_BGM.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+Testing BGM only on the bottom source proves the mix tool, but it does not prove the real viewer experience after top, bottom, captions, B-roll, and final render are combined. Final BGM acceptance must happen on the actual final MP4.
+```
+
 ## v50
 
 Set the default BGM fallback and test policy.

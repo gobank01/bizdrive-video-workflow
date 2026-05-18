@@ -36,6 +36,9 @@
 [ ] BGM mix command/report exists if BGM is used
 [ ] BGM loop/fade is smooth if used
 [ ] voice remains clearly louder than BGM if used
+[ ] BGM has been tested on the final rendered MP4, not only on bottom source
+[ ] original final MP4 loudness and BGM final MP4 loudness are compared
+[ ] original/BGM preview clips are created for listening comparison
 [ ] index.html durations updated
 [ ] npm run check passes
 ```
