@@ -1,5 +1,24 @@
 # Changelog
 
+## v57
+
+Added one-command BGM apply for the latest final MP4.
+
+```text
+Created scripts/auto-final-bgm.js
+Added npm script: auto:bgm
+Auto-picks the newest eligible stacked-output*.mp4 while skipping preview and already-BGM outputs
+Runs qa-bgm-final with generated output/report paths
+Tested against the real v35 final MP4 and produced a pass BGM QA report
+Updated WORKFLOW.md, STEPS.md, BGM_LIBRARY.md, and NEXT_SESSION.md
+```
+
+Reason:
+
+```text
+After render, the user should not need to copy a long final MP4 path into the BGM QA command. The wrapper reduces mistakes by selecting the latest non-preview/non-BGM final file, keeping BGM at 5%, and still preserving the full final-real-file QA path.
+```
+
 ## v56
 
 Added automatic final report generation.

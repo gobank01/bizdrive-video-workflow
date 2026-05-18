@@ -98,6 +98,8 @@ Every B-roll set must have a machine-readable manifest or index entry. Optimized
 
 After final render/QA, run `npm run report:final` when the final MP4 and reports are available. The report should include final MP4 metadata, context cut summary, B-roll counts/slots, BGM QA, key term QA, and output both JSON and Markdown.
 
+When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest final MP4 should be selected automatically. Use `npm run qa:bgm` when the exact final MP4 path must be pinned manually.
+
 ## B-roll Keyword Selection
 
 Before downloading, generating, or selecting B-roll, read the spoken context around the insert point:

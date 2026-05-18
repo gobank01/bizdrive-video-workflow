@@ -67,6 +67,19 @@ suggestedMixCommand
 
 หลัง render final MP4 แล้ว ใช้คำสั่งเดียวเพื่อเลือก BGM, mix, สร้าง preview และวัด loudness:
 
+เลือก final MP4 ล่าสุดอัตโนมัติ:
+
+```bash
+npm run auto:bgm -- \
+  --title "หัวข้อคลิป" \
+  --context assets/context/test2-v35-full-context-index.json \
+  --transcript assets/transcript_test2.large-v3.json
+```
+
+คำสั่งนี้จะข้ามไฟล์ preview และไฟล์ที่มี BGM อยู่แล้ว เพื่อกันการ mix ซ้ำ
+
+หรือระบุ final MP4 เอง:
+
 ```bash
 npm run qa:bgm -- \
   --final ../stacked-output-v35-test2-full-context-softcut-broll-full-test.mp4 \

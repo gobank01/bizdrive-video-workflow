@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v56 - เพิ่ม Final Report Generator หลัง handoff v55
+สถานะล่าสุด: v57 - เพิ่ม Auto Final BGM wrapper ต่อจาก Final Report Generator
 
 วันที่บันทึก: 2026-05-19
 
@@ -11,6 +11,7 @@ v53 tag: v53-auto-bgm-selector
 v53 commit: f6aba92 Add automatic BGM selector
 v54 commit: 5a90e2f Add automatic final BGM QA
 v55 commit: f897a32 Add next session handoff
+v56 commit: 145f10f Add final report generator
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -26,6 +27,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 6. Auto Final BGM QA เลือกเพลง, mix final MP4 จริง, สร้าง preview, วัด loudness และออก report ได้
 7. v53 checkpoint ถูก tag และ push แล้ว
 8. Final Report Generator รวม final MP4 metadata, context, B-roll, BGM QA, key term QA เป็น JSON + Markdown ได้
+9. Auto Final BGM wrapper เลือก final MP4 ล่าสุดที่ไม่ใช่ preview/BGM แล้วเรียก QA BGM ต่อได้
 ```
 
 ## Commands Now Available
@@ -41,6 +43,17 @@ npm run select:bgm -- \
 ```
 
 QA BGM กับ final MP4 จริง:
+
+แบบเลือก final MP4 ล่าสุดอัตโนมัติ:
+
+```bash
+npm run auto:bgm -- \
+  --title "หัวข้อคลิป" \
+  --context assets/context/test2-v35-full-context-index.json \
+  --transcript assets/transcript_test2.large-v3.json
+```
+
+แบบระบุไฟล์เอง:
 
 ```bash
 npm run qa:bgm -- \
@@ -118,21 +131,31 @@ status: review
 reason: B-roll QA pass, BGM QA pass, key term QA warn from existing v45 report missing "prompt"
 ```
 
+Auto BGM wrapper test:
+
+```text
+command: npm run auto:bgm -- --title ... --context ... --transcript ...
+selectedFinal: ../stacked-output-v35-test2-full-context-softcut-broll-full-test.mp4
+output: ../stacked-output-v35-test2-full-context-softcut-broll-full-test-auto-bgm-5pct.mp4
+report: reports/stacked-output-v35-test2-full-context-softcut-broll-full-test-auto-bgm-qa.json
+selectedStyle: tech_explainer
+selectedTrack: mixkit-175 Digital Clouds
+qa.status: pass
+original final: -16.0 LUFS, true peak -1.0 dBFS
+BGM final:      -16.1 LUFS, true peak -1.7 dBFS
+```
+
 ## Tomorrow Recommended Next Work
 
 1. **Unified Context Decision**
    - Use the same context index to drive both B-roll and BGM.
    - Store `clipStyle`, `brollIntent`, `bgmStyle`, and `reason` in one report.
 
-2. **One Command Final BGM Apply**
-   - After final render, `npm run qa:bgm` already works.
-   - Next step is a wrapper that picks the latest final MP4 automatically.
-
-3. **Full Pipeline Orchestrator**
+2. **Full Pipeline Orchestrator**
    - Later combine: inspect -> cut -> captions -> B-roll -> render -> qa:bgm -> final report.
    - Target command: `npm run bizdrive:render`.
 
-4. **Run On A New Real Job Folder**
+3. **Run On A New Real Job Folder**
    - The current system is proven on Test 2.
    - Next important proof is running it on the next raw top/bottom pair.
 
