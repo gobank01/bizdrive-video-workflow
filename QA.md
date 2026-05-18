@@ -28,6 +28,7 @@
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
 [ ] BGM is licensed/royalty-free if used
+[ ] BGM mix command/report exists if BGM is used
 [ ] BGM loop/fade is smooth if used
 [ ] voice remains clearly louder than BGM if used
 [ ] index.html durations updated
@@ -74,6 +75,7 @@ optimized manifest.json
 [ ] soft cuts do not sound abrupt
 [ ] zoom motion supports emphasis and is not distracting
 [ ] BGM does not cover speech and fades out cleanly
+[ ] BGM mixed output is used as bottom source when BGM is enabled
 [ ] no obvious frame freeze/seek issue
 [ ] no text/logo/brand in B-roll output
 ```

@@ -1,5 +1,22 @@
 # Changelog
 
+## v47
+
+Implemented BGM mix tooling.
+
+```text
+Created scripts/mix-bgm.js
+Added npm script: mix:bgm
+Updated MOTION_BGM.md with runnable commands
+Updated WORKFLOW.md, CONFIG.md, STEPS.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+BGM loop should be more than a rule. The workflow now has a repeatable ffmpeg-based command to loop, fade, optionally duck, mix, limit, and report BGM under the bottom voice.
+```
+
 ## v46
 
 Added Zoom Motion and BGM Loop production options.

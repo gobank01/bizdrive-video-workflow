@@ -54,8 +54,10 @@ polish chain:
 loudness:
 true peak:
 BGM source:
+BGM mixed output:
 BGM loop:
 BGM gain/ducking:
+BGM mix report:
 notes:
 ```
 

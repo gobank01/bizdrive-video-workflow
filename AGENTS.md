@@ -60,6 +60,8 @@ When context cuts may remove important spoken terms, run `npm run check:keyterms
 
 Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free, loop smoothly, fade out, and stay clearly under the bottom voice.
 
+When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source and report the BGM source, gain, ducking, output, and QA result.
+
 ## Linting — Always Run After Changes
 
 After creating or editing any `.html` composition, run the full check before considering the task complete:

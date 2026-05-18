@@ -170,6 +170,9 @@ speechPriority: true
 suggestedBgmGain: -24dB to -18dB depending on source
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudioMix: bottom polished voice + BGM
+mixCommand: npm run mix:bgm
+defaultBgmOutput: assets/bottom_audio_polished_bgm.mp4
+defaultBgmReport: reports/bgm-mix-vXX.json
 ```
 
 ## B-roll

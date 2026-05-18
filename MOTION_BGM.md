@@ -95,3 +95,48 @@ BGM ต้อง fade out ตอนจบ
 ถ้าเสียงพูดต่อเนื่องทั้งคลิป ให้ใช้ BGM เบามากแทนการ duck หนัก ๆ
 ```
 
+## BGM Mix Implementation v47
+
+คำสั่ง:
+
+```bash
+npm run mix:bgm -- \
+  --voice assets/bottom_audio_polished.mp4 \
+  --bgm assets/bgm/track.mp3 \
+  --output assets/bottom_audio_polished_bgm.mp4 \
+  --report reports/bgm-mix-v47.json \
+  --gain-db -22 \
+  --fade-in 0.5 \
+  --fade-out 1.0
+```
+
+ถ้า BGM ยังแย่งเสียงพูด ให้เปิด ducking:
+
+```bash
+npm run mix:bgm -- \
+  --voice assets/bottom_audio_polished.mp4 \
+  --bgm assets/bgm/track.mp3 \
+  --output assets/bottom_audio_polished_bgm.mp4 \
+  --duck true \
+  --gain-db -20
+```
+
+ผลลัพธ์:
+
+```text
+output ยังเก็บ video stream จาก bottom voice source
+audio ถูก mix เป็น voice + BGM
+BGM loop ด้วย -stream_loop -1
+BGM fade in/out ตาม duration ของ voice source
+final limiter กัน peak เกิน
+report JSON บันทึก command และค่า mix
+```
+
+หลัง mix:
+
+```text
+1. ใช้ output เป็น bottom video/audio ใน composition
+2. ตรวจ loudness อีกครั้ง
+3. ฟัง key phrases และท้ายประโยคว่า BGM ไม่กลบ
+4. ตรวจ loop/fade-out
+```

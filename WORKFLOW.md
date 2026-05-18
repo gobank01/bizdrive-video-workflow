@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v46 VIDEO WORKFLOW - เพิ่ม Zoom Motion และ BGM Loop เป็น production options
+สถานะล่าสุด: v47 VIDEO WORKFLOW - เพิ่ม BGM mix implementation ด้วย `npm run mix:bgm`
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -50,7 +50,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v46
+version: v47
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -71,6 +71,7 @@ context index schema: schemas/context-index.schema.json
 key term checker: npm run check:keyterms
 zoom motion: optional, subtle, top/B-roll emphasis
 BGM loop: optional, speech-first, licensed/royalty-free only
+BGM mix command: npm run mix:bgm
 ```
 
 ## Master Pipeline
@@ -145,6 +146,7 @@ v43 เพิ่ม `SYNC_REPORT.md` สำหรับ sync decisions
 v44 เพิ่ม `schemas/context-index.schema.json`
 v45 เพิ่ม `KEYTERM_QA.md` และ `npm run check:keyterms`
 v46 เพิ่ม `MOTION_BGM.md`, zoom in/out rules และ BGM loop rules
+v47 เพิ่ม `scripts/mix-bgm.js` และ `npm run mix:bgm` สำหรับ mix BGM loop ใต้ bottom voice
 
 ## How To Continue Development
 
