@@ -1,5 +1,21 @@
 # Changelog
 
+## v55
+
+Added a next-session handoff.
+
+```text
+Created NEXT_SESSION.md
+Recorded v53 tag, v54 commit, latest verified BGM QA test, commands, outputs, and tomorrow's recommended next work
+Updated WORKFLOW.md
+```
+
+Reason:
+
+```text
+The user is pausing for the night and wants the current state saved clearly. The next session should start from a compact handoff instead of re-reading the full conversation.
+```
+
 ## v54
 
 Added automatic final MP4 BGM QA.

@@ -192,7 +192,7 @@ audio ถูก mix เป็น voice + BGM
 BGM loop ด้วย -stream_loop -1
 BGM fade in/out ตาม duration ของ voice source
 amix ใช้ normalize=0 เพื่อไม่ลดเสียงพูดหลัก
-final limiter default 0.82 และ `level=false` เพื่อคุม peak โดยไม่เร่งเสียงขึ้น
+final limiter default 0.80 และ `level=false` เพื่อคุม peak โดยไม่เร่งเสียงขึ้น
 report JSON บันทึก command และค่า mix
 ```
 
