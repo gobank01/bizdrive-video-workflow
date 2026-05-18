@@ -27,7 +27,9 @@
 [ ] captions obey max length policy
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
-[ ] BGM is licensed/royalty-free if used
+[ ] BGM source/license is documented if used
+[ ] BGM is licensed/royalty-free/generated-with-rights if used
+[ ] BGM starts at 5% default unless user approved a different level
 [ ] BGM mix command/report exists if BGM is used
 [ ] BGM loop/fade is smooth if used
 [ ] voice remains clearly louder than BGM if used
@@ -74,6 +76,7 @@ optimized manifest.json
 [ ] key spoken terms are audible
 [ ] soft cuts do not sound abrupt
 [ ] zoom motion supports emphasis and is not distracting
+[ ] BGM source/license is documented in final report if used
 [ ] BGM does not cover speech and fades out cleanly
 [ ] BGM mixed output is used as bottom source when BGM is enabled
 [ ] no obvious frame freeze/seek issue

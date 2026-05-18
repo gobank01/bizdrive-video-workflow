@@ -6,7 +6,8 @@ import path from "node:path";
 const DEFAULTS = {
   fadeIn: 0.5,
   fadeOut: 1.0,
-  gainDb: -22,
+  gainPercent: 5,
+  gainDb: percentToDb(5),
   duck: false,
   duckThreshold: 0.02,
   duckRatio: 6,
@@ -21,6 +22,7 @@ function parseArgs(argv) {
     report: null,
     fadeIn: DEFAULTS.fadeIn,
     fadeOut: DEFAULTS.fadeOut,
+    gainPercent: DEFAULTS.gainPercent,
     gainDb: DEFAULTS.gainDb,
     duck: DEFAULTS.duck,
     duckThreshold: DEFAULTS.duckThreshold,
@@ -52,6 +54,11 @@ function parseArgs(argv) {
       i += 1;
     } else if (arg === "--gain-db") {
       args.gainDb = Number(next);
+      args.gainPercent = null;
+      i += 1;
+    } else if (arg === "--gain-percent") {
+      args.gainPercent = Number(next);
+      args.gainDb = percentToDb(args.gainPercent);
       i += 1;
     } else if (arg === "--duck") {
       args.duck = next !== "false";
@@ -79,6 +86,9 @@ function parseArgs(argv) {
   for (const key of ["fadeIn", "fadeOut", "gainDb", "duckThreshold", "duckRatio"]) {
     if (!Number.isFinite(args[key])) throw new Error(`Invalid ${key}`);
   }
+  if (args.gainPercent !== null && (!Number.isFinite(args.gainPercent) || args.gainPercent <= 0 || args.gainPercent > 100)) {
+    throw new Error("Invalid gainPercent; use a value > 0 and <= 100");
+  }
   if (!fs.existsSync(args.voice)) throw new Error(`Voice file not found: ${args.voice}`);
   if (!fs.existsSync(args.bgm)) throw new Error(`BGM file not found: ${args.bgm}`);
   return args;
@@ -103,6 +113,14 @@ function ffprobeDuration(file) {
 
 function dbToLinear(db) {
   return Math.pow(10, db / 20);
+}
+
+function percentToDb(percent) {
+  return 20 * Math.log10(percent / 100);
+}
+
+function dbToPercent(db) {
+  return dbToLinear(db) * 100;
 }
 
 function buildFilter(args, duration) {
@@ -149,11 +167,14 @@ function main() {
   ];
 
   const report = {
-    version: 47,
+    version: 48,
     voice: args.voice,
     bgm: args.bgm,
     output: args.output,
     duration,
+    sourcePolicy: "licensed/royalty-free/generated-with-usage-rights only; do not assume arbitrary music is copyright-free",
+    gainPercent: args.gainPercent,
+    effectiveGainPercent: Number(dbToPercent(args.gainDb).toFixed(3)),
     gainDb: args.gainDb,
     fadeIn: args.fadeIn,
     fadeOut: args.fadeOut,
@@ -192,10 +213,11 @@ function printHelp() {
 
 Options:
   --voice <path>          Bottom polished video/audio source
-  --bgm <path>            Licensed/royalty-free BGM file
+  --bgm <path>            Licensed/royalty-free/generated-with-rights BGM file
   --output <path>         Output video/audio with BGM mixed in
   --report <path>         Optional JSON mix report
-  --gain-db <number>      BGM gain, default -22
+  --gain-percent <number> BGM level as percent of original, default 5
+  --gain-db <number>      BGM gain in dB, overrides percent default
   --fade-in <seconds>     BGM fade in, default 0.5
   --fade-out <seconds>    BGM fade out, default 1.0
   --duck true|false       Sidechain duck BGM under voice, default false

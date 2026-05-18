@@ -161,13 +161,16 @@ zoomFrameRule: transform inner media only, not frame/border wrapper
 ```text
 bgmEnabled: optional
 bgmSource: assets/bgm/*
+bgmSourcePolicy: user-provided licensed, royalty-free with documented terms, generated with usage rights, or internal verified stock only
+bgmAutoSource: allowed only when license/source is recorded before final render
 bgmLoop: true
 bgmFadeIn: 0.5s
 bgmFadeOut: 1.0s
-bgmAllowed: licensed or royalty-free only
+bgmAllowed: licensed, royalty-free, generated-with-usage-rights only
 bgmAvoid: vocals, audio tags, watermark, distracting melody
 speechPriority: true
-suggestedBgmGain: -24dB to -18dB depending on source
+bgmDefaultLevel: 5%
+suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudioMix: bottom polished voice + BGM
 mixCommand: npm run mix:bgm

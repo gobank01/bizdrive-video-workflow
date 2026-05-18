@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v42
+## Bizdrive Workflow Docs — v48
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -58,9 +58,9 @@ Sync rule: treat bottom audio as the master timeline. If top/bottom duration, st
 
 When context cuts may remove important spoken terms, run `npm run check:keyterms` or explicitly report why it was not run.
 
-Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free, loop smoothly, fade out, and stay clearly under the bottom voice.
+Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free/generated-with-rights, loop smoothly, fade out, and stay clearly under the bottom voice.
 
-When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source and report the BGM source, gain, ducking, output, and QA result.
+When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source. Default BGM level is 5% (`--gain-percent 5`, about -26.02dB). Never claim a track is copyright-free unless its source/license is documented. Report the BGM source, license/usage-rights note, level percent, gain, ducking, output, and QA result.
 
 ## Linting — Always Run After Changes
 

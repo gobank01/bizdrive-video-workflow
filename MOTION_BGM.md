@@ -64,11 +64,12 @@ BGM เป็น background mix เท่านั้น
 กฎเลือกเพลง:
 
 ```text
-1. ใช้เพลงที่มีสิทธิ์ใช้งาน หรือ royalty-free เท่านั้น
+1. ใช้เพลงที่มีสิทธิ์ใช้งาน, royalty-free, หรือ generated-with-usage-rights เท่านั้น
 2. ไม่มี vocal ชัด ๆ
 3. ไม่มี logo/audio tag/watermark
 4. loop ได้เนียน
 5. mood เข้ากับ Bizdrive: modern, clean, tech, business, optimistic
+6. ห้ามสรุปว่า copyright-free ถ้าไม่มี source/license ยืนยัน
 ```
 
 ค่า default:
@@ -79,8 +80,9 @@ bgmLoop: true
 bgmFadeIn: 0.5s
 bgmFadeOut: 1.0s
 speechPriority: true
-bgmTargetUnderSpeech: very low
-suggestedBgmGain: -24dB to -18dB depending on source
+bgmDefaultLevel: 5%
+bgmTargetUnderSpeech: very low, ambience only
+suggestedBgmGain: -26.02dB default, equivalent to 5% linear amplitude
 duckingDuringSpeech: -6dB to -12dB if BGM distracts
 finalAudio: bottom polished voice + BGM mixed into final output
 ```
@@ -89,13 +91,43 @@ QA:
 
 ```text
 เสียงพูดต้องชัดกว่า BGM เสมอ
+BGM default ต้องเริ่มที่ 5% เว้นแต่ผู้ใช้อนุมัติให้ดังขึ้น
 BGM ห้ามกลบ consonant/คำท้ายประโยค
 BGM loop ต้องไม่สะดุดที่รอยต่อ
 BGM ต้อง fade out ตอนจบ
 ถ้าเสียงพูดต่อเนื่องทั้งคลิป ให้ใช้ BGM เบามากแทนการ duck หนัก ๆ
 ```
 
-## BGM Mix Implementation v47
+## BGM Source Policy v48
+
+คำตอบมาตรฐานเวลาผู้ใช้ถามว่า "ต้องหาเพลงเองไหม":
+
+```text
+ระบบสามารถช่วยเลือก/เตรียม BGM ได้เมื่อมีขั้นตอน source BGM แล้ว
+แต่ทุกเพลงต้องมีสิทธิ์ใช้งานชัดเจนก่อน mix จริง
+ถ้าไม่มี license/source ยืนยัน ให้ถือว่าใช้ไม่ได้
+current mix tool รับ BGM file ที่เตรียมไว้แล้ว และจะไม่รับประกันลิขสิทธิ์แทน source
+```
+
+แหล่งที่ใช้ได้:
+
+```text
+1. user-provided music พร้อม license/usage rights
+2. royalty-free library ที่มี terms ใช้งาน commercial/social ได้
+3. generated music ที่ provider ให้สิทธิ์ใช้งานชัดเจน
+4. internal stock ที่เคยตรวจ license และบันทึก source ไว้แล้ว
+```
+
+ห้ามใช้:
+
+```text
+1. เพลงดัง/เพลง commercial ที่ไม่มีสิทธิ์
+2. เพลงจากคลิปอื่นโดยไม่มี license
+3. เพลงที่มี audio tag, watermark, หรือเสียงพูด
+4. เพลงที่ source/license ไม่ชัดเจน
+```
+
+## BGM Mix Implementation v48
 
 คำสั่ง:
 
@@ -104,8 +136,8 @@ npm run mix:bgm -- \
   --voice assets/bottom_audio_polished.mp4 \
   --bgm assets/bgm/track.mp3 \
   --output assets/bottom_audio_polished_bgm.mp4 \
-  --report reports/bgm-mix-v47.json \
-  --gain-db -22 \
+  --report reports/bgm-mix-v48.json \
+  --gain-percent 5 \
   --fade-in 0.5 \
   --fade-out 1.0
 ```
@@ -118,7 +150,7 @@ npm run mix:bgm -- \
   --bgm assets/bgm/track.mp3 \
   --output assets/bottom_audio_polished_bgm.mp4 \
   --duck true \
-  --gain-db -20
+  --gain-percent 5
 ```
 
 ผลลัพธ์:

@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v47 VIDEO WORKFLOW - เพิ่ม BGM mix implementation ด้วย `npm run mix:bgm`
+สถานะล่าสุด: v48 VIDEO WORKFLOW - BGM voice-first 5% และ source/license policy
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -50,7 +50,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v47
+version: v48
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -70,7 +70,7 @@ sync report: required when mismatch exists
 context index schema: schemas/context-index.schema.json
 key term checker: npm run check:keyterms
 zoom motion: optional, subtle, top/B-roll emphasis
-BGM loop: optional, speech-first, licensed/royalty-free only
+BGM loop: optional, speech-first, default 5%, licensed/royalty-free/generated-with-rights only
 BGM mix command: npm run mix:bgm
 ```
 
@@ -116,7 +116,8 @@ bottom audio เป็น master timeline และสำคัญกว่า t
 ห้ามตัด key spoken terms จนหายจากเสียงพูดจริง
 B-roll ต้องไม่มี text/logo/watermark/other brand/distracting graphic
 zoom motion ต้อง subtle และใช้เพื่อ emphasis เท่านั้น
-BGM ต้องอยู่ใต้เสียงพูดเสมอ และต้องมีสิทธิ์ใช้งาน
+BGM ต้องอยู่ใต้เสียงพูดเสมอ default 5% และต้องมีสิทธิ์ใช้งาน
+ห้ามบอกว่าเพลงไม่มีลิขสิทธิ์ถ้าไม่มี license/source ยืนยัน
 หลังแก้ index.html ต้องรัน npm run check
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
@@ -147,6 +148,7 @@ v44 เพิ่ม `schemas/context-index.schema.json`
 v45 เพิ่ม `KEYTERM_QA.md` และ `npm run check:keyterms`
 v46 เพิ่ม `MOTION_BGM.md`, zoom in/out rules และ BGM loop rules
 v47 เพิ่ม `scripts/mix-bgm.js` และ `npm run mix:bgm` สำหรับ mix BGM loop ใต้ bottom voice
+v48 ตั้ง BGM default เป็น 5% (`--gain-percent 5`) และเพิ่ม policy เรื่อง source/license ห้ามใช้เพลงที่สิทธิ์ไม่ชัดเจน
 
 ## How To Continue Development
 

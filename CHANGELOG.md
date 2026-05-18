@@ -1,5 +1,22 @@
 # Changelog
 
+## v48
+
+Set the BGM workflow to voice-first 5% by default.
+
+```text
+Changed scripts/mix-bgm.js default BGM level to 5%
+Added --gain-percent for human-readable mix control
+Recorded source/license policy for BGM
+Updated WORKFLOW.md, MOTION_BGM.md, CONFIG.md, STEPS.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+Speech clarity is the priority. BGM should be ambience only, and no workflow should imply that arbitrary music is copyright-free without documented usage rights.
+```
+
 ## v47
 
 Implemented BGM mix tooling.
