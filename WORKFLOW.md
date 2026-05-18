@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v55 VIDEO WORKFLOW - เพิ่ม handoff สำหรับ session ถัดไป
+สถานะล่าสุด: v56 VIDEO WORKFLOW - เพิ่ม Final Report Generator
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -52,7 +52,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v55
+version: v56
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -78,6 +78,7 @@ BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check be
 BGM selector: npm run select:bgm
 BGM selector keywords: bgm-library/style-keywords-v53.json
 BGM final QA command: npm run qa:bgm
+final report command: npm run report:final
 BGM default fallback: mixkit-480 Curiosity
 BGM tech fallback: mixkit-1167 Close Up
 BGM calm fallback: mixkit-441 Meditation
@@ -111,7 +112,7 @@ BGM mix command: npm run mix:bgm
 22. Run `npm run check`.
 23. Render full MP4.
 24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; if BGM is used, run `npm run qa:bgm` against the final MP4.
-25. Write final report.
+25. Write final report with `npm run report:final`.
 26. Update changelog/workflow version when rules change.
 
 ดูรายละเอียดเต็มใน `STEPS.md`
@@ -138,6 +139,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 หลังแก้ index.html ต้องรัน npm run check
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
+หลัง render/QA ให้สร้าง JSON + Markdown final report ด้วย `npm run report:final`
 ทุก rule change ต้องนับ version
 ```
 
@@ -173,6 +175,7 @@ v52 บันทึก user acceptance: BGM 5% ควรเป็น ambient bed
 v53 เพิ่ม `scripts/select-bgm.js`, `npm run select:bgm` และ keyword map ที่แก้ได้สำหรับเลือก BGM อัตโนมัติ
 v54 เพิ่ม `scripts/qa-bgm-final.js` และ `npm run qa:bgm` สำหรับเลือก/mix/preview/loudness QA กับ final MP4 จริงอัตโนมัติ
 v55 เพิ่ม `NEXT_SESSION.md` เพื่อบันทึก checkpoint, ผลทดสอบล่าสุด และงานที่ควรทำต่อ
+v56 เพิ่ม `scripts/final-report.js` และ `npm run report:final` สำหรับรวม final MP4 metadata, context cut, B-roll, BGM QA, key term QA เป็น JSON + Markdown report
 
 ## How To Continue Development
 

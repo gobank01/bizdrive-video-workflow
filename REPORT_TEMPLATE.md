@@ -2,6 +2,21 @@
 
 ใช้ template นี้หลัง render หรือหลังจบงานวิดีโอ
 
+สร้างรายงานอัตโนมัติ:
+
+```bash
+npm run report:final -- \
+  --final ../final.mp4 \
+  --context assets/context/job-context.json \
+  --broll-manifest assets/broll/optimized/job/manifest.json \
+  --bgm-qa reports/bgm-final-qa.json \
+  --keyterm-report reports/keyterm-job.json \
+  --json reports/final-report-job.json \
+  --markdown reports/final-report-job.md
+```
+
+คำสั่งนี้จะรวม metadata ของ final MP4, context cut, B-roll manifest, BGM QA, key term QA และสร้างทั้ง JSON + Markdown
+
 ## Summary
 
 ```text

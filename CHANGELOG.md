@@ -1,5 +1,22 @@
 # Changelog
 
+## v56
+
+Added automatic final report generation.
+
+```text
+Created scripts/final-report.js
+Added npm script: report:final
+Generated a test report from the real v54/v35 final MP4, context index, B-roll manifest, BGM QA, and key term QA
+Updated WORKFLOW.md, REPORT_TEMPLATE.md, and NEXT_SESSION.md
+```
+
+Reason:
+
+```text
+The workflow needs a single delivery artifact after render/QA. The final report command gathers final MP4 metadata, context cut details, B-roll download/reuse/reject counts, slot keywords, BGM selection/loudness QA, and key term QA into JSON and Markdown so the next session does not depend on memory.
+```
+
 ## v55
 
 Added a next-session handoff.

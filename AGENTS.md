@@ -96,6 +96,8 @@ After any task that touches B-roll selection, download, generation, optimization
 
 Every B-roll set must have a machine-readable manifest or index entry. Optimized derivatives should keep a `manifest.json` beside the files, mapping each slot back to its source and keyword.
 
+After final render/QA, run `npm run report:final` when the final MP4 and reports are available. The report should include final MP4 metadata, context cut summary, B-roll counts/slots, BGM QA, key term QA, and output both JSON and Markdown.
+
 ## B-roll Keyword Selection
 
 Before downloading, generating, or selecting B-roll, read the spoken context around the insert point:
