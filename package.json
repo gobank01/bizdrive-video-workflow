@@ -1,0 +1,19 @@
+{
+  "name": "stacked-video",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "npx --yes hyperframes@0.6.16 preview",
+    "build:context60:test2": "node scripts/build-v34-context-cut.js",
+    "build:context60:v35-full": "node scripts/build-v35-full-context-test.js",
+    "check": "npx --yes hyperframes@0.6.16 lint && npx --yes hyperframes@0.6.16 validate && npx --yes hyperframes@0.6.16 inspect",
+    "check:keyterms": "node scripts/check-keyterms.js",
+    "generate:broll": "node scripts/generate-openrouter-broll.js",
+    "generate:broll:test-models": "node scripts/openrouter-broll-library.js",
+    "search:broll:test2-v35-full": "node scripts/pexels-test2-v35-full-broll.js",
+    "search:broll:test2-context": "node scripts/pexels-test2-context-broll.js",
+    "search:broll:pexels": "node scripts/pexels-broll-library.js",
+    "render": "npx --yes hyperframes@0.6.16 render",
+    "publish": "npx --yes hyperframes@0.6.16 publish"
+  }
+}

@@ -1,0 +1,422 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@800;900&family=Inter:wght@800;900&display=swap"
+      rel="stylesheet"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html,
+      body {
+        margin: 0;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      #root {
+        position: relative;
+        width: 1080px;
+        height: 1920px;
+        overflow: hidden;
+        background: #000;
+      }
+
+      .clip {
+        position: absolute;
+      }
+
+      .background {
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        z-index: 0;
+      }
+
+      .video-frame {
+        left: 0;
+        width: 1080px;
+        height: 607.5px;
+        overflow: hidden;
+        background: #000;
+        border: 4px solid transparent;
+        background:
+          linear-gradient(#02040d, #02040d) padding-box,
+          linear-gradient(
+              135deg,
+              rgba(255, 236, 122, 1) 0%,
+              rgba(255, 217, 61, 1) 28%,
+              rgba(244, 194, 15, 0.95) 56%,
+              rgba(184, 134, 11, 0.9) 78%,
+              rgba(255, 236, 122, 1) 100%
+            )
+            border-box;
+        box-shadow:
+          0 10px 26px rgba(0, 0, 0, 0.38),
+          0 0 22px rgba(244, 194, 15, 0.28),
+          inset 0 0 14px rgba(255, 217, 61, 0.12);
+        display: block;
+        object-fit: contain;
+        z-index: 2;
+      }
+
+      .top-frame {
+        top: 198.9px;
+        border-radius: 30px;
+      }
+
+      .bottom-frame {
+        left: 50%;
+        top: 846.4px;
+        width: 607.5px;
+        height: 607.5px;
+        border-radius: 50%;
+        transform: translateX(-50%);
+        object-fit: cover;
+      }
+
+      .broll-frame {
+        object-fit: cover;
+        opacity: 0;
+        z-index: 4;
+      }
+
+      .subtitle-cue {
+        left: 60px;
+        right: 60px;
+        top: 1490px;
+        height: 160px;
+        color: #fff;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-weight: 800;
+        line-height: 1;
+        letter-spacing: -0.01em;
+        text-align: center;
+        z-index: 7;
+      }
+
+      .caption-box {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        max-width: 92%;
+        padding: 18px 36px;
+        border: 1px solid rgba(244, 194, 15, 0.35);
+        border-radius: 20px;
+        background: linear-gradient(180deg, rgba(10, 22, 64, 0.78), rgba(8, 16, 50, 0.88));
+        backdrop-filter: blur(8px);
+        box-shadow:
+          0 10px 28px rgba(0, 0, 0, 0.55),
+          inset 0 0 18px rgba(244, 194, 15, 0.05);
+        text-shadow:
+          0 4px 20px rgba(0, 0, 0, 0.85),
+          0 0 30px rgba(0, 0, 0, 0.7);
+        white-space: nowrap;
+      }
+
+      .cap-xl .caption-box {
+        font-size: 100px;
+      }
+
+      .cap-lg .caption-box {
+        font-size: 84px;
+      }
+
+      .cap-md .caption-box {
+        font-size: 60px;
+      }
+
+      .cap-sm .caption-box {
+        font-size: 50px;
+      }
+
+      .cap-xs .caption-box {
+        font-size: 38px;
+        line-height: 1.15;
+      }
+
+      .gold {
+        display: inline-block;
+        padding: 0 0.04em;
+        font-family: "Inter", "IBM Plex Sans Thai", sans-serif;
+        font-weight: 900;
+        line-height: 1.25;
+        vertical-align: baseline;
+        transform-origin: center center;
+        background: linear-gradient(180deg, #ffd93d 0%, #f4c20f 50%, #b8860b 100%);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+        color: transparent;
+        text-shadow: 0 4px 20px rgba(244, 194, 15, 0.35);
+      }
+
+      .hi {
+        color: #f4c20f;
+        font-weight: 900;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="root"
+      data-composition-id="main"
+      data-start="0"
+      data-duration="59.33"
+      data-width="1080"
+      data-height="1920"
+    >
+      <img
+        id="background"
+        class="clip background"
+        src="assets/bg.png"
+        alt=""
+        data-start="0"
+        data-duration="59.33"
+        data-track-index="0"
+      />
+
+      <video
+        id="topVideo"
+        class="clip video-frame top-frame"
+        src="assets/top_test2_context60_v35_softcut.mp4"
+        data-start="0"
+        data-duration="59.33"
+        data-track-index="1"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll01"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-01.mp4"
+        data-start="1.000"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="4"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll02"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-02.mp4"
+        data-start="3.900"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="5"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll03"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-03.mp4"
+        data-start="8.400"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="6"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll04"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-04.mp4"
+        data-start="14.800"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="7"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll05"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-05.mp4"
+        data-start="18.700"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="8"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll06"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-06.mp4"
+        data-start="25.900"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="9"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll07"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-07.mp4"
+        data-start="32.700"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="10"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll08"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-08.mp4"
+        data-start="39.800"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="11"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll09"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-09.mp4"
+        data-start="42.700"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="12"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="broll10"
+        class="clip video-frame top-frame broll-frame"
+        src="assets/broll/optimized/test2-v35/broll-10.mp4"
+        data-start="46.900"
+        data-duration="3"
+        data-media-start="1"
+        data-track-index="13"
+        data-volume="0"
+        muted
+        playsinline
+      ></video>
+
+      <video
+        id="bottomVideo"
+        class="clip video-frame bottom-frame"
+        src="assets/bottom_test2_context60_v35_audio_polished_softcut.mp4"
+        data-start="0"
+        data-duration="59.33"
+        data-track-index="2"
+        data-has-audio="true"
+        playsinline
+      ></video>
+
+      <div id="subtitle-01" class="clip subtitle-cue cap-md" data-start="0.000" data-duration="2.190" data-track-index="3"><span class="caption-box">กำลังตัดต่อด้วย <span class="gold">AI</span></span></div>
+      <div id="subtitle-02" class="clip subtitle-cue cap-lg" data-start="2.200" data-duration="2.170" data-track-index="3"><span class="caption-box">อัดคลิปเสร็จแล้ว</span></div>
+      <div id="subtitle-03" class="clip subtitle-cue cap-lg" data-start="4.380" data-duration="1.910" data-track-index="3"><span class="caption-box">คลิปแนะนำ</span></div>
+      <div id="subtitle-04" class="clip subtitle-cue cap-lg" data-start="6.300" data-duration="2.090" data-track-index="3"><span class="caption-box"><span class="gold">ตัดต่อ</span>ได้จริง</span></div>
+      <div id="subtitle-05" class="clip subtitle-cue cap-lg" data-start="8.400" data-duration="1.490" data-track-index="3"><span class="caption-box">มีฟุต <span class="gold">2 ตัว</span></span></div>
+      <div id="subtitle-06" class="clip subtitle-cue cap-lg" data-start="9.900" data-duration="1.550" data-track-index="3"><span class="caption-box">หน้า + หน้าจอ</span></div>
+      <div id="subtitle-07" class="clip subtitle-cue cap-lg" data-start="11.460" data-duration="2.030" data-track-index="3"><span class="caption-box">โยนให้ <span class="gold">AI</span></span></div>
+      <div id="subtitle-08" class="clip subtitle-cue cap-lg" data-start="13.500" data-duration="1.850" data-track-index="3"><span class="caption-box">ตัดต่อจริงๆ</span></div>
+      <div id="subtitle-09" class="clip subtitle-cue cap-lg" data-start="15.360" data-duration="2.010" data-track-index="3"><span class="caption-box">โยนเข้าไปเลย</span></div>
+      <div id="subtitle-10" class="clip subtitle-cue cap-lg" data-start="17.380" data-duration="1.810" data-track-index="3"><span class="caption-box">ตัดต่อให้หน่อย</span></div>
+      <div id="subtitle-11" class="clip subtitle-cue cap-lg" data-start="19.200" data-duration="2.150" data-track-index="3"><span class="caption-box">รอ <span class="gold">7-10 นาที</span></span></div>
+      <div id="subtitle-12" class="clip subtitle-cue cap-lg" data-start="21.360" data-duration="2.990" data-track-index="3"><span class="caption-box">ปล่อยเขาทำ</span></div>
+      <div id="subtitle-13" class="clip subtitle-cue cap-lg" data-start="24.360" data-duration="2.090" data-track-index="3"><span class="caption-box">เช็คไฟล์ก่อน</span></div>
+      <div id="subtitle-14" class="clip subtitle-cue cap-md" data-start="26.460" data-duration="1.970" data-track-index="3"><span class="caption-box">ตัด <span class="gold">Dead Air</span></span></div>
+      <div id="subtitle-15" class="clip subtitle-cue cap-md" data-start="28.440" data-duration="2.110" data-track-index="3"><span class="caption-box">ตัดเสียงฟุ่มเฟือย</span></div>
+      <div id="subtitle-16" class="clip subtitle-cue cap-lg" data-start="30.560" data-duration="2.070" data-track-index="3"><span class="caption-box">อืม อ่ำ ออก</span></div>
+      <div id="subtitle-17" class="clip subtitle-cue cap-xl" data-start="32.640" data-duration="1.810" data-track-index="3"><span class="caption-box">ปรับ<span class="gold">เสียง</span></span></div>
+      <div id="subtitle-18" class="clip subtitle-cue cap-lg" data-start="34.460" data-duration="1.710" data-track-index="3"><span class="caption-box">ให้ดังเสมอกัน</span></div>
+      <div id="subtitle-19" class="clip subtitle-cue cap-lg" data-start="36.180" data-duration="2.070" data-track-index="3"><span class="caption-box">วาง <span class="gold">layout</span></span></div>
+      <div id="subtitle-20" class="clip subtitle-cue cap-lg" data-start="38.260" data-duration="1.690" data-track-index="3"><span class="caption-box">ดูภาพรวม</span></div>
+      <div id="subtitle-21" class="clip subtitle-cue cap-lg" data-start="39.960" data-duration="3.230" data-track-index="3"><span class="caption-box">ใส่ <span class="gold">B-roll</span></span></div>
+      <div id="subtitle-22" class="clip subtitle-cue cap-lg" data-start="43.200" data-duration="2.170" data-track-index="3"><span class="caption-box">ทำ <span class="gold">caption</span></span></div>
+      <div id="subtitle-23" class="clip subtitle-cue cap-lg" data-start="45.380" data-duration="1.930" data-track-index="3"><span class="caption-box">ทำ <span class="gold">overlay</span></span></div>
+      <div id="subtitle-24" class="clip subtitle-cue cap-lg" data-start="47.320" data-duration="1.970" data-track-index="3"><span class="caption-box">ใส่ <span class="gold">intro</span></span></div>
+      <div id="subtitle-25" class="clip subtitle-cue cap-lg" data-start="49.300" data-duration="2.210" data-track-index="3"><span class="caption-box">ใส่ <span class="gold">outro</span></span></div>
+      <div id="subtitle-26" class="clip subtitle-cue cap-md" data-start="51.520" data-duration="2.170" data-track-index="3"><span class="caption-box">ทำ <span class="gold">thumbnail</span></span></div>
+      <div id="subtitle-27" class="clip subtitle-cue cap-lg" data-start="53.700" data-duration="2.850" data-track-index="3"><span class="caption-box">ออกมาเป็นคลิป</span></div>
+      <div id="subtitle-28" class="clip subtitle-cue cap-xl" data-start="56.560" data-duration="1.330" data-track-index="3"><span class="caption-box"><span class="gold">สุดจริงๆ</span></span></div>
+      <div id="subtitle-29" class="clip subtitle-cue cap-lg" data-start="57.900" data-duration="1.420" data-track-index="3"><span class="caption-box">ลองกันครับ</span></div>
+
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      tl.from("#topVideo", { opacity: 0, y: -28, duration: 0.35, ease: "power2.out" }, 0);
+      tl.from("#bottomVideo", { opacity: 0, y: 28, duration: 0.35, ease: "power2.out" }, 0);
+
+      document.querySelectorAll(".broll-frame").forEach((clip) => {
+        const start = Number(clip.dataset.start || 0);
+        const duration = Number(clip.dataset.duration || 0);
+        tl.fromTo(
+          clip,
+          { opacity: 0 },
+          { opacity: 1, duration: 0.16, ease: "power2.out", immediateRender: false },
+          start,
+        );
+        tl.to(clip, { opacity: 0, duration: 0.16, ease: "power2.out" }, Math.max(start + duration - 0.16, start));
+      });
+
+      document.querySelectorAll(".subtitle-cue").forEach((cue) => {
+        const start = Number(cue.dataset.start || 0);
+        const duration = Number(cue.dataset.duration || 0);
+        const enterDuration = Math.min(0.4, Math.max(0.2, duration * 0.3));
+        const exitStart = Math.max(start + duration - 0.3, start + enterDuration);
+        tl.fromTo(
+          cue,
+          { y: 30, scale: 0.92, opacity: 0 },
+          { y: 0, scale: 1, opacity: 1, duration: enterDuration, ease: "back.out(1.7)", immediateRender: false },
+          start,
+        );
+        const goldTargets = Array.from(cue.querySelectorAll(".gold"));
+        if (goldTargets.length > 0) {
+          tl.fromTo(
+            goldTargets,
+            { scale: 0.7, opacity: 0, transformOrigin: "center center" },
+            { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2)", transformOrigin: "center center", immediateRender: false },
+            start + 0.1,
+          );
+        }
+        tl.to(cue, { opacity: 0, duration: 0.3, ease: "power2.out" }, exitStart);
+      });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

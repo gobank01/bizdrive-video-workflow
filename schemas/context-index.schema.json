@@ -1,0 +1,108 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://bizdrive.local/schemas/context-index.schema.json",
+  "title": "Bizdrive Context Index",
+  "type": "object",
+  "required": [
+    "version",
+    "setId",
+    "goal",
+    "strategy",
+    "originalDuration",
+    "outputDuration",
+    "compositionDuration",
+    "xfadeSeconds",
+    "screenSampling",
+    "keptSegments",
+    "droppedSegments",
+    "brollSlots"
+  ],
+  "properties": {
+    "version": { "type": ["integer", "string"] },
+    "setId": { "type": "string", "minLength": 1 },
+    "goal": { "type": "string", "minLength": 1 },
+    "strategy": { "type": "string", "minLength": 1 },
+    "originalDuration": { "type": "number", "minimum": 0 },
+    "outputDuration": { "type": "number", "minimum": 0 },
+    "compositionDuration": { "type": "number", "minimum": 0 },
+    "xfadeSeconds": { "type": "number", "minimum": 0 },
+    "screenSampling": {
+      "type": "object",
+      "required": ["intervalSeconds", "summary"],
+      "properties": {
+        "path": { "type": "string" },
+        "intervalSeconds": { "type": "number", "minimum": 0 },
+        "extraAroundCutAndBrollSeconds": { "type": "number", "minimum": 0 },
+        "summary": { "type": "string" }
+      },
+      "additionalProperties": true
+    },
+    "keptSegments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/segment" }
+    },
+    "droppedSegments": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/segment" }
+    },
+    "brollSlots": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/brollSlot" }
+    }
+  },
+  "additionalProperties": true,
+  "$defs": {
+    "segment": {
+      "type": "object",
+      "required": ["id", "speech", "topic", "intent"],
+      "properties": {
+        "id": { "type": "string" },
+        "start": { "type": "number" },
+        "end": { "type": "number" },
+        "originalStart": { "type": "number" },
+        "originalEnd": { "type": "number" },
+        "newStart": { "type": "number" },
+        "newEnd": { "type": "number" },
+        "duration": { "type": "number", "minimum": 0 },
+        "speech": { "type": "string" },
+        "topic": { "type": "string" },
+        "intent": { "type": "string" },
+        "importanceScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "redundancyScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "fillerScore": { "type": "number", "minimum": 0, "maximum": 1 },
+        "screenContext": { "type": "string" },
+        "captionKeywords": { "type": "array", "items": { "type": "string" } },
+        "keyTermsIncluded": { "type": "array", "items": { "type": "string" } },
+        "brollKeyword": { "type": "string" },
+        "brollQuery": { "type": "string" },
+        "keepReason": { "type": "string" },
+        "dropReason": { "type": "string" },
+        "cutRisk": { "type": "string" },
+        "softCutPlan": { "type": "string" },
+        "brollCoverRecommended": { "type": "boolean" }
+      },
+      "additionalProperties": true
+    },
+    "brollSlot": {
+      "type": "object",
+      "required": ["id", "start", "duration", "keyword"],
+      "properties": {
+        "id": { "type": "string" },
+        "slot": { "type": ["integer", "string"] },
+        "start": { "type": "number", "minimum": 0 },
+        "duration": { "type": "number", "minimum": 0 },
+        "keyword": { "type": "string" },
+        "query": { "type": "string" },
+        "beforeSpeech": { "type": "string" },
+        "afterSpeech": { "type": "string" },
+        "coverCut": { "type": ["number", "null"] },
+        "source": { "type": "string" },
+        "provider": { "type": "string" },
+        "qaStatus": { "type": "string" },
+        "qaReason": { "type": ["string", "null"] }
+      },
+      "additionalProperties": true
+    }
+  }
+}
+

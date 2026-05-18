@@ -1,0 +1,29 @@
+# Dependencies / local runtime
+node_modules/
+.DS_Store
+.env
+.env.*
+
+# Large, user-provided, or generated media/data
+assets/
+assets/**/*.mp4
+assets/**/*.mov
+assets/**/*.m4v
+assets/**/*.wav
+assets/**/*.mp3
+assets/**/*.m4a
+assets/**/*.aac
+assets/**/*.png
+assets/**/*.jpg
+assets/**/*.jpeg
+assets/**/*.webp
+
+# Generated renders and QA artifacts
+render-checks/
+reports/
+reports/*.json
+renders/
+*.mp4
+*.mov
+
+# Keep workflow docs/scripts/config in git, not generated media.
