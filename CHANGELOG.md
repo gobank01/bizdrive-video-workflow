@@ -1,5 +1,24 @@
 # Changelog
 
+## v49
+
+Added a reusable royalty-free BGM stock library.
+
+```text
+Downloaded 15 Mixkit starter BGM tracks to assets/bgm/stock/mixkit
+Created BGM_LIBRARY.md
+Created bgm-library/mixkit-stock-v49.json with style tags and usage guidance
+Created scripts/check-bgm-library.js
+Added npm script: check:bgm
+Updated WORKFLOW.md, STEPS.md, CONFIG.md, MOTION_BGM.md, QA.md, REPORT_TEMPLATE.md, and AGENTS.md
+```
+
+Reason:
+
+```text
+The workflow should not generate or hunt for music every time. It should reuse a verified local stock library first, choose by clip style, keep source/license metadata, and mix under speech at 5%.
+```
+
 ## v48
 
 Set the BGM workflow to voice-first 5% by default.

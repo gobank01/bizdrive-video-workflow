@@ -167,11 +167,12 @@ function main() {
   ];
 
   const report = {
-    version: 48,
+    version: 49,
     voice: args.voice,
     bgm: args.bgm,
     output: args.output,
     duration,
+    stockIndex: "bgm-library/mixkit-stock-v49.json",
     sourcePolicy: "licensed/royalty-free/generated-with-usage-rights only; do not assume arbitrary music is copyright-free",
     gainPercent: args.gainPercent,
     effectiveGainPercent: Number(dbToPercent(args.gainDb).toFixed(3)),

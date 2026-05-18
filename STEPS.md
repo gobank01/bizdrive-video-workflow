@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v48 - practical edit map 62 steps with BGM 5% voice-first policy
+สถานะล่าสุด: v49 - practical edit map 62 steps with BGM stock library
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -94,4 +94,4 @@
 ## Phase 10 — Captions, Composition, QA
 
 61. สร้าง captions จาก cleaned transcript, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
-62. ถ้าเปิดใช้ BGM ให้ยืนยัน source/license ก่อน, mix ด้วย default `--gain-percent 5`, ห้ามให้เพลงกลบเสียงพูด, update composition พร้อม zoom motion/BGM output, run `npm run check`, render MP4, QA metadata/audio/B-roll/captions/key terms/motion/BGM, สร้าง final report และเก็บ artifacts
+62. ถ้าเปิดใช้ BGM ให้เลือกจาก `bgm-library/mixkit-stock-v49.json` ก่อน, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ห้ามให้เพลงกลบเสียงพูด, update composition พร้อม zoom motion/BGM output, run `npm run check`, render MP4, QA metadata/audio/B-roll/captions/key terms/motion/BGM, สร้าง final report และเก็บ artifacts

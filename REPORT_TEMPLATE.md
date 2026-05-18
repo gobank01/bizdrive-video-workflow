@@ -55,6 +55,9 @@ loudness:
 true peak:
 BGM source:
 BGM source/license:
+BGM stock index:
+BGM stock id/title:
+BGM style match:
 BGM mixed output:
 BGM loop:
 BGM level percent:

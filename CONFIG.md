@@ -161,8 +161,14 @@ zoomFrameRule: transform inner media only, not frame/border wrapper
 ```text
 bgmEnabled: optional
 bgmSource: assets/bgm/*
+bgmTrackedIndex: bgm-library/mixkit-stock-v49.json
+bgmRuntimeIndex: assets/bgm/index.json
+bgmRuntimeStockRoot: assets/bgm/stock/mixkit
+bgmStockCount: 15
+bgmCheckCommand: npm run check:bgm
 bgmSourcePolicy: user-provided licensed, royalty-free with documented terms, generated with usage rights, or internal verified stock only
 bgmAutoSource: allowed only when license/source is recorded before final render
+bgmSelectionOrder: local stock index -> generated OpenRouter/Lyria -> user-provided licensed track
 bgmLoop: true
 bgmFadeIn: 0.5s
 bgmFadeOut: 1.0s

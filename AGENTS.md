@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v48
+## Bizdrive Workflow Docs — v49
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -43,8 +43,9 @@ For Bizdrive stacked-video work, read these files in order:
 5. `SYNC_REPORT.md` — sync mismatch/bottom-master reporting template
 6. `KEYTERM_QA.md` — key term preservation QA rules
 7. `MOTION_BGM.md` — zoom motion and BGM loop rules
-8. `REPORT_TEMPLATE.md` — final report format
-9. `CHANGELOG.md` — workflow version history
+8. `BGM_LIBRARY.md` — BGM stock index and style map
+9. `REPORT_TEMPLATE.md` — final report format
+10. `CHANGELOG.md` — workflow version history
 
 `STEPS_PRACTICAL_99.md` is an archived 99-step reference. Use it only when the 62-step edit map needs more detail.
 
@@ -61,6 +62,8 @@ When context cuts may remove important spoken terms, run `npm run check:keyterms
 Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free/generated-with-rights, loop smoothly, fade out, and stay clearly under the bottom voice.
 
 When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source. Default BGM level is 5% (`--gain-percent 5`, about -26.02dB). Never claim a track is copyright-free unless its source/license is documented. Report the BGM source, license/usage-rights note, level percent, gain, ducking, output, and QA result.
+
+Before generating or sourcing new BGM, check `bgm-library/mixkit-stock-v49.json` and run `npm run check:bgm`. Prefer a local stock track whose `bestFor` matches the clip style. Report whether the BGM was reused from stock or newly generated/downloaded.
 
 ## Linting — Always Run After Changes
 

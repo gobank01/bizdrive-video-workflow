@@ -7,6 +7,7 @@
     "build:context60:test2": "node scripts/build-v34-context-cut.js",
     "build:context60:v35-full": "node scripts/build-v35-full-context-test.js",
     "check": "npx --yes hyperframes@0.6.16 lint && npx --yes hyperframes@0.6.16 validate && npx --yes hyperframes@0.6.16 inspect",
+    "check:bgm": "node scripts/check-bgm-library.js",
     "check:keyterms": "node scripts/check-keyterms.js",
     "generate:broll": "node scripts/generate-openrouter-broll.js",
     "generate:broll:test-models": "node scripts/openrouter-broll-library.js",
