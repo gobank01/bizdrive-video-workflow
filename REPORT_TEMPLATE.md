@@ -17,6 +17,17 @@ npm run report:final -- \
 
 คำสั่งนี้จะรวม metadata ของ final MP4, context cut, B-roll manifest, BGM QA, key term QA และสร้างทั้ง JSON + Markdown
 
+หลัง render เสร็จ ถ้าต้องการทำ BGM + final report ในคำสั่งเดียว:
+
+```bash
+npm run finalize:video -- \
+  --title "หัวข้อคลิป" \
+  --context assets/context/job-context.json \
+  --transcript assets/transcript-job.json \
+  --broll-manifest assets/broll/optimized/job/manifest.json \
+  --keyterm-report reports/keyterm-job.json
+```
+
 ## Summary
 
 ```text

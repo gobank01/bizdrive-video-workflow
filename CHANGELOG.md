@@ -1,5 +1,24 @@
 # Changelog
 
+## v58
+
+Added a post-render finalize command.
+
+```text
+Created scripts/finalize-video.js
+Added npm script: finalize:video
+Runs Auto Final BGM and Final Report Generator in one post-render command
+Supports explicit final MP4 or auto-picks the latest eligible stacked-output*.mp4
+Tested end-to-end on the real v35 final MP4
+Updated WORKFLOW.md, STEPS.md, REPORT_TEMPLATE.md, AGENTS.md, and NEXT_SESSION.md
+```
+
+Reason:
+
+```text
+The workflow now has reliable BGM QA and final report generation, but they still required separate commands. The finalize command makes the post-render delivery step repeatable: pick final, apply 5% speech-first BGM, run loudness QA, and write the final JSON/Markdown report.
+```
+
 ## v57
 
 Added one-command BGM apply for the latest final MP4.

@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v57 - เพิ่ม Auto Final BGM wrapper ต่อจาก Final Report Generator
+สถานะล่าสุด: v58 - เพิ่ม post-render finalize command
 
 วันที่บันทึก: 2026-05-19
 
@@ -12,6 +12,7 @@ v53 commit: f6aba92 Add automatic BGM selector
 v54 commit: 5a90e2f Add automatic final BGM QA
 v55 commit: f897a32 Add next session handoff
 v56 commit: 145f10f Add final report generator
+v57 commit: 485facb Add auto final BGM wrapper
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -28,6 +29,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 7. v53 checkpoint ถูก tag และ push แล้ว
 8. Final Report Generator รวม final MP4 metadata, context, B-roll, BGM QA, key term QA เป็น JSON + Markdown ได้
 9. Auto Final BGM wrapper เลือก final MP4 ล่าสุดที่ไม่ใช่ preview/BGM แล้วเรียก QA BGM ต่อได้
+10. Finalize command รวม Auto BGM + Final Report หลัง render ได้ในคำสั่งเดียว
 ```
 
 ## Commands Now Available
@@ -82,6 +84,17 @@ npm run report:final -- \
   --keyterm-report reports/keyterm-test2-v45.json \
   --json reports/final-report-v56-test2.json \
   --markdown reports/final-report-v56-test2.md
+```
+
+Finalize หลัง render:
+
+```bash
+npm run finalize:video -- \
+  --title "หัวข้อคลิป" \
+  --context assets/context/test2-v35-full-context-index.json \
+  --transcript assets/transcript_test2.large-v3.json \
+  --broll-manifest assets/broll/optimized/test2-v35/manifest.json \
+  --keyterm-report reports/keyterm-test2-v45.json
 ```
 
 ## Latest Verified Test
@@ -145,6 +158,20 @@ original final: -16.0 LUFS, true peak -1.0 dBFS
 BGM final:      -16.1 LUFS, true peak -1.7 dBFS
 ```
 
+Finalize command test:
+
+```text
+command: npm run finalize:video -- --title ... --context ... --transcript ... --broll-manifest ... --keyterm-report ...
+selectedFinal: ../stacked-output-v35-test2-full-context-softcut-broll-full-test.mp4
+bgmOutput: ../stacked-output-v35-test2-full-context-softcut-broll-full-test-auto-bgm-5pct.mp4
+finalReportJson: reports/stacked-output-v35-test2-full-context-softcut-broll-full-test-final-report.json
+finalReportMarkdown: reports/stacked-output-v35-test2-full-context-softcut-broll-full-test-final-report.md
+BGM QA: pass
+B-roll QA: pass
+Final report status: review
+reason: key term QA warn from existing v45 report missing "prompt"
+```
+
 ## Tomorrow Recommended Next Work
 
 1. **Unified Context Decision**
@@ -152,7 +179,7 @@ BGM final:      -16.1 LUFS, true peak -1.7 dBFS
    - Store `clipStyle`, `brollIntent`, `bgmStyle`, and `reason` in one report.
 
 2. **Full Pipeline Orchestrator**
-   - Later combine: inspect -> cut -> captions -> B-roll -> render -> qa:bgm -> final report.
+   - Later combine: inspect -> cut -> captions -> B-roll -> render -> finalize.
    - Target command: `npm run bizdrive:render`.
 
 3. **Run On A New Real Job Folder**

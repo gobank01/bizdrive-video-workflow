@@ -100,6 +100,8 @@ After final render/QA, run `npm run report:final` when the final MP4 and reports
 
 When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest final MP4 should be selected automatically. Use `npm run qa:bgm` when the exact final MP4 path must be pinned manually.
 
+When the final MP4, context index, B-roll manifest, and key term report are ready, prefer `npm run finalize:video` for post-render delivery. It runs Auto BGM first, then creates the final report.
+
 ## B-roll Keyword Selection
 
 Before downloading, generating, or selecting B-roll, read the spoken context around the insert point:
