@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v68 - practical edit map with lip-sync zero-tolerance gate
+สถานะล่าสุด: v69 - practical edit map with lip-sync-safe soft cuts
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -92,9 +92,10 @@
 49. ใส่ captionKeywords, brollKeyword, brollQuery, keep/drop reason
 50. เลือก keep/drop segments จากสาระ ไม่ตัดแบบหารเวลาเท่า ๆ กัน
 51. ตรวจว่า key terms สำคัญยังอยู่ใน keep segments
-52. ใช้ soft cut ทุก content cut และหลีกเลี่ยงตัดกลางคำ/key term
-53. render softcut top และ softcut bottom
+52. ใช้ soft cut ทุก content cut แต่ต้องเป็น lip-sync-safe: หลีกเลี่ยงตัดกลางคำ/key term และเลือกจุด silence/closed-mouth/speech boundary เมื่อ bottom ยัง visible
+53. render context cut โดย top/B-roll ใช้ xfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ถ้า jump cut ของ bottom ดูแรง ให้ใช้ B-roll/bridge ปิดช่วง jump หรือใช้ hard cut ที่จุดปลอดภัย
 53.1 ตรวจว่า softcut top/bottom duration, fps และ frame count ตรงกัน ก่อนทำ B-roll/caption
+53.2 สร้าง contact sheet รอบ content cut ทุกจุด และต้องไม่เห็น ghost/double-mouth frame ก่อน render final
 
 ## Phase 9 — B-roll
 
@@ -118,3 +119,4 @@
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
 62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
 62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
+62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade

@@ -29,6 +29,8 @@
 [ ] target duration is treated as a ceiling/meaning goal; no padding was added just to reach the requested time
 [ ] key terms preserved in keep segments
 [ ] key term checker has been run when context cut changes speech
+[ ] content cut plan is lip-sync-safe: no bottom-face xfade while bottom circle is visible
+[ ] cut contact sheet around every content cut shows no ghost/double-mouth frame
 [ ] B-roll slots selected from context
 [ ] B-roll count is not more than 4 inserts per 60s of final video unless user explicitly overrode it
 [ ] fresh B-roll candidates were attempted before reuse while QA-passed stock index is below 200 usable clips
@@ -108,6 +110,7 @@ optimized manifest.json
 [ ] output has one audio track
 [ ] audio is from bottom polished
 [ ] bottom audio and bottom face are still locked
+[ ] bottom face has no visible xfade/ghost/double-mouth frame at content cuts
 [ ] top screen is still aligned with bottom speech/action
 [ ] top video is muted
 [ ] B-roll replaces only top frame

@@ -63,6 +63,8 @@ Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its h
 
 Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip sync must be treated as a blocker, not a best-effort check. Do not call an output final unless final stream start_time was checked, any compensation is logged in ms, at least 5 lip-sync spot-check points were reviewed, and residualRisk is none. If uncertain, report blocked.
 
+Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
+
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
 
 Sync lock rule: bottom audio, bottom face video, top screen video, and subtitles must stay on one edited timeline. Do not manually shift, retime, offset, or speed-change top/bottom/caption independently. B-roll may replace only top visuals and must never change the timeline. If any sync risk appears, stop and fix/report sync before continuing.
@@ -152,7 +154,7 @@ When the goal is to shorten a clip while preserving meaning, create a timestampe
 5. Cut only by meaning-bearing segments, not by equal time chunks
 6. Default cut aggressiveness is Medium unless the user asks otherwise
 7. The user supplies the target duration or goal each time; do not force a fixed duration when meaning is better served by a nearby length
-8. Use soft cuts for all content cuts, then re-encode GOP 30 / faststart before HyperFrames render
+8. Use lip-sync-safe soft cuts for content cuts: top/B-roll may crossfade, but visible bottom face must not xfade
 9. Use B-roll to cover jump cuts when the face/screen cut would look or sound abrupt
 
 ## Key Rules

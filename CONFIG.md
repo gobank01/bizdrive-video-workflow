@@ -80,6 +80,9 @@ allowedTinyMismatch: frame/container rounding only
 manualOffsetPolicy: forbidden unless logged and user-approved
 independentRetimingPolicy: forbidden
 captionTimingPolicy: generate/map captions after all trim/dead-air/context cuts
+bottomFaceXfadeWhileVisible: forbidden
+bottomCutStrategy: hard cut at safe speech boundary or cover jump with B-roll/bridge
+cutContactSheetRequired: true
 ```
 
 Rules:
@@ -173,7 +176,9 @@ doNotPadToTarget: true
 contextIndex: Full
 screenSampling: every ~5s plus cut/B-roll neighborhoods
 softCutAlways: true
-defaultCrossfade: 0.12s
+softCutMode: lip-sync-safe
+defaultCrossfade: 0.12s for top/B-roll only
+bottomVisibleCrossfade: forbidden
 crossfadeIfHarsh: 0.15-0.18s
 crossfadeIfSlow: 0.08-0.10s
 preserveKeyTerms: true
@@ -226,6 +231,7 @@ borderStable: true
 applyTo: B-roll/top-frame media opacity, filter, object-position
 avoid: scaling frame wrapper, moving top/bottom border, moving captions
 bridgeRule: if B-roll covers a jump cut, use bridge mode and let B-roll overlap the cut point
+bridgePurpose: cover bottom/top jump cuts without xfade blending visible bottom mouth frames
 spacingRule: do not place 2 B-rolls inside the same 6s viewing window
 minBrollStartGap: 6s
 minRealTopFootageGap: 3s

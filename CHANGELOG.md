@@ -1,5 +1,25 @@
 # Changelog
 
+## v69
+
+Recorded the lip-sync root cause and changed soft-cut rules to be lip-sync-safe.
+
+```text
+Created reports/lipsync-root-cause-v69.md with evidence from v66 diagnostics
+Updated WORKFLOW.md, CONFIG.md, QA.md, STEPS.md, AGENTS.md, MISTAKES.md, LIPSYNC_QA.md, NEXT_SESSION.md, and local bizdrive-video skill
+Identified that v66 xfade blended visible bottom face frames at content cuts
+Identified that acrossfade blended speech phonemes at the same cuts
+Forbid xfade on visible bottom face
+Require cut contact sheets around every content cut
+Require B-roll/bridge or safe hard cuts instead of blending bottom mouth frames
+```
+
+Reason:
+
+```text
+The user reported that lip sync still appeared wrong. Diagnostics showed ghost/double-mouth frames around content cuts because bottom face video was xfade blended. A metadata delay cannot fix blended mouth frames, so the workflow now separates top/B-roll soft transitions from the bottom lip-sync layer.
+```
+
 ## v68
 
 Added zero-tolerance lip-sync rules.

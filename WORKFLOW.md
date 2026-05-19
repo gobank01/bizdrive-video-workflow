@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v68 LIP-SYNC ZERO TOLERANCE - lip sync เป็น hard blocker ห้ามส่งถ้าไม่มั่นใจ 100%
+สถานะล่าสุด: v69 LIP-SYNC-SAFE SOFT CUT - ห้าม xfade bottom face ตอนปากยัง visible
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -54,7 +54,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v68
+version: v69
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -64,7 +64,7 @@ dead air rule: cut silence longer than 0.5s in parallel
 false-start rule: if the opening has a short non-sustained sound/word followed by silence/reset, cut it before the true start
 context cut default: Medium
 context index: Full
-soft cut: always, default 0.12s crossfade
+soft cut: always, but lip-sync-safe only; top/B-roll can crossfade, bottom face must not xfade while visible
 B-roll duration: 3s each
 B-roll count: max 4 per 60s of final video, minimum 3 when the clip is long enough
 B-roll fresh-stock policy: try fresh download first until QA-passed stock index reaches 200 usable clips
@@ -118,7 +118,7 @@ BGM mix command: npm run mix:bgm
 10. Clean transcript and mark editable key terms.
 11. Build Full context index.
 12. Decide keep/drop segments from meaning.
-13. Apply soft cuts to top and bottom.
+13. Apply lip-sync-safe soft cuts: top/B-roll may crossfade, but bottom face must not xfade while visible.
 14. Select B-roll slots from context.
 15. Search/download/index B-roll first; reuse only when indexed stock is clearly the best match or stock count is already mature.
 16. QA B-roll and reject text/logo/brand/graphic failures.
@@ -176,7 +176,28 @@ lip sync ห้ามพลาดเด็ดขาด:
 4. ห้ามสรุป sync pass จาก frame count/duration อย่างเดียว
 5. ถ้าต้อง compensate offset ต้องมี ms value + reason ใน context/final report
 6. ถ้ายังไม่มั่นใจ ให้รายงาน blocked และห้ามเรียก output ว่า final
+7. ห้าม xfade bottom face ตอนเห็นปากอยู่ เพราะจะเกิด ghost/double-mouth frame ที่ไม่มีทางตรงเสียง
 ```
+
+## Lip-Sync-Safe Soft Cut Rule
+
+soft cut ยังใช้ได้ แต่ต้องไม่ทำลายปากกับเสียง:
+
+```text
+allowed:
+  - top screen xfade
+  - B-roll entry/exit transition
+  - B-roll bridge covering jump cuts
+  - audio microfade เฉพาะจุดที่ไม่ smear speech/key term
+  - bottom hard cut ที่ silence, closed-mouth point, หรือ speech boundary ที่พิสูจน์แล้ว
+
+forbidden:
+  - xfade bottom face while bottom circle is visible
+  - acrossfade speech over visible mouth movement when it blends phonemes
+  - calling lip sync pass without cut contact sheet around every content cut
+```
+
+ถ้าจุดตัดจำเป็นต้องข้ามช่วงคำพูดและ bottom jump ดูแรง ให้ใช้ B-roll/transition ปิดช่วง jump แทนการ blend ปากสองช่วงเข้าด้วยกัน
 
 ## Audio Noise Rule
 
@@ -359,6 +380,7 @@ v65 ทดสอบ full edit video2 ตามกฎ v64 สำเร็จ: syn
 v66 แก้ noise/sync: ตัด false-start 0-2.3s, เปลี่ยนมา polish จาก raw bottom audio, เพิ่ม denoise/gate chain ใหม่, log audio delay 21ms เพื่อชดเชย stream start mismatch และ render output `stacked-output-v66-video2-noise-sync-fix.mp4`
 v67 เพิ่ม `MISTAKES.md` เพื่อบันทึกความผิดพลาด v65/v66 และ hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof และ final summary ต้องรายงาน gates เหล่านี้
 v68 เพิ่ม `LIPSYNC_QA.md` และ zero-tolerance lip-sync gate: ห้ามส่ง final ถ้าไม่มี final stream start_time check, compensation log เมื่อจำเป็น, spot-check อย่างน้อย 5 จุด และ residual risk ต้องเป็น none
+v69 บันทึก root cause lip-sync: v66 xfade bottom face และ acrossfade speech ที่ content cuts ทำให้เกิด ghost/double-mouth frames; ต่อไป soft cut ต้องเป็น lip-sync-safe ห้าม xfade bottom face ตอน visible และต้องมี cut contact sheet ก่อนเรียก final
 
 ## How To Continue Development
 

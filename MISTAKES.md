@@ -150,6 +150,7 @@ spot check caption timing around first 10s and around each cut/B-roll point
 5. Caption map gate: captions mapped to edited timeline after every cut
 6. Report gate: final summary includes what failed before and how this run prevents it
 7. Lip-sync zero-tolerance gate: `LIPSYNC_QA.md` checks pass; if uncertain, final is blocked
+8. Bottom visible cut gate: bottom face must not be xfade blended while visible; cut contact sheet must show no ghost/double-mouth frames
 ```
 
 ถ้า gate ใดไม่ผ่าน ห้ามเรียกงานว่าเสร็จ
@@ -180,4 +181,45 @@ Required proof:
 อ่านและทำตาม LIPSYNC_QA.md
 final report มี lipSyncStatus
 final summary มี finalStreamStartDeltaMs, compensationMs และ spotCheckPoints
+```
+
+## v69 Bottom Xfade Lip-Sync Failure
+
+User rule:
+
+```text
+ถ้าปากกับเสียงยังรู้สึกไม่ตรง ต้องรื้อทั้งหมดและหาสาเหตุจริง
+```
+
+What happened:
+
+```text
+v66 ใช้ soft cut แบบ xfade กับ bottom face และ acrossfade กับ bottom audio
+final contact sheet รอบ content cuts พบ ghost/double-mouth frames
+ภาพปากที่ถูก blend จากสองช่วงไม่สามารถตรงกับเสียงพยางค์เดียวได้
+```
+
+Root cause:
+
+```text
+workflow แปลคำว่า soft cut เป็น xfade/acrossfade ทั้ง top และ bottom
+แต่ bottom เป็น talking-head lip-sync layer จึงห้าม blend ปากสองช่วงเข้าด้วยกันตอน visible
+metadata compensation 21ms แก้ stream start_time ได้บางส่วน แต่แก้ ghost-mouth frames ไม่ได้
+```
+
+Never again:
+
+```text
+soft cut ต้องเป็น lip-sync-safe เท่านั้น
+top/B-roll xfade ได้ แต่ bottom face ห้าม xfade ตอน visible
+ถ้าจุดตัด bottom ดูกระโดด ให้ใช้ B-roll/bridge ปิด jump หรือย้าย cut ไป silence/closed-mouth boundary
+ห้ามเรียก final ถ้าไม่มี cut contact sheet รอบ content cuts
+```
+
+Required proof:
+
+```text
+cut contact sheet รอบทุก content cut
+รายงานว่า bottomCutMode เป็น hard/covered ไม่ใช่ visible xfade
+lipSyncStatus ต้องเป็น pass เฉพาะเมื่อไม่มี ghost/double-mouth frame และ residualRisk=none
 ```

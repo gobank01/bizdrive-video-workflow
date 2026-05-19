@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v68 - lip-sync zero-tolerance gate
+สถานะล่าสุด: v69 - lip-sync-safe soft cut gate
 
 วันที่บันทึก: 2026-05-19
 
@@ -24,6 +24,7 @@ v65 commit: 1bc100c Add v65 full edit test
 v66 commit: ea280c4 Add v66 noise and sync fix
 v67 commit: 5284118 Add v67 mistake prevention gates
 v68 commit: bd330bc Add v68 lip sync zero tolerance
+v69 commit: a551fc7 Add v69 lip-sync safe cut rules
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -65,6 +66,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 32. v67 เพิ่ม hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, final summary gate
 33. v68 เพิ่ม `LIPSYNC_QA.md` และกำหนด lip sync เป็น zero-tolerance blocker
 34. v68 ห้ามเรียก output ว่า final ถ้าไม่มี final stream start_time check, compensationMs/reason ถ้ามี offset, spot-check อย่างน้อย 5 จุด และ residualRisk=none
+35. v69 พบ root cause lip-sync ของ v66: bottom face ถูก xfade ตอน visible จนเกิด ghost/double-mouth frames รอบ content cuts
+36. v69 กำหนดว่า soft cut ต้องเป็น lip-sync-safe: top/B-roll crossfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ใช้ hard cut จุดปลอดภัยหรือ B-roll/bridge ปิด jump แทน
 ```
 
 ## Commands Now Available
