@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v69 - lip-sync-safe soft cut gate
+สถานะล่าสุด: v70 - timestamped clip QA gate
 
 วันที่บันทึก: 2026-05-19
 
@@ -25,6 +25,7 @@ v66 commit: ea280c4 Add v66 noise and sync fix
 v67 commit: 5284118 Add v67 mistake prevention gates
 v68 commit: bd330bc Add v68 lip sync zero tolerance
 v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
+v70 commit: pending
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -68,6 +69,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 34. v68 ห้ามเรียก output ว่า final ถ้าไม่มี final stream start_time check, compensationMs/reason ถ้ามี offset, spot-check อย่างน้อย 5 จุด และ residualRisk=none
 35. v69 พบ root cause lip-sync ของ v66: bottom face ถูก xfade ตอน visible จนเกิด ghost/double-mouth frames รอบ content cuts
 36. v69 กำหนดว่า soft cut ต้องเป็น lip-sync-safe: top/B-roll crossfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ใช้ hard cut จุดปลอดภัยหรือ B-roll/bridge ปิด jump แทน
+37. v70 เพิ่ม `npm run qa:timestamps` สำหรับสร้าง QA contact sheet ทุก 1 วินาทีพร้อม timestamp label และต้องใช้ทุกครั้งที่ตรวจคลิป
 ```
 
 ## Commands Now Available

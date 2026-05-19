@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v69 LIP-SYNC-SAFE SOFT CUT - ห้าม xfade bottom face ตอนปากยัง visible
+สถานะล่าสุด: v70 TIMESTAMPED CLIP QA - ทุกครั้งที่ตรวจคลิปต้องมี timestamp ทุก 1 วินาที
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -54,7 +54,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v69
+version: v70
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -74,6 +74,8 @@ B-roll provider order: Pexels -> OpenRouter veo-3.1-lite -> OpenRouter kling-v3.
 B-roll transition mix: enabled, soft 0.22s, bridge 0.26s for jump-cover slots
 transition QA command: npm run check:transition
 frame edit report command: npm run report:frames
+timestamp QA command: npm run qa:timestamps
+timestamp QA interval: every 1s with visible timestamp label
 caption max length: about 20 Thai characters, never split Thai words
 sync master: bottom audio
 sync lock: top video, bottom audio/video, and captions must stay on the same edited timeline with no unlogged offset drift
@@ -132,6 +134,7 @@ BGM mix command: npm run mix:bgm
 24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; after a full render, prefer `npm run finalize:video` to run Auto BGM and final report together.
 24.1. Run mistake prevention gates: opening true start, audio source proof, noise proof, final stream start_time sync, caption remap proof.
 24.2. Run lip-sync zero-tolerance gate from `LIPSYNC_QA.md`; if uncertain, mark output blocked, not final.
+24.3. Create timestamped clip QA sheet every 1 second with `npm run qa:timestamps`.
 25. Write frame edit report with `npm run report:frames`.
 26. Write final report with `npm run report:final`.
 27. Update changelog/workflow version when rules change.
@@ -381,6 +384,7 @@ v66 แก้ noise/sync: ตัด false-start 0-2.3s, เปลี่ยนม
 v67 เพิ่ม `MISTAKES.md` เพื่อบันทึกความผิดพลาด v65/v66 และ hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof และ final summary ต้องรายงาน gates เหล่านี้
 v68 เพิ่ม `LIPSYNC_QA.md` และ zero-tolerance lip-sync gate: ห้ามส่ง final ถ้าไม่มี final stream start_time check, compensation log เมื่อจำเป็น, spot-check อย่างน้อย 5 จุด และ residual risk ต้องเป็น none
 v69 บันทึก root cause lip-sync: v66 xfade bottom face และ acrossfade speech ที่ content cuts ทำให้เกิด ghost/double-mouth frames; ต่อไป soft cut ต้องเป็น lip-sync-safe ห้าม xfade bottom face ตอน visible และต้องมี cut contact sheet ก่อนเรียก final
+v70 เพิ่ม timestamped clip QA: ทุกครั้งที่ตรวจคลิปต้องสร้าง contact sheet ที่มี timestamp กำกับทุก 1 วินาที ด้วย `npm run qa:timestamps` เพื่อไล่ lip sync, cut, caption, B-roll และ timeline ได้แม่นขึ้น
 
 ## How To Continue Development
 

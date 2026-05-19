@@ -1,5 +1,23 @@
 # Changelog
 
+## v70
+
+Added every-second timestamped clip QA.
+
+```text
+Created scripts/timestamp-qa-sheet.js
+Added npm run qa:timestamps
+Updated WORKFLOW.md, CONFIG.md, QA.md, STEPS.md, AGENTS.md, LIPSYNC_QA.md, NEXT_SESSION.md, and local bizdrive-video skill
+Required a visible timestamp label every 1 second when checking rendered clips
+Required issue reports to reference the 1-second timestamp from the QA sheet
+```
+
+Reason:
+
+```text
+The user wants clip inspection to be timestamped every second. This makes lip sync, cut, caption, B-roll, BGM, and visual QA easier to discuss and reproduce without guessing the exact moment.
+```
+
 ## v69
 
 Recorded the lip-sync root cause and changed soft-cut rules to be lip-sync-safe.

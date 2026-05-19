@@ -17,6 +17,7 @@
     "generate:broll": "node scripts/generate-openrouter-broll.js",
     "generate:broll:test-models": "node scripts/openrouter-broll-library.js",
     "mix:bgm": "node scripts/mix-bgm.js",
+    "qa:timestamps": "node scripts/timestamp-qa-sheet.js",
     "qa:bgm": "node scripts/qa-bgm-final.js",
     "report:final": "node scripts/final-report.js",
     "select:bgm": "node scripts/select-bgm.js",

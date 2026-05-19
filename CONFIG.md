@@ -56,6 +56,8 @@ lipSyncSpotCheckMinimum: 5
 lipSyncBlockIfUncertain: true
 captionMapGate: captions remapped after every trim/dead-air/context cut
 summaryGate: final summary reports prevention gate status
+timestampQaRequired: true
+timestampQaIntervalSeconds: 1
 ```
 
 ## Sync Policy
@@ -83,6 +85,7 @@ captionTimingPolicy: generate/map captions after all trim/dead-air/context cuts
 bottomFaceXfadeWhileVisible: forbidden
 bottomCutStrategy: hard cut at safe speech boundary or cover jump with B-roll/bridge
 cutContactSheetRequired: true
+timestampedClipQaSheetRequired: true
 ```
 
 Rules:

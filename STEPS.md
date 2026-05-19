@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v69 - practical edit map with lip-sync-safe soft cuts
+สถานะล่าสุด: v70 - practical edit map with 1-second timestamped clip QA
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -120,3 +120,4 @@
 62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
 62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
 62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
+62.4 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ

@@ -48,6 +48,7 @@
 [ ] any measured sync compensation is logged in context/final report with ms value and reason
 [ ] final ffprobe stream start_time was checked for video and audio after render
 [ ] finalStreamStartDeltaMs is reported
+[ ] timestamped clip QA sheet exists with one visible timestamp label per second
 [ ] lip-sync spot-check was done at 5+ points: hook, hard consonant, after cuts, around B-roll bridge, CTA
 [ ] residual lip-sync risk is none; if uncertain, output is blocked and not called final
 [ ] final summary includes mistake prevention gate status
@@ -131,6 +132,7 @@ optimized manifest.json
 [ ] BGM mixed output is used as bottom source when BGM is enabled
 [ ] no obvious frame freeze/seek issue
 [ ] no text/logo/brand in B-roll output
+[ ] any reported visual/audio issue includes the 1-second timestamp from the QA sheet
 [ ] B-roll density stays at or below 4 inserts per 60s unless explicitly approved
 ```
 

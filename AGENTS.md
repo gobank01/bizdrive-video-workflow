@@ -65,6 +65,8 @@ Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip 
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 
+Timestamped clip QA rule: whenever checking a rendered clip, create a 1-second timestamped QA sheet with `npm run qa:timestamps`. Use those timestamps when reporting lip-sync, cut, caption, B-roll, BGM, or timeline issues.
+
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
 
 Sync lock rule: bottom audio, bottom face video, top screen video, and subtitles must stay on one edited timeline. Do not manually shift, retime, offset, or speed-change top/bottom/caption independently. B-roll may replace only top visuals and must never change the timeline. If any sync risk appears, stop and fix/report sync before continuing.
