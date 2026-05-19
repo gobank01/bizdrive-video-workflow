@@ -21,7 +21,7 @@ v62 commit: 9e1d85a Add safe inner-media motion
 v63 commit: 1fc1cd7 Add video2 context edit
 v64 commit: 4773216 Add v64 production guardrails
 v65 commit: 1bc100c Add v65 full edit test
-v66 commit: pending until saved
+v66 commit: ea280c4 Add v66 noise and sync fix
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
