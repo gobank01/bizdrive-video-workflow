@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v82 - final BGM candidate built from v81 golden proof; frame/timing/loudness QA pass
+สถานะล่าสุด: v83 - accepted final saved; final report status pass
 
 วันที่บันทึก: 2026-05-19
 
@@ -37,7 +37,8 @@ v78 commit: current v78 workflow commit (Add v78 phase-gated testing rule)
 v79 commit: current v79 workflow commit (Add v79 raw bottom lip-sync human gate)
 v80 commit: 408cc68 Add v80 clean Set B phase test
 v81 commit: 46e407c Add v81 golden phase 10 checkpoint
-v82 commit: current v82 final BGM frame-lock checkpoint commit
+v82 commit: 1b91667 Add v82 BGM frame lock checkpoint
+v83 commit: current v83 accepted final checkpoint commit
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -116,6 +117,13 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 69. v82 `mix-bgm.js` ถูกแก้ให้ไม่ใช้ `-shortest` และ lock audio filter ด้วย `apad,atrim=0:<duration>,asetpts=PTS-STARTPTS`
 70. v82 `qa-bgm-final.js` เพิ่ม `frameLock` check: frames/duration/start_time ต้องตรงกับไฟล์ final ก่อน BGM
 71. v82 QA pass: 2423 -> 2423 frames, video duration 80.766667s, start_time 0/0, loudness -16.3 LUFS, true peak -1.7 dBFS, timestamp sheet `reports/phase11/timestamps/timestamp-qa-sheet.jpg`
+72. v83 ผู้ใช้ pass BGM final ว่า “สมบูรณ์แบบ ไปต่อได้เลย”
+73. v83 final output เดียว: `../preview-v80/v83-setB-final-accepted.mp4`
+74. v83 final report: `reports/phase11/v83-final-report.json` และ `reports/phase11/v83-final-report.md`, status pass
+75. v83 timestamp QA: `reports/phase11/v83-timestamps/timestamp-qa-sheet.jpg`
+76. v83 metadata: 1080x1920, 30fps, 80.766667s, 2423 frames, video/audio start_time 0/0, BGM frameDelta 0
+77. v83 B-roll counts: fresh 27, selected 5, reused 0, generated 0, rejected 22, optimized 5; B-roll top replacement 450 frames; removed frames after golden proof 0
+78. v83 `scripts/final-report.js` เพิ่ม video frames/start metadata, BGM frameLock และ pass-status matcher สำหรับ QA status ที่ลงท้ายด้วย pass
 ```
 
 ## Latest v75 Delivery

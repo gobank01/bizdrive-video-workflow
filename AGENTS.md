@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v82
+## Bizdrive Workflow Docs — v83
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -77,6 +77,10 @@ Latest v81 checkpoint: Set B Phase 10 proof `../preview-v80/v80-setB-phase10-pro
 Latest v82 checkpoint: BGM final candidate `../preview-v80/v81-setB-final-bgm.mp4` was built from the v81 golden proof with Mixkit `mixkit-175 Digital Clouds` at 5%. QA passed only after preserving the original video stream: 2423 frames, 80.766667s, video start_time 0.000000, audio start_time 0.000000, loudness -16.3 LUFS, true peak -1.7 dBFS.
 
 BGM frame-lock rule: BGM mix must not shorten, extend, shift, retime, or drop frames from the accepted final/golden proof. `mix-bgm.js` must not use `-shortest`; `qa-bgm-final.js` frameLock must pass. If frameDelta is not 0, do not deliver the file.
+
+Latest v83 checkpoint: accepted final output is `../preview-v80/v83-setB-final-accepted.mp4`. User reviewed the BGM candidate and confirmed "สมบูรณ์แบบ ไปต่อได้เลย". Final report status is pass at `reports/phase11/v83-final-report.md` / `.json`. Metadata: 1080x1920, 30fps, 80.766667s, 2423 frames, video/audio start_time 0/0, BGM frameDelta 0, loudness -16.3 LUFS, true peak -1.7 dBFS.
+
+Final report rule: report video frames/start metadata and BGM frameLock. B-roll QA statuses ending in `pass` count as pass.
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 

@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v82 - final BGM candidate: เพิ่ม BGM 5% จาก v81 golden proof โดย frame/timing lock ผ่าน
+สถานะล่าสุด: v83 - accepted final: final BGM ผ่าน user review และ final report status pass
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 

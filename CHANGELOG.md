@@ -1,5 +1,44 @@
 # Changelog
 
+## v83
+
+Saved the accepted final output after the user reviewed the BGM candidate and confirmed it is perfect.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated scripts/final-report.js
+Created local final output: ../preview-v80/v83-setB-final-accepted.mp4
+Created local final reports: reports/phase11/v83-final-report.json and reports/phase11/v83-final-report.md
+Created local timestamp QA: reports/phase11/v83-timestamps/timestamp-qa-sheet.jpg
+```
+
+Result:
+
+```text
+User confirmed: "สมบูรณ์แบบ ไปต่อได้เลย"
+Final report status: pass
+Output: ../preview-v80/v83-setB-final-accepted.mp4
+Duration: 80.766667s
+Video: 1080x1920, 30fps, 2423 frames
+Video/audio start_time: 0.000000 / 0.000000
+BGM frameLock: pass, frameDelta 0
+BGM: mixkit-175 Digital Clouds at 5%
+Loudness: -16.3 LUFS
+True peak: -1.7 dBFS
+B-roll: 27 fresh Pexels downloads, 5 selected, 0 reused, 0 generated, 22 rejected, 5 optimized
+Edited frames: 450 B-roll top replacement frames
+Removed frames after v81 golden proof: 0
+```
+
+Reason:
+
+```text
+v83 is the single user-facing accepted final for this clip. `scripts/final-report.js` now records video frame/start metadata, BGM frameLock, and treats QA statuses ending in `pass` as pass so final reports reflect the actual pipeline evidence.
+```
+
 ## v82
 
 Built and QA'd the final BGM candidate from the v81 golden proof, then fixed the BGM mixer so it cannot shorten the video stream.

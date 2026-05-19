@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v82 FINAL BGM CANDIDATE - เพิ่ม BGM 5% จาก v81 golden proof โดย preserve 2423 frames และ timing เดิมครบ
+สถานะล่าสุด: v83 ACCEPTED FINAL - ผู้ใช้ pass final BGM แล้วและบันทึก final output พร้อม final report
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v82
+version: v83
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -114,7 +114,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v82 BGM final candidate built from v81 golden proof; timing/loudness QA pass, human listening review still recommended
+latest phase test: v83 final accepted by user; final report status pass
 ```
 
 ## Master Pipeline
@@ -156,6 +156,48 @@ latest phase test: v82 BGM final candidate built from v81 golden proof; timing/l
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v83 Accepted Final
+
+ผู้ใช้ตรวจ v82 BGM final candidate แล้วให้ผลว่า:
+
+```text
+สมบูรณ์แบบ ไปต่อได้เลย
+```
+
+บันทึกเป็น final accepted output:
+
+```text
+final output = ../preview-v80/v83-setB-final-accepted.mp4
+base = ../preview-v80/v80-setB-golden-phase10-proof.mp4
+final report json = reports/phase11/v83-final-report.json
+final report md = reports/phase11/v83-final-report.md
+timestamp QA sheet = reports/phase11/v83-timestamps/timestamp-qa-sheet.jpg
+```
+
+QA:
+
+```text
+final report status = pass
+video = 1080x1920, 30fps, 2423 frames
+duration = 80.766667s
+video/audio start_time = 0.000000 / 0.000000
+BGM frameLock = pass, frameDelta 0
+BGM = mixkit-175 Digital Clouds, 5%
+loudness = -16.3 LUFS
+true peak = -1.7 dBFS
+B-roll = 27 fresh Pexels downloads, 5 selected, 0 reused, 0 generated, 22 rejected, 5 optimized
+B-roll replacement frames = 450
+main video frames removed after v81 golden proof = 0
+```
+
+กติกาต่อจาก v83:
+
+```text
+ใช้ v83 เป็น accepted final reference สำหรับงานคลิปนี้
+ถ้าจะปรับต่อ ให้เริ่มจาก final/golden proof ที่ผ่านแล้วและ preserve timing ทุกชั้น
+final report ต้องแสดง BGM frameLock และมอง B-roll status ที่ลงท้ายด้วย pass เป็น pass
+```
 
 ## v82 Final BGM Candidate
 

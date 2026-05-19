@@ -114,7 +114,7 @@ function ffprobe(file) {
     "-v",
     "error",
     "-show_entries",
-    "format=duration,size,bit_rate:stream=codec_type,codec_name,width,height,sample_rate,channels",
+    "format=duration,size,bit_rate:stream=codec_type,codec_name,width,height,sample_rate,channels,start_time,duration,nb_frames,r_frame_rate,avg_frame_rate",
     "-of",
     "json",
     file
@@ -144,12 +144,18 @@ function summarizeMetadata(metadata) {
     video: video ? {
       codec: video.codec_name,
       width: video.width,
-      height: video.height
+      height: video.height,
+      frames: video.nb_frames ? Number(video.nb_frames) : null,
+      duration: seconds(video.duration),
+      startTime: seconds(video.start_time),
+      frameRate: video.avg_frame_rate || video.r_frame_rate || null
     } : null,
     audio: audio ? {
       codec: audio.codec_name,
       sampleRate: audio.sample_rate ? Number(audio.sample_rate) : null,
-      channels: audio.channels ?? null
+      channels: audio.channels ?? null,
+      duration: seconds(audio.duration),
+      startTime: seconds(audio.start_time)
     } : null
   };
 }
@@ -219,7 +225,7 @@ function summarizeBroll(manifest, context, manifestPath) {
       rejectedCandidates: summary.rejectedCandidateCount ?? rejected.length
     },
     qaRule: manifest.qaRule ?? null,
-    qaStatus: slots.length && slots.every((slot) => slot.qaStatus === "pass") ? "pass" : "review",
+    qaStatus: slots.length && slots.every((slot) => isPassStatus(slot.qaStatus)) ? "pass" : "review",
     slots: slots.map(normalizeBrollSlot),
     rejectedCandidates: rejected.map((item) => ({
       slot: item.slot,
@@ -271,6 +277,7 @@ function summarizeBgm(bgmQa, bgmSelect, bgmMix, paths) {
     audibilityIntent: bgmQa?.audibilityIntent || "barely audible ambient bed, felt more than heard",
     originalLoudness: bgmQa?.originalLoudness || null,
     mixedLoudness: bgmQa?.mixedLoudness || null,
+    frameLock: bgmQa?.frameLock || null,
     qa: bgmQa?.qa || null,
     previews: {
       original: bgmQa?.originalPreview || null,
@@ -298,6 +305,11 @@ function summarizeKeyterms(report, reportPath) {
   };
 }
 
+function isPassStatus(status) {
+  if (!status) return false;
+  return /(^|[_ -])pass(ed)?($|[_ -])/i.test(status) || /^pass$/i.test(status);
+}
+
 function buildQaSummary({ args, broll, bgm, keyterms }) {
   const issues = [];
   if (args.checkStatus && !/pass|ok|passed|ผ่าน/i.test(args.checkStatus)) {
@@ -305,6 +317,9 @@ function buildQaSummary({ args, broll, bgm, keyterms }) {
   }
   if (broll.qaStatus && broll.qaStatus !== "pass") issues.push(`B-roll QA: ${broll.qaStatus}`);
   if (bgm.enabled && bgm.qa?.status && bgm.qa.status !== "pass") issues.push(`BGM QA: ${bgm.qa.status}`);
+  if (bgm.enabled && bgm.frameLock?.status && bgm.frameLock.status !== "pass") {
+    issues.push(`BGM frame lock: ${bgm.frameLock.status}`);
+  }
   if (keyterms.status && !["pass", "unknown"].includes(keyterms.status)) {
     issues.push(`Key term QA: ${keyterms.status}`);
   }
@@ -409,6 +424,9 @@ function renderMarkdown(report) {
 | Size | ${safe(report.renderMetadata.sizeMb)} MB |
 | Video | ${safe(streamText(report.renderMetadata.video))} |
 | Audio | ${safe(audioText(report.renderMetadata.audio))} |
+| Video Frames | ${safe(report.renderMetadata.video?.frames)} |
+| Video Start Time | ${safe(report.renderMetadata.video?.startTime)}s |
+| Audio Start Time | ${safe(report.renderMetadata.audio?.startTime)}s |
 
 ## Context Cut
 
@@ -451,6 +469,7 @@ ${brollLines || "| - | - | - | - | - | - | - |"}
 | Original Loudness | ${safe(loudnessText(report.audio.bgm.originalLoudness))} |
 | Mixed Loudness | ${safe(loudnessText(report.audio.bgm.mixedLoudness))} |
 | Mixed Output | ${safe(report.audio.bgm.output)} |
+| Frame Lock | ${safe(frameLockText(report.audio.bgm.frameLock))} |
 
 ## Captions / Key Terms
 
@@ -488,7 +507,7 @@ function safe(value) {
 
 function streamText(video) {
   if (!video) return "";
-  return `${video.codec} ${video.width}x${video.height}`;
+  return `${video.codec} ${video.width}x${video.height} ${video.frameRate || ""}`.trim();
 }
 
 function audioText(audio) {
@@ -504,6 +523,11 @@ function trackText(track) {
 function loudnessText(value) {
   if (!value) return "";
   return `${value.integratedLufs} LUFS, true peak ${value.truePeakDbfs} dBFS`;
+}
+
+function frameLockText(value) {
+  if (!value) return "";
+  return `${value.status}, frames ${value.originalFrames} -> ${value.mixedFrames}, delta ${value.frameDelta}, start delta ${value.startDeltaMs}ms`;
 }
 
 function printHelp() {
