@@ -1,42 +1,136 @@
-# Bizdrive Stacked Video Workflow
+# Video V3 — BIZDRIVE Video Template System
 
-Production workflow for building Bizdrive vertical stacked videos in HyperFrames.
+Multi-template HyperFrames video production. Each template is a reusable pattern (aspect ratio, layout, caption style). Each job is one rendered video.
 
-## Start Here
+**Status:** Template 01 locked at v88 (PERFECT CHECKPOINT, 2026-05-19).
 
-Read in this order:
+---
 
-1. `WORKFLOW.md` — overview and current production defaults
-2. `STEPS.md` — current practical 62-step edit map
-3. `CONFIG.md` — editable settings
-4. `QA.md` — QA checklists
-5. `REPORT_TEMPLATE.md` — final report format
-6. `CHANGELOG.md` — version history
+## 📁 Repo layout
 
-## References
-
-- `SYNC_REPORT.md` — top/bottom sync report template
-- `KEYTERM_QA.md` — key term preservation QA
-- `MOTION_BGM.md` — zoom motion and BGM loop rules
-- `STEPS_PRACTICAL_99.md` — archived 99-step reference
-- `STEPS_DETAILED_425.md` — detailed automation reference
-- `FULL_WORKFLOW_ARCHIVE.md` — old full workflow archive
-
-## Important Rules
-
-- Bottom audio is the master timeline.
-- Top video is the visual screen layer and must stay muted.
-- Trim/dead-air cuts must be parallel across top and bottom.
-- Notify the user before alignment decisions if top/bottom duration, start offset, or drift mismatches are found.
-- B-roll must pass strict text/logo/watermark/brand QA.
-- Key spoken terms must not disappear during context cuts.
-- BGM is optional and must stay clearly under the voice.
-
-## Local Commands
-
-```bash
-npm run check
-npm run check:keyterms -- --context assets/context/test2-v35-full-context-index.json --required B-roll,prompt,caption,AI
+```
+Video V3/
+├── templates/                          เก็บ pattern ทั้งหมด
+│   ├── README.md                       ตารางเปรียบเทียบ templates
+│   ├── _shared/                        infra ใช้ร่วมทุก template
+│   │   ├── scripts/                    transcribe (ElevenLabs) + clean-cut (Silero VAD)
+│   │   ├── docs/                       V88_PLAYBOOK + SUBAGENT_PROMPTS + WORKFLOW + etc.
+│   │   ├── prompts/                    canonical editorial + post-process prompts
+│   │   ├── references/                 editorial-rules + post-process-protocol
+│   │   ├── bgm-library/                BGM stock JSON
+│   │   ├── bgm/                        BGM mp3 files
+│   │   ├── broll/                      B-roll stock library
+│   │   ├── schemas/                    JSON schemas
+│   │   ├── brand-kit/                  logos, fonts, brand colors
+│   │   └── env/                        .env (gitignored) + .env.example
+│   │
+│   ├── 01-stacked-vertical-burst/      ⭐ Template 1: v88 stacked vertical + burst captions
+│   │   ├── README.md                   เมื่อไหร่ใช้, output spec
+│   │   ├── manifest.json               machine-readable spec
+│   │   ├── DESIGN.md                   colors/fonts/position
+│   │   ├── index.html                  composition source-of-truth
+│   │   ├── compositions/               sub-compositions (captions-burst.html)
+│   │   ├── scripts/                    per-template build scripts
+│   │   ├── assets/                     template default assets (bg.png)
+│   │   ├── prompts/                    template-specific subagent slot defaults
+│   │   ├── backups/                    previous composition versions
+│   │   └── reference/                  golden test (input + expected output + tolerances)
+│   │
+│   └── _starter/                       skeleton ใช้สร้าง template ใหม่
+│
+├── jobs/                               งานจริงรายคลิป
+│   └── 2026-05-19-bizdrive-video-div/  v88 reference job
+│       ├── manifest.json               { template, source, date }
+│       ├── input/                      source media (or symlinks to /video div/)
+│       ├── intermediates/              raw transcript, EDLs, visual masters, polished WAV
+│       ├── output/finals/              final.mp4 + visual.mp4 + no-bgm.mp4
+│       └── workspace/                  HyperFrames project — render happens here
+│           ├── index.html              copy of template-01 index
+│           ├── compositions/           copy of template-01 compositions
+│           ├── scripts/                template scripts + symlinks to _shared
+│           ├── assets/                 symlinks: v87-video-div, v88-video-div, broll, bgm
+│           ├── bgm-library/            symlink to _shared
+│           └── package.json
+│
+├── tools/                              repo-wide CLI
+│   ├── new-job.sh                      สร้าง job ใหม่จาก template
+│   └── new-template.sh                 สร้าง template ใหม่จาก _starter
+│
+├── archive/                            v80/v87 historical artifacts (preserved)
+├── robot/                              (unrelated; user's other work)
+├── video/  video div/  video2/         original source media folders
+└── test 2/                             original test materials
 ```
 
-Large media, raw assets, renders, and generated QA images are intentionally ignored by git.
+---
+
+## 🚀 Quick start
+
+### Render the v88 reference job (golden test)
+
+```bash
+cd "jobs/2026-05-19-bizdrive-video-div/workspace"
+npm run check                # lint + validate + inspect
+npm run render               # render visual-only
+# Then mux speech + BGM following templates/_shared/docs/V88_PLAYBOOK.md Step 14
+```
+
+### Start a new clip with Template 01
+
+```bash
+# Scaffold
+bash tools/new-job.sh 01 my-slug
+# Creates jobs/YYYY-MM-DD-my-slug/ with workspace ready
+
+# Drop input files into jobs/YYYY-MM-DD-my-slug/input/{top.mp4, bottom.mp4, bg.png}
+# Then follow templates/_shared/docs/V88_PLAYBOOK.md Steps 1-15
+```
+
+### Create a new template (pattern 02+)
+
+```bash
+bash tools/new-template.sh 02 horizontal-talking-head
+# Clones templates/_starter/ → templates/02-horizontal-talking-head/
+# Customize manifest.json, index.html, DESIGN.md before first job
+```
+
+---
+
+## 🤖 Porting to a different AI agent
+
+The pipeline is stateless. Two AI-driven steps:
+
+1. **Editorial subagent** (rough cut) — see `templates/_shared/docs/SUBAGENT_PROMPTS.md` Section A
+2. **Post-process subagent** (caption text fix + grouping) — Section B
+
+Drop those prompts verbatim into any agent (Claude API, Codex CLI, Cursor, GPT, Gemini). Everything else is deterministic Python/ffmpeg/Node.
+
+---
+
+## 📦 v88 Reference output
+
+```
+jobs/2026-05-19-bizdrive-video-div/output/finals/final.mp4
+  1080×1920, 30 fps, 103.587s, 3107 frames
+  AI auto-trimmed start 24.70s, end 130.27s (false start + outro music auto-dropped)
+  48 burst caption groups, 22 gold particle bursts + 66 white
+  Mixkit-1167 Close Up BGM at 5%, frame-lock preserved
+  0 errors / 0 warnings on npm run check
+```
+
+---
+
+## 📚 Required reading (in order)
+
+1. `templates/_shared/docs/V88_PLAYBOOK.md` — 15-step pipeline
+2. `templates/_shared/docs/SUBAGENT_PROMPTS.md` — verbatim AI prompts
+3. `templates/_shared/docs/WORKFLOW.md` — full BIZDRIVE workflow
+4. `templates/_shared/docs/MISTAKES.md` — past incidents + fixes (v67-v88)
+5. `templates/01-stacked-vertical-burst/README.md` — Template 01 specifics
+
+---
+
+## 🔐 Security
+
+`.env` is gitignored at `templates/_shared/env/.env`. Never commit secrets.
+The ELEVENLABS_API_KEY currently in .env was exposed during the v88 session — rotate before sharing this repo.

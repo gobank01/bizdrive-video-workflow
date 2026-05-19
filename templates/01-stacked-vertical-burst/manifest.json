@@ -1,0 +1,103 @@
+{
+  "id": "01-stacked-vertical-burst",
+  "version": "v88",
+  "lockedAt": "2026-05-19",
+  "name": "Stacked Vertical with Particle-Burst Captions",
+  "description": "BIZDRIVE-style vertical talking-head video: top frame is screen recording, bottom is face on circle, with kinetic particle-burst captions and optional B-roll inserts.",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "full-frame bg.png image",
+    "topFrame": { "width": 1080, "height": 607.5, "radius": 30, "border": "4px gold gradient" },
+    "bottomFrame": { "shape": "circle", "diameter": 607.5, "border": "4px gold gradient" },
+    "gap": 40,
+    "captionPosition": "above bottom circle, bottom: 360px"
+  },
+
+  "captions": {
+    "system": "particle-burst",
+    "subComposition": "compositions/captions-burst.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 900,
+    "fontSize": 64,
+    "colors": {
+      "active": "#ffffff",
+      "highlight": "#FFD700",
+      "dim": "rgba(255,255,255,0.45)"
+    },
+    "particleCount": 10,
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 22,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline tickers"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": true,
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "minTopFootageBetweenInserts": 3,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-veo-3.1-lite", "openrouter-kling-v3.0-std"]
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "input": "jobs/2026-05-19-bizdrive-video-div/input/",
+    "output": "jobs/2026-05-19-bizdrive-video-div/output/finals/final.mp4",
+    "duration": 103.587,
+    "videoFrames": 3107,
+    "captionGroups": 48,
+    "goldTokens": 22,
+    "whiteTokens": 66,
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true,
+      "captionGroupTolerance": 5,
+      "goldTokenRange": [18, 26],
+      "loudnessRange": [-18, -14]
+    }
+  }
+}

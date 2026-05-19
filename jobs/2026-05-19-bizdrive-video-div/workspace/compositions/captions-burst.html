@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>v88 Burst Captions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;900&family=Inter:wght@900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }
+      #burst-root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #bs-container { position: absolute; inset: 0; pointer-events: none; }
+      .bs-group {
+        position: absolute;
+        left: 0;
+        bottom: 360px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 18px;
+        row-gap: 8px;
+        padding: 0 60px;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .bs-word {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-weight: 900;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 0.45);
+        text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 28px rgba(0,0,0,.7);
+        letter-spacing: 0.01em;
+        line-height: 1.1;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .bs-particle {
+        position: absolute;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+        left: 540px; bottom: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="burst-root" data-composition-id="captions-burst" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
+      <div id="bs-container"></div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+
+        function mulberry32(seed) {
+          return function () {
+            seed |= 0;
+            seed = (seed + 0x6d2b79f5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        var CUES = [{"start": 0.28, "end": 1.819, "duration": 1.539, "tokens": [{"text": "มีเงินใช้", "gold": false, "start": 0.28, "end": 1.345}, {"text": "ฟรีๆ", "gold": false, "start": 1.345, "end": 1.819}]}, {"start": 1.86, "end": 3.399, "duration": 1.539, "tokens": [{"text": "ปีละ", "gold": false, "start": 1.86, "end": 2.3}, {"text": "100,000", "gold": true, "start": 2.3, "end": 3.069}, {"text": "บาท", "gold": true, "start": 3.069, "end": 3.399}]}, {"start": 3.5, "end": 6.299, "duration": 2.799, "tokens": [{"text": "โห วันนี้บอกเลย", "gold": false, "start": 3.5, "end": 5.408}, {"text": "ว่าสุดๆ", "gold": false, "start": 5.408, "end": 6.299}]}, {"start": 6.339, "end": 7.759, "duration": 1.42, "tokens": [{"text": "นี่ครับ", "gold": false, "start": 6.339, "end": 6.891}, {"text": "พี่แบงค์ให้", "gold": false, "start": 6.891, "end": 7.759}]}, {"start": 7.799, "end": 8.699, "duration": 0.9, "tokens": [{"text": "AI", "gold": true, "start": 7.799, "end": 8.699}]}, {"start": 8.739, "end": 11.5, "duration": 2.761, "tokens": [{"text": "หาข้อมูล", "gold": false, "start": 8.739, "end": 9.902}, {"text": "หุ้นอเมริกา", "gold": false, "start": 9.902, "end": 11.5}]}, {"start": 11.5, "end": 13.6, "duration": 2.1, "tokens": [{"text": "ทั้งหมด", "gold": false, "start": 11.5, "end": 12.365}, {"text": "หลายพันตัว", "gold": true, "start": 12.365, "end": 13.6}]}, {"start": 13.6, "end": 15.679, "duration": 2.079, "tokens": [{"text": "ตัวที่ดี", "gold": false, "start": 13.6, "end": 14.578}, {"text": "ที่สุดไหม", "gold": false, "start": 14.578, "end": 15.679}]}, {"start": 15.739, "end": 17.359, "duration": 1.62, "tokens": [{"text": "แล้วก็เจอ", "gold": false, "start": 15.739, "end": 16.861}, {"text": "ครับ", "gold": false, "start": 16.861, "end": 17.359}]}, {"start": 17.44, "end": 20.0, "duration": 2.56, "tokens": [{"text": "สามารถทำให้เรา", "gold": false, "start": 17.44, "end": 18.874}, {"text": "มีเงินปันผล", "gold": false, "start": 18.874, "end": 20.0}]}, {"start": 20.0, "end": 23.3, "duration": 3.3, "tokens": [{"text": "แค่ลงทุนไว้", "gold": false, "start": 20.0, "end": 21.396}, {"text": "ก็ได้เงินกลับมา", "gold": false, "start": 21.396, "end": 23.3}]}, {"start": 23.3, "end": 26.399, "duration": 3.099, "tokens": [{"text": "ปีนึง", "gold": false, "start": 23.3, "end": 24.591}, {"text": "เป็นแสน", "gold": true, "start": 24.591, "end": 26.399}]}, {"start": 26.439, "end": 29.26, "duration": 2.821, "tokens": [{"text": "เป็นหุ้น", "gold": false, "start": 26.439, "end": 27.767}, {"text": "ที่ดีมากๆ", "gold": false, "start": 27.767, "end": 29.26}]}, {"start": 29.319, "end": 29.88, "duration": 0.561, "tokens": [{"text": "พี่แบงค์ใช้", "gold": false, "start": 29.319, "end": 29.88}]}, {"start": 29.92, "end": 30.179, "duration": 0.259, "tokens": [{"text": "AI", "gold": true, "start": 29.92, "end": 30.179}]}, {"start": 30.219, "end": 31.34, "duration": 1.121, "tokens": [{"text": "คำนวณทั้งหมด", "gold": false, "start": 30.219, "end": 31.34}]}, {"start": 31.379, "end": 33.239, "duration": 1.86, "tokens": [{"text": "เว็บนี้ทำจาก", "gold": false, "start": 31.379, "end": 33.239}]}, {"start": 33.279, "end": 33.619, "duration": 0.34, "tokens": [{"text": "AI", "gold": true, "start": 33.279, "end": 33.619}]}, {"start": 33.939, "end": 34.84, "duration": 0.901, "tokens": [{"text": "แค่หนึ่ง", "gold": false, "start": 33.939, "end": 34.454}, {"text": "prompt", "gold": true, "start": 34.454, "end": 34.84}]}, {"start": 34.86, "end": 35.919, "duration": 1.059, "tokens": [{"text": "เท่านั้นเอง", "gold": false, "start": 34.86, "end": 35.545}, {"text": "นะครับ", "gold": false, "start": 35.545, "end": 35.919}]}, {"start": 35.939, "end": 38.7, "duration": 2.761, "tokens": [{"text": "สามารถได้เงิน", "gold": false, "start": 35.939, "end": 37.828}, {"text": "กลับมา", "gold": false, "start": 37.828, "end": 38.7}]}, {"start": 38.7, "end": 41.52, "duration": 2.82, "tokens": [{"text": "ปีละ", "gold": false, "start": 38.7, "end": 39.506}, {"text": "แสนกว่า", "gold": true, "start": 39.506, "end": 40.916}, {"text": "บาท", "gold": true, "start": 40.916, "end": 41.52}]}, {"start": 41.54, "end": 43.36, "duration": 1.82, "tokens": [{"text": "โห ไม่ต้องทำงาน", "gold": false, "start": 41.54, "end": 42.727}, {"text": "สบายมากๆ", "gold": false, "start": 42.727, "end": 43.36}]}, {"start": 43.459, "end": 45.119, "duration": 1.66, "tokens": [{"text": "จ่ายภาษี", "gold": false, "start": 43.459, "end": 44.197}, {"text": "ด้วยนะครับ", "gold": false, "start": 44.197, "end": 45.119}]}, {"start": 45.18, "end": 48.0, "duration": 2.82, "tokens": [{"text": "ลงทุนไว้", "gold": false, "start": 45.18, "end": 46.367}, {"text": "สมมุติว่าจบ", "gold": false, "start": 46.367, "end": 48.0}]}, {"start": 48.0, "end": 50.7, "duration": 2.7, "tokens": [{"text": "20-30 ปี", "gold": true, "start": 48.0, "end": 50.7}]}, {"start": 50.7, "end": 53.879, "duration": 3.179, "tokens": [{"text": "ได้เงินกลับมา", "gold": false, "start": 50.7, "end": 52.422}, {"text": "หลายล้าน", "gold": true, "start": 52.422, "end": 53.482}, {"text": "บาท", "gold": true, "start": 53.482, "end": 53.879}]}, {"start": 53.939, "end": 56.8, "duration": 2.861, "tokens": [{"text": "แนะนำจริงๆครับ", "gold": false, "start": 53.939, "end": 56.8}]}, {"start": 56.8, "end": 59.6, "duration": 2.8, "tokens": [{"text": "สำหรับคนที่มี", "gold": false, "start": 56.8, "end": 58.1}, {"text": "เงินเย็นก้อนนึง", "gold": false, "start": 58.1, "end": 59.6}]}, {"start": 59.6, "end": 62.419, "duration": 2.819, "tokens": [{"text": "อยากให้มัน", "gold": false, "start": 59.6, "end": 61.362}, {"text": "งอกเงย", "gold": false, "start": 61.362, "end": 62.419}]}, {"start": 62.5, "end": 64.5, "duration": 2.0, "tokens": [{"text": "ดีกว่าเอาไป", "gold": false, "start": 62.5, "end": 63.658}, {"text": "ฝากประจำ", "gold": false, "start": 63.658, "end": 64.5}]}, {"start": 64.58, "end": 67.58, "duration": 3.0, "tokens": [{"text": "ดีกว่าให้", "gold": false, "start": 64.58, "end": 65.754}, {"text": "เงินเฟ้อ", "gold": true, "start": 65.754, "end": 66.797}, {"text": "กินเรา", "gold": false, "start": 66.797, "end": 67.58}]}, {"start": 67.599, "end": 70.5, "duration": 2.901, "tokens": [{"text": "เพราะฉะนั้น", "gold": false, "start": 67.599, "end": 69.119}, {"text": "เอาไปลงทุน", "gold": false, "start": 69.119, "end": 70.5}]}, {"start": 70.5, "end": 73.459, "duration": 2.959, "tokens": [{"text": "ในหุ้นสหรัฐฯ", "gold": true, "start": 70.5, "end": 71.815}, {"text": "ถึงไม่มีความรู้", "gold": false, "start": 71.815, "end": 73.459}]}, {"start": 73.599, "end": 73.939, "duration": 0.34, "tokens": [{"text": "AI", "gold": true, "start": 73.599, "end": 73.939}]}, {"start": 73.979, "end": 76.679, "duration": 2.7, "tokens": [{"text": "เป็นผู้ช่วย", "gold": false, "start": 73.979, "end": 75.464}, {"text": "ให้เราได้", "gold": false, "start": 75.464, "end": 76.679}]}, {"start": 76.739, "end": 80.2, "duration": 3.461, "tokens": [{"text": "อยากให้ทุกคน", "gold": false, "start": 76.739, "end": 78.4}, {"text": "มาลองเรียนรู้", "gold": false, "start": 78.4, "end": 80.2}]}, {"start": 80.2, "end": 84.319, "duration": 4.119, "tokens": [{"text": "การลงทุน", "gold": false, "start": 80.2, "end": 81.42}, {"text": "ฝั่งอเมริกา", "gold": true, "start": 81.42, "end": 83.099}, {"text": "นิยมมากๆ", "gold": false, "start": 83.099, "end": 84.319}]}, {"start": 84.36, "end": 85.559, "duration": 1.199, "tokens": [{"text": "แล้วบอกเลยว่า", "gold": false, "start": 84.36, "end": 85.559}]}, {"start": 85.599, "end": 87.239, "duration": 1.64, "tokens": [{"text": "S&P 500", "gold": true, "start": 85.599, "end": 87.239}]}, {"start": 87.299, "end": 91.0, "duration": 3.701, "tokens": [{"text": "หรือกองทุน", "gold": false, "start": 87.299, "end": 89.15}, {"text": "ปันผลต่างๆ", "gold": true, "start": 89.15, "end": 91.0}]}, {"start": 91.019, "end": 93.759, "duration": 2.74, "tokens": [{"text": "เป็นตัวที่ดี", "gold": false, "start": 91.019, "end": 92.663}, {"text": "ระดับโลก", "gold": true, "start": 92.663, "end": 93.759}]}, {"start": 93.819, "end": 95.079, "duration": 1.26, "tokens": [{"text": "มาลองดูครับ", "gold": false, "start": 93.819, "end": 95.079}]}, {"start": 95.119, "end": 95.36, "duration": 0.241, "tokens": [{"text": "AI", "gold": true, "start": 95.119, "end": 95.36}]}, {"start": 95.439, "end": 96.959, "duration": 1.52, "tokens": [{"text": "แนะนำให้", "gold": false, "start": 95.439, "end": 96.374}, {"text": "ทุกคน", "gold": false, "start": 96.374, "end": 96.959}]}, {"start": 97.0, "end": 99.5, "duration": 2.5, "tokens": [{"text": "พี่แบงค์ได้", "gold": false, "start": 97.0, "end": 98.146}, {"text": "ปันผลทุกเดือน", "gold": true, "start": 98.146, "end": 99.5}]}, {"start": 99.5, "end": 101.819, "duration": 2.319, "tokens": [{"text": "จากวิธีการ", "gold": false, "start": 99.5, "end": 101.284}, {"text": "นี้", "gold": false, "start": 101.284, "end": 101.819}]}, {"start": 101.879, "end": 103.561333, "duration": 1.682, "tokens": [{"text": "อยากให้ทุกคน", "gold": false, "start": 101.879, "end": 102.655}, {"text": "มาลองกันนะครับ", "gold": false, "start": 102.655, "end": 103.561}]}];
+        var YELLOW = "#FFD700";
+        var WHITE = "#ffffff";
+        var DIM = "rgba(255,255,255,0.45)";
+
+        var PARTICLE_COLORS = [
+          "#FFD700", "#FFC233", "#FFD86A", "#FFE48E", "#ffffff",
+          "#FFD700", "#FFC233", "#FFD86A"
+        ];
+        var NUM_PARTICLES = 10;
+
+        var container = document.getElementById("bs-container");
+        var tl = gsap.timeline({ paused: true });
+
+        CUES.forEach(function (cue, ci) {
+          var grp = document.createElement("div");
+          grp.className = "bs-group";
+          grp.id = "bs-grp-" + ci;
+          container.appendChild(grp);
+
+          cue.tokens.forEach(function (tok, ti) {
+            var span = document.createElement("span");
+            span.className = "bs-word";
+            span.id = "bs-w-" + ci + "-" + ti;
+            span.textContent = tok.text;
+            grp.appendChild(span);
+          });
+
+          // Group enter / hold / exit
+          tl.set(grp, { visibility: "visible" }, cue.start);
+          tl.fromTo(
+            grp,
+            { opacity: 0, scale: 0.92, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.22, ease: "back.out(1.6)" },
+            cue.start
+          );
+
+          cue.tokens.forEach(function (tok, ti) {
+            var wid = "#bs-w-" + ci + "-" + ti;
+            var isGold = !!tok.gold;
+            // Active reveal at token.start
+            tl.to(wid, { color: isGold ? YELLOW : WHITE, scale: isGold ? 1.10 : 1.03, duration: 0.10, ease: "power2.out" }, tok.start);
+            // After a brief held window, ease the scale back so multiple tokens read together
+            tl.to(wid, { scale: 1.0, duration: 0.20, ease: "power1.inOut" }, tok.start + Math.max(0.15, (tok.end - tok.start) * 0.35));
+
+            if (isGold) {
+              var rng = mulberry32((ci * 31 + ti * 7 + 11) | 0);
+              for (var p = 0; p < NUM_PARTICLES; p++) {
+                var angle = (p / NUM_PARTICLES) * Math.PI * 2 + rng() * 0.6;
+                var dist = 90 + rng() * 160;
+                var sz = 4 + rng() * 8;
+                var dx = Math.cos(angle) * dist;
+                var dy = -Math.sin(angle) * dist;
+                var dot = document.createElement("div");
+                dot.className = "bs-particle";
+                dot.id = "bs-p-" + ci + "-" + ti + "-" + p;
+                dot.style.backgroundColor = PARTICLE_COLORS[p % PARTICLE_COLORS.length];
+                dot.style.width = sz.toFixed(1) + "px";
+                dot.style.height = sz.toFixed(1) + "px";
+                container.appendChild(dot);
+                tl.set("#" + dot.id, { x: 0, y: 0, opacity: 0 }, tok.start);
+                tl.to("#" + dot.id, { x: dx, y: dy, opacity: 1, duration: 0.14, ease: "power3.out" }, tok.start + p * 0.018);
+                tl.to("#" + dot.id, { opacity: 0, duration: 0.5, ease: "power1.in" }, tok.start + 0.14 + p * 0.018);
+                tl.set("#" + dot.id, { opacity: 0, x: 0, y: 0 }, Math.min(tok.start + 0.85, cue.end));
+              }
+            }
+          });
+
+          // Exit
+          var exitStart = Math.max(cue.start + 0.1, cue.end - 0.22);
+          tl.to(grp, { opacity: 0, duration: 0.20, ease: "power2.in" }, exitStart);
+          tl.set(grp, { opacity: 0, visibility: "hidden" }, cue.end);
+        });
+
+        tl.seek(0);
+        window.__timelines["captions-burst"] = tl;
+      })();
+    </script>
+  </body>
+</html>

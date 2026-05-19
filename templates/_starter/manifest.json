@@ -1,0 +1,60 @@
+{
+  "id": "__TEMPLATE_NUMBER__-__TEMPLATE_SLUG__",
+  "version": "v1",
+  "name": "TBD",
+  "description": "TBD — what does this template produce?",
+
+  "output": {
+    "width": 1920,
+    "height": 1080,
+    "aspect": "16:9",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac"
+  },
+
+  "layout": {
+    "background": "describe background layer",
+    "primaryFrame": "describe primary visual element",
+    "captionPosition": "describe where captions live"
+  },
+
+  "captions": {
+    "system": "particle-burst | static-cue | karaoke | submagic-kinetic | none",
+    "font": "TBD",
+    "colors": {
+      "active": "#ffffff",
+      "highlight": "#FFD700",
+      "dim": "rgba(255,255,255,0.45)"
+    }
+  },
+
+  "audio": {
+    "master": "describe master audio source",
+    "targetLoudness": -16,
+    "bgm": { "enabled": true, "gainPercent": 5 }
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "input": "TBD",
+    "output": "TBD",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}

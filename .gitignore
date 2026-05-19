@@ -1,29 +1,57 @@
+# Video V3 — Multi-template HyperFrames repo
+
 # Dependencies / local runtime
 node_modules/
+**/node_modules/
 .DS_Store
+**/.DS_Store
+
+# Secrets
 .env
 .env.*
+!.env.example
+templates/_shared/env/.env
+!templates/_shared/env/.env.example
 
-# Large, user-provided, or generated media/data
-assets/
-assets/**/*.mp4
-assets/**/*.mov
-assets/**/*.m4v
-assets/**/*.wav
-assets/**/*.mp3
-assets/**/*.m4a
-assets/**/*.aac
-assets/**/*.png
-assets/**/*.jpg
-assets/**/*.jpeg
-assets/**/*.webp
-
-# Generated renders and QA artifacts
-render-checks/
-reports/
-reports/*.json
-renders/
+# Media / large generated artifacts
 *.mp4
 *.mov
+*.m4v
+*.wav
+*.mp3
+*.m4a
+*.aac
 
-# Keep workflow docs/scripts/config in git, not generated media.
+# Source media folders at repo root (V2 holdovers)
+/video/
+/video div/
+/video2/
+/test 2/
+/robot/
+
+# Per-job artifacts (kept only as needed)
+jobs/*/intermediates/
+jobs/*/output/
+jobs/*/workspace/.tmp/
+jobs/*/workspace/node_modules/
+
+# Per-template asset folders (large media)
+templates/_shared/bgm/
+templates/_shared/broll/
+templates/*/reference/input/
+templates/*/reference/output/
+
+# QA / preview / scratch
+archive/
+render-checks/
+reports/
+
+# Keep template specs + scripts + docs in git.
+# Keep job manifests + notes + small JSON artifacts in git.
+# Track these explicitly:
+!jobs/*/manifest.json
+!jobs/*/notes.md
+!jobs/*/workspace/index.html
+!jobs/*/workspace/package.json
+!jobs/*/workspace/compositions/**
+!jobs/*/workspace/scripts/**
