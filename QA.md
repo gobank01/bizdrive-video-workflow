@@ -48,6 +48,7 @@
 [ ] captions obey max length policy
 [ ] captions are mapped to edited timeline, not raw pre-cut timestamps
 [ ] caption timing spot check matches bottom speech
+[ ] caption gold highlights have word-safe spacing from adjacent normal text; run npm run check:caption-gold
 [ ] any measured sync compensation is logged in context/final report with ms value and reason
 [ ] final ffprobe stream start_time was checked for video and audio after render
 [ ] finalStreamStartDeltaMs is reported
@@ -125,6 +126,7 @@ optimized manifest.json
 [ ] transition mix does not move top/bottom frame borders
 [ ] captions do not fade/pan with B-roll transition
 [ ] captions remain visible and readable
+[ ] gold-highlight caption tokens do not visually stick to adjacent normal text
 [ ] subtitles appear on the correct spoken words and do not drift
 [ ] key spoken terms are audible
 [ ] soft cuts do not sound abrupt

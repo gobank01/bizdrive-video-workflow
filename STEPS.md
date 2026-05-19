@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v83 - accepted final: final BGM ผ่าน user review และ final report status pass
+สถานะล่าสุด: v84 - caption gold spacing: คำสีเหลืองต้องแยกช่องว่างจากข้อความธรรมดาและมี QA command
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -147,12 +147,13 @@ C. ขอหลักฐานเพิ่ม
 
 ## Phase 10 — Captions, Composition, QA
 
-61. สร้าง captions จาก cleaned transcript หลัง trim/dead-air/context cut แล้วเท่านั้น, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
+61. สร้าง captions จาก cleaned transcript หลัง trim/dead-air/context cut แล้วเท่านั้น, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style และเว้นช่องว่าง token สีเหลืองแบบ word-safe เช่น ABC ที่ highlight B ต้องออกเป็น A B C
 61.0 ก่อนสร้าง caption ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: clean สั้น / ใกล้เสียงพูดจริง / ให้ AI balance
 61.1 ตรวจ caption timing เทียบกับ bottom audio และ edited frame timeline ห้ามใช้ raw timestamp โดยไม่ map
-61.2 HyperFrames composition ต้องใช้ visual masters เป็น source และ render แบบ visual-only/audio disabled เมื่อใช้ edit-first architecture
-61.3 หลัง render visual-only ให้ mux `speech_audio_master.wav` กลับเข้า MP4 แล้วค่อยทำ BGM mix/QA
-61.4 ก่อน BGM ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ใส่ BGM 5% / ไม่ใส่ BGM / ให้ AI เลือกหลังวิเคราะห์
+61.2 ตรวจ `npm run check:caption-gold` เพื่อกัน `.gold` ติดตัวอักษรธรรมดาซ้าย/ขวา
+61.3 HyperFrames composition ต้องใช้ visual masters เป็น source และ render แบบ visual-only/audio disabled เมื่อใช้ edit-first architecture
+61.4 หลัง render visual-only ให้ mux `speech_audio_master.wav` กลับเข้า MP4 แล้วค่อยทำ BGM mix/QA
+61.5 ก่อน BGM ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ใส่ BGM 5% / ไม่ใส่ BGM / ให้ AI เลือกหลังวิเคราะห์
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
 62.0 หลัง BGM mix ต้องตรวจ frame lock เทียบกับไฟล์ final ก่อน BGM: video frames, video duration, video start_time และ audio start_time ต้องไม่เปลี่ยน; ถ้า frameDelta ไม่ใช่ 0 ห้ามส่ง final และต้อง rebuild โดยไม่ใช้ `-shortest`
 62.1 ก่อน full render ให้สรุป decision choices ทั้งหมดแล้วถาม confirm เป็นตัวเลือก: Render final / แก้ decision / หยุดรอ

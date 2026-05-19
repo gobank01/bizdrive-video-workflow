@@ -9,6 +9,7 @@
     "auto:bgm": "node scripts/auto-final-bgm.js",
     "check": "npx --yes hyperframes@0.6.16 lint && npx --yes hyperframes@0.6.16 validate && npx --yes hyperframes@0.6.16 inspect",
     "check:bgm": "node scripts/check-bgm-library.js",
+    "check:caption-gold": "node scripts/check-caption-gold-spacing.js",
     "check:keyterms": "node scripts/check-keyterms.js",
     "check:motion": "node scripts/check-motion-safety.js",
     "check:transition": "node scripts/check-transition-mix.js",

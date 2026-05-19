@@ -1,5 +1,39 @@
 # Changelog
 
+## v84
+
+Added the caption gold-spacing rule and a QA command for highlight spacing.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated CONFIG.md
+Updated QA.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated index.html
+Updated package.json
+Added scripts/check-caption-gold-spacing.js
+Updated local bizdrive-video skill
+```
+
+Result:
+
+```text
+Rule: when a caption token is highlighted gold, it must be separated from adjacent normal text.
+Example: ABC with B highlighted renders as A B C.
+Example: BCD with separated highlighted tokens renders as B C D.
+CSS: .gold now has controlled horizontal margin and first/last child guards.
+QA: npm run check:caption-gold
+Current index.html check: pass, 27 captions, 0 issues
+```
+
+Reason:
+
+```text
+Gold-highlight caption text can visually stick to neighboring text if the HTML is generated as `A<span class="gold">B</span>C`. v84 makes this a formal caption rule and adds a machine check so future caption builders catch spacing mistakes before render.
+```
+
 ## v83
 
 Saved the accepted final output after the user reviewed the BGM candidate and confirmed it is perfect.

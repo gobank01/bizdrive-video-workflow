@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v83
+## Bizdrive Workflow Docs — v84
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -81,6 +81,8 @@ BGM frame-lock rule: BGM mix must not shorten, extend, shift, retime, or drop fr
 Latest v83 checkpoint: accepted final output is `../preview-v80/v83-setB-final-accepted.mp4`. User reviewed the BGM candidate and confirmed "สมบูรณ์แบบ ไปต่อได้เลย". Final report status is pass at `reports/phase11/v83-final-report.md` / `.json`. Metadata: 1080x1920, 30fps, 80.766667s, 2423 frames, video/audio start_time 0/0, BGM frameDelta 0, loudness -16.3 LUFS, true peak -1.7 dBFS.
 
 Final report rule: report video frames/start metadata and BGM frameLock. B-roll QA statuses ending in `pass` count as pass.
+
+Caption gold-spacing rule: gold-highlighted caption tokens must be separated from adjacent normal text. Example: `ABC` with `B` highlighted should render as `A B C`; if `BCD` needs separated highlighted tokens, render `B C D`. Run `npm run check:caption-gold` after caption HTML/style changes.
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 

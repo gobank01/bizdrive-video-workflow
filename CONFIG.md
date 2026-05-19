@@ -168,7 +168,9 @@ noThaiMidWordBreak: true
 removeFillers: อืม, อะ, อ่ะ, เอ่อ
 goldHighlight: #FFD93D -> #F4C20F -> #B8860B
 goldBaseline: same as normal text
-goldSpacing: proportional, about 0.04em
+goldSpacing: word-safe spacing before/after highlighted token; visual margin about 0.08em with first/last child guard
+goldSpacingRule: if ABC has B highlighted, render as A B C; if BCD needs separated highlighted tokens, render as B C D
+goldSpacingQaCommand: npm run check:caption-gold
 ```
 
 ## Context Cut

@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v83 ACCEPTED FINAL - ผู้ใช้ pass final BGM แล้วและบันทึก final output พร้อม final report
+สถานะล่าสุด: v84 CAPTION GOLD SPACING - เพิ่ม rule เว้นวรรคหน้าหลังคำสีเหลืองและ QA command
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v83
+version: v84
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -78,6 +78,8 @@ frame edit report command: npm run report:frames
 timestamp QA command: npm run qa:timestamps
 timestamp QA interval: every 1s with visible timestamp label
 caption max length: about 20 Thai characters, never split Thai words
+caption gold spacing: highlighted gold token must be visually separated from adjacent normal text; ABC with B highlighted becomes A B C
+caption gold spacing QA command: npm run check:caption-gold
 sync master: bottom audio
 sync lock: top video, bottom audio/video, and captions must stay on the same edited timeline with no unlogged offset drift
 edit-first master: required; create frame/sample-locked top visual, bottom visual, and speech audio masters before HyperFrames layout
@@ -114,7 +116,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v83 final accepted by user; final report status pass
+latest phase test: v84 caption gold spacing rule/check added; v83 remains accepted final output
 ```
 
 ## Master Pipeline
@@ -140,7 +142,7 @@ latest phase test: v83 final accepted by user; final report status pass
 17. Search/download/index B-roll first; reuse only when indexed stock is clearly the best match or stock count is already mature.
 18. QA B-roll and reject text/logo/brand/graphic failures.
 19. Re-encode selected B-roll.
-20. Build captions with Bizdrive style.
+20. Build captions with Bizdrive style. Gold-highlight terms must be separated from adjacent normal text with word-safe spacing.
 21. If BGM is enabled, run `npm run select:bgm` to select from stock using title/transcript/context; generate only when no stock mood fits.
 22. Add B-roll transition mix, optional zoom motion, and BGM loop if enabled.
 23. Update HyperFrames composition using visual masters only and keep render audio disabled.
@@ -156,6 +158,32 @@ latest phase test: v83 final accepted by user; final report status pass
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v84 Caption Gold Spacing Rule
+
+เพิ่ม rule สำหรับ subtitle/caption สีเหลือง:
+
+```text
+ถ้ามี token ที่ต้องทำสีเหลือง ต้องเว้นช่องว่างหน้าหลังจากข้อความธรรมดา
+ตัวอย่าง: ABC และ B เป็นสีเหลือง -> A B C
+ตัวอย่าง: BCD และ B/C/D เป็น token ที่ต้องแยก -> B C D ตาม token ที่ highlight
+ถ้า token สีเหลืองอยู่ต้น caption ไม่ต้องมีช่องว่างนำหน้าที่มองเห็นเกินจำเป็น แต่ต้องไม่ติดกับ token ถัดไป
+ถ้า token สีเหลืองอยู่ท้าย caption ไม่ต้องมีช่องว่างท้ายที่เกินจำเป็น แต่ต้องไม่ติดกับ token ก่อนหน้า
+```
+
+Implementation:
+
+```text
+index.html: .gold เพิ่ม margin แนวนอน และ first/last child guard
+package.json: เพิ่ม npm run check:caption-gold
+scripts/check-caption-gold-spacing.js: ตรวจว่า .gold ไม่ติดตัวอักษรธรรมดาซ้าย/ขวาใน caption-box
+```
+
+QA:
+
+```text
+npm run check:caption-gold = pass, captionCount 27, issues 0
+```
 
 ## v83 Accepted Final
 

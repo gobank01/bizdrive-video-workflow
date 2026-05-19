@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v83 - accepted final saved; final report status pass
+สถานะล่าสุด: v84 - caption gold spacing rule saved; v83 final remains accepted output
 
 วันที่บันทึก: 2026-05-19
 
@@ -38,7 +38,8 @@ v79 commit: current v79 workflow commit (Add v79 raw bottom lip-sync human gate)
 v80 commit: 408cc68 Add v80 clean Set B phase test
 v81 commit: 46e407c Add v81 golden phase 10 checkpoint
 v82 commit: 1b91667 Add v82 BGM frame lock checkpoint
-v83 commit: current v83 accepted final checkpoint commit
+v83 commit: 21a4955 Add v83 accepted final checkpoint
+v84 commit: current v84 caption gold spacing checkpoint commit
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -124,6 +125,9 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 76. v83 metadata: 1080x1920, 30fps, 80.766667s, 2423 frames, video/audio start_time 0/0, BGM frameDelta 0
 77. v83 B-roll counts: fresh 27, selected 5, reused 0, generated 0, rejected 22, optimized 5; B-roll top replacement 450 frames; removed frames after golden proof 0
 78. v83 `scripts/final-report.js` เพิ่ม video frames/start metadata, BGM frameLock และ pass-status matcher สำหรับ QA status ที่ลงท้ายด้วย pass
+79. v84 เพิ่ม caption gold-spacing rule: token สีเหลืองต้องแยกช่องว่างจากข้อความธรรมดา เช่น ABC highlight B -> A B C
+80. v84 เพิ่ม `scripts/check-caption-gold-spacing.js` และ `npm run check:caption-gold`; current index.html pass, 27 captions, issues 0
+81. v84 `index.html` ปรับ `.gold` ให้มี margin แนวนอนแบบคุมได้ พร้อม first/last child guard เพื่อไม่ให้ช่องว่างเกินที่หัว/ท้าย caption
 ```
 
 ## Latest v75 Delivery
