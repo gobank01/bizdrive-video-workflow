@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v64 - sync lock, Whisper required, sequential gates, fresh-stock B-roll และ B-roll density cap
+สถานะล่าสุด: v65 - full video2 edit test ผ่านภายใต้กฎ v64
 
 วันที่บันทึก: 2026-05-19
 
@@ -20,6 +20,7 @@ v61 commit: 91d3f9b Add B-roll spacing rule
 v62 commit: 9e1d85a Add safe inner-media motion
 v63 commit: 1fc1cd7 Add video2 context edit
 v64 commit: 4773216 Add v64 production guardrails
+v65 commit: pending until saved
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -44,9 +45,9 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 15. B-roll spacing rule: ห้าม B-roll ติดกันจนลายตา ต้องห่างกันอย่างน้อย 6s ระหว่าง start และมี footage จริงของ top อย่างน้อย 3s ระหว่าง insert
 16. Slow inner-media motion: top/B-roll ขยับได้ช้า ๆ เฉพาะ media ข้างใน frame; top frame shell และ bottom frame ห้ามขยับเด็ดขาด
 17. Motion safety command ตรวจไม่ให้ animate frame/border หรือ bottom face
-18. video2 v63 full edit render แล้วที่ `../stacked-output-v63-video2-context90-full.mp4`
-19. video2 v63 ใช้ B-roll 8 จุดจาก local Pexels stock, re-encode ใหม่ 8 derivatives, reject 3 candidate ที่เสี่ยง graphic/text
-20. video2 v63 frame report และ final report พร้อมใช้ต่อ: `reports/frame-edit-report-v63-video2.json`, `reports/final-report-v63-video2.md`
+18. video2 v65 full edit render แล้วที่ `../stacked-output-v65-video2-v64-full-test.mp4`
+19. video2 v65 ใช้ B-roll 5 จุดจาก local Pexels stock, re-encode ใหม่ 5 derivatives, reject 0 candidate
+20. video2 v65 frame report และ final report พร้อมใช้ต่อ: `reports/frame-edit-report-v65-video2.json`, `reports/final-report-v65-video2.md`
 21. v64 เพิ่ม sync lock: top + bottom audio/video + subtitles ต้องอยู่ edited timeline เดียวกัน ห้ามเลื่อนแยก
 22. v64 บังคับใช้ Whisper transcript ก่อน context cut/caption ทุกงาน ถ้า HyperFrames fail ให้ใช้ direct whisper-cli fallback
 23. v64 บังคับทำงานเรียง step และต้องเช็ค artifact/QA ก่อนข้าม step
@@ -54,6 +55,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 25. v64 B-roll ใช้ไม่เกิน 4 inserts ต่อ final video 1 นาที เว้นแต่ผู้ใช้ override ชัดเจน
 26. v64 target duration เป็นเพดาน/meaning target ถ้าขอ 1:30 แต่ตัดได้ 1:20 และสาระครบ ให้ใช้ 1:20
 27. v64 ระหว่างทำงานให้รายงานเป็น Step/Phase ว่ากำลังทำอะไรและเช็คอะไร
+28. v65 full test พยายามโหลด fresh B-roll แล้ว แต่ shell env ไม่มี `PEXELS_API_KEY` จึงใช้ local QA-passed stock; รอบต่อไปถ้าต้องการ stock growth ให้ export key ก่อนเริ่มงาน
 ```
 
 ## Commands Now Available
@@ -152,6 +154,34 @@ npm run finalize:video -- \
 ```
 
 ## Latest Verified Test
+
+v65 video2 v64 full test:
+
+```text
+../stacked-output-v65-video2-v64-full-test.mp4
+duration: 89.354333s
+size: 52.5 MB
+video: h264 1080x1920, 30fps, 2680 stream frames
+audio: aac 48000 Hz
+render: completed
+npm run check: pass with warning timeline_track_too_dense
+npm run check:transition: pass
+npm run check:motion: pass
+frame report: reports/frame-edit-report-v65-video2.json
+final report: reports/final-report-v65-video2.md
+B-roll manifest: assets/broll/optimized/video2-v65/manifest.json
+B-roll new downloads: 0
+B-roll AI generations: 0
+B-roll reused local stock: 5
+B-roll optimized derivatives: 5
+B-roll rejected candidates: 0
+fresh B-roll attempt: blocked_missing_env_pexels_api_key
+content dropped: 784 frames
+soft-cut overlap removed: 13 frames
+total net removed: 798 frames
+B-roll top replacement: 450 frames
+transition mix: 71 frames
+```
 
 v63 video2 full edit:
 

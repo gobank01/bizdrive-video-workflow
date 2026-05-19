@@ -1,5 +1,41 @@
 # Changelog
 
+## v65
+
+Ran a full video2 edit test under the v64 production guardrails.
+
+```text
+Built scripts/build-video2-v65-full-v64-test.js for repeatable v64-rule validation
+Used bottom audio as the master timeline and kept top/bottom/captions on the same edited timeline
+Reused the timestamped Whisper large-v3 transcript from the same video2 bottom source
+Reduced 115.946s raw source to 89.354333s final output
+Kept the same Medium context cut plan as v63, but reduced B-roll density from 8 slots to 5 slots
+Fresh Pexels sourcing was attempted, but blocked because PEXELS_API_KEY was not present in the shell environment
+Reused 5 local QA-passed Pexels stock clips and re-encoded 5 optimized derivatives
+Rendered ../stacked-output-v65-video2-v64-full-test.mp4
+Generated reports/frame-edit-report-v65-video2.json
+Generated reports/final-report-v65-video2.json and reports/final-report-v65-video2.md
+```
+
+Frame results:
+
+```text
+original: 115.946s / 3478 frames
+final: 89.354s / 2681 report frames, 2680 video stream frames
+content dropped: 26.146s / 784 frames
+soft-cut overlap removed: 0.446s / 13 frames
+total net removed: 26.592s / 798 frames
+B-roll top replacement: 15s / 450 frames
+transition mix: 2.36s / 71 frames
+visible inner-media motion: 89.32s / 2680 frames
+```
+
+Reason:
+
+```text
+The user requested a new full edit test after tightening the workflow rules. v65 verifies that the v64 sync lock, Whisper requirement, step gates, B-roll density cap, transition mix, and motion safety can run together on the real video2 output.
+```
+
 ## v64
 
 Added stricter production rules after video2 review.
