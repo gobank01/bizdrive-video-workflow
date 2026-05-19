@@ -1,5 +1,22 @@
 # Changelog
 
+## v60
+
+Added required summary and frame edit reporting.
+
+```text
+Created scripts/frame-edit-report.js
+Added npm script: report:frames
+Updated WORKFLOW.md and AGENTS.md so every task summary reports edited frames and removed frames
+Frame report separates content dropped, soft-cut overlap, total net removed, B-roll top replacement, and transition mix frames
+```
+
+Reason:
+
+```text
+The user wants every editing task to end with a clear summary and explicit frame counts: how many frames were edited and how many frames were removed. Making this a command and workflow rule keeps reporting consistent across future sessions.
+```
+
 ## v59
 
 Added B-roll Transition Mix Engine.

@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v59 VIDEO WORKFLOW - เพิ่ม B-roll Transition Mix Engine
+สถานะล่าสุด: v60 VIDEO WORKFLOW - เพิ่ม summary และ frame edit reporting ทุกงาน
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -52,7 +52,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v59
+version: v60
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -67,6 +67,7 @@ B-roll count: usually 5-10, minimum 3
 B-roll provider order: Pexels -> OpenRouter veo-3.1-lite -> OpenRouter kling-v3.0-std
 B-roll transition mix: enabled, soft 0.22s, bridge 0.26s for jump-cover slots
 transition QA command: npm run check:transition
+frame edit report command: npm run report:frames
 caption max length: about 20 Thai characters, never split Thai words
 sync master: bottom audio
 notify on sync mismatch: true
@@ -116,8 +117,34 @@ BGM mix command: npm run mix:bgm
 22. Run `npm run check`.
 23. Render full MP4.
 24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; after a full render, prefer `npm run finalize:video` to run Auto BGM and final report together.
-25. Write final report with `npm run report:final`.
-26. Update changelog/workflow version when rules change.
+25. Write frame edit report with `npm run report:frames`.
+26. Write final report with `npm run report:final`.
+27. Update changelog/workflow version when rules change.
+
+## Required Summary And Frame Counts
+
+ทุกครั้งหลังทำงาน ต้องสรุปให้ผู้ใช้เห็นอย่างน้อย:
+
+```text
+1. ทำอะไรไปบ้าง
+2. output path หรือ report path ที่เกี่ยวข้อง
+3. QA/test ที่รันและผลลัพธ์
+4. B-roll โหลดใหม่ / generated / reused / optimized เท่าไร ถ้างานเกี่ยวกับ B-roll
+5. ตัดต่อไปกี่เฟรม เช่น B-roll replace top frame, transition mix, zoom/motion หรือ overlay สำคัญ
+6. เอาออกไปกี่เฟรม เช่น dropped content segments, soft-cut overlap, total net removed
+```
+
+ให้นับเฟรมด้วย `30fps` เป็นค่า default ของ workflow นี้ เว้นแต่ source หรือ output ระบุชัดว่าต้องใช้ fps อื่น
+
+ใช้คำสั่งนี้เมื่อมี context index, B-roll manifest และ final MP4:
+
+```bash
+npm run report:frames -- \
+  --context assets/context/test2-v35-full-context-index.json \
+  --broll-manifest assets/broll/optimized/test2-v35/manifest.json \
+  --final ../stacked-output-v59-transition-mix-full-test.mp4 \
+  --json reports/frame-edit-report-v59.json
+```
 
 ดูรายละเอียดเต็มใน `STEPS.md`
 

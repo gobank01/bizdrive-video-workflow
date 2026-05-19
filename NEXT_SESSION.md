@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v59 - เพิ่ม B-roll Transition Mix Engine
+สถานะล่าสุด: v60 - เพิ่ม summary และ frame edit reporting ทุกงาน
 
 วันที่บันทึก: 2026-05-19
 
@@ -14,6 +14,7 @@ v55 commit: f897a32 Add next session handoff
 v56 commit: 145f10f Add final report generator
 v57 commit: 485facb Add auto final BGM wrapper
 v58 commit: dc3b0fa Add post-render finalize command
+v59 commit: f02d694 Add B-roll transition mix
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -33,6 +34,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 10. Finalize command รวม Auto BGM + Final Report หลัง render ได้ในคำสั่งเดียว
 11. B-roll Transition Mix Engine ทำ soft/bridge transition ตอน B-roll เข้าออกได้ โดยไม่ขยับกรอบ top/bottom และไม่กระทบ bottom audio/caption
 12. มี transition QA command ตรวจ metadata ทุก B-roll slot และบังคับให้ B-roll ที่ cover jump cut ใช้ bridge mode
+13. ทุกงานต้องมี summary และ frame counts: edited frames, removed frames, output/report paths, QA result
+14. มี frame edit report command สำหรับนับเฟรมจาก context index + B-roll manifest + final MP4
 ```
 
 ## Commands Now Available
@@ -80,6 +83,16 @@ npm run check:bgm
 
 ```bash
 npm run check:transition
+```
+
+สร้าง frame edit report:
+
+```bash
+npm run report:frames -- \
+  --context assets/context/test2-v35-full-context-index.json \
+  --broll-manifest assets/broll/optimized/test2-v35/manifest.json \
+  --final ../stacked-output-v59-transition-mix-full-retest.mp4 \
+  --json reports/frame-edit-report-v59-retest.json
 ```
 
 สร้าง final report:
@@ -138,6 +151,27 @@ reports/final-report-v59-transition-mix.json
 reports/final-report-v59-transition-mix.md
 status: review
 reason: B-roll QA pass, transition QA pass, BGM QA disabled for this render, key term QA warn from existing v45 report missing "prompt"
+```
+
+v59 full retest after v60 reporting rule:
+
+```text
+../stacked-output-v59-transition-mix-full-retest.mp4
+duration: 59.354333s
+size: 35.1 MB
+video: h264 1080x1920
+audio: aac 48000 Hz
+render: completed
+npm run check: pass with existing warnings composition_file_too_large, timeline_track_too_dense
+npm run check:transition: pass
+frame report: reports/frame-edit-report-v59-retest.json
+original: 2535 frames
+final output: 1781 frames
+content dropped: 735 frames
+soft-cut overlap removed: 18 frames
+total net removed: 754 frames
+B-roll top replacement: 900 frames
+transition mix: 144 frames
 ```
 
 Input final:
@@ -249,4 +283,6 @@ B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.
 Do not move/scale top or bottom frame borders during transition.
 Run npm run check:transition after B-roll timing or transition edits.
+Every task must end with a summary and frame counts: edited frames and removed frames.
+Use npm run report:frames when context index, B-roll manifest, and final MP4 are available.
 ```

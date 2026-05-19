@@ -12,6 +12,7 @@
     "check:keyterms": "node scripts/check-keyterms.js",
     "check:transition": "node scripts/check-transition-mix.js",
     "finalize:video": "node scripts/finalize-video.js",
+    "report:frames": "node scripts/frame-edit-report.js",
     "generate:broll": "node scripts/generate-openrouter-broll.js",
     "generate:broll:test-models": "node scripts/openrouter-broll-library.js",
     "mix:bgm": "node scripts/mix-bgm.js",

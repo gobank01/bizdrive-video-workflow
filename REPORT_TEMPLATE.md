@@ -17,6 +17,16 @@ npm run report:final -- \
 
 คำสั่งนี้จะรวม metadata ของ final MP4, context cut, B-roll manifest, BGM QA, key term QA และสร้างทั้ง JSON + Markdown
 
+สร้างรายงานเฟรมที่ตัดต่อ/เอาออก:
+
+```bash
+npm run report:frames -- \
+  --context assets/context/job-context.json \
+  --broll-manifest assets/broll/optimized/job/manifest.json \
+  --final ../final.mp4 \
+  --json reports/frame-edit-report-job.json
+```
+
 หลัง render เสร็จ ถ้าต้องการทำ BGM + final report ในคำสั่งเดียว:
 
 ```bash
@@ -147,6 +157,21 @@ slot 07:
 slot 08:
 slot 09:
 slot 10:
+```
+
+## Frame Edit Report
+
+```text
+fps:
+original frames:
+final output frames:
+content kept frames:
+content dropped frames:
+soft-cut overlap removed frames:
+total net removed frames:
+B-roll top replacement frames:
+transition mix frames:
+frame report:
 ```
 
 ## QA
