@@ -25,7 +25,7 @@ v66 commit: ea280c4 Add v66 noise and sync fix
 v67 commit: 5284118 Add v67 mistake prevention gates
 v68 commit: bd330bc Add v68 lip sync zero tolerance
 v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
-v70 commit: pending
+v70 commit: f3356ba Add v70 timestamped clip QA
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
