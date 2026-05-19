@@ -1,5 +1,35 @@
 # Changelog
 
+## v67
+
+Locked the v65/v66 mistakes into the workflow so they cannot be missed in future sessions.
+
+```text
+Created MISTAKES.md as a permanent incident and prevention log
+Recorded the v65 false-start/opening-noise mistake
+Recorded the v65 audio-source mistake: trusting a prior polished file without re-verifying quality/sync
+Recorded the v65 sync QA mistake: checking frame count/duration but not final stream start_time
+Recorded the caption remap risk after any new trim/cut
+Updated WORKFLOW.md, CONFIG.md, QA.md, STEPS.md, AGENTS.md, NEXT_SESSION.md, and the local bizdrive-video skill with hard gates
+```
+
+Hard gates added:
+
+```text
+Opening gate: true start must be sustained speech, not first detectable sound
+Audio source gate: raw vs polished source must be chosen with evidence
+Noise gate: opening false start/noise must be checked before and after polish
+Sync metadata gate: final ffprobe video/audio stream start_time must be checked after render
+Caption map gate: captions must be remapped after every trim/dead-air/context cut
+Summary gate: final summary must report mistake prevention gate status
+```
+
+Reason:
+
+```text
+The user asked to save all mistakes and prevent them from happening again. v67 makes the incident log a required source of truth and turns each known failure into a blocking QA gate.
+```
+
 ## v66
 
 Fixed the v65 review issues around opening noise and perceived lip sync.

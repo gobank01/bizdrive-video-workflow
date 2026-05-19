@@ -8,6 +8,7 @@
 [ ] bottom is main audio
 [ ] bottom audio is treated as master timeline
 [ ] sync lock is active: top, bottom audio/video, and captions share one edited timeline
+[ ] MISTAKES.md was read and all hard gates are active for this job
 [ ] user is notified if top/bottom duration, start offset, or drift mismatch is found
 [ ] top/bottom trim timestamps match
 [ ] top/bottom clean durations match
@@ -41,6 +42,8 @@
 [ ] captions are mapped to edited timeline, not raw pre-cut timestamps
 [ ] caption timing spot check matches bottom speech
 [ ] any measured sync compensation is logged in context/final report with ms value and reason
+[ ] final ffprobe stream start_time was checked for video and audio after render
+[ ] final summary includes mistake prevention gate status
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
 [ ] npm run check:motion passes after zoom/motion changes

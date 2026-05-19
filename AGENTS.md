@@ -40,12 +40,13 @@ For Bizdrive stacked-video work, read these files in order:
 2. `STEPS.md` — practical 62-step execution list for real editing
 3. `CONFIG.md` — editable settings such as key terms, layout, audio, captions, and B-roll provider order
 4. `QA.md` — required QA checklists
-5. `SYNC_REPORT.md` — sync mismatch/bottom-master reporting template
-6. `KEYTERM_QA.md` — key term preservation QA rules
-7. `MOTION_BGM.md` — zoom motion and BGM loop rules
-8. `BGM_LIBRARY.md` — BGM stock index and style map
-9. `REPORT_TEMPLATE.md` — final report format
-10. `CHANGELOG.md` — workflow version history
+5. `MISTAKES.md` — real incident log and hard gates that must not regress
+6. `SYNC_REPORT.md` — sync mismatch/bottom-master reporting template
+7. `KEYTERM_QA.md` — key term preservation QA rules
+8. `MOTION_BGM.md` — zoom motion and BGM loop rules
+9. `BGM_LIBRARY.md` — BGM stock index and style map
+10. `REPORT_TEMPLATE.md` — final report format
+11. `CHANGELOG.md` — workflow version history
 
 `STEPS_PRACTICAL_99.md` is an archived 99-step reference. Use it only when the 62-step edit map needs more detail.
 
@@ -56,6 +57,8 @@ For Bizdrive stacked-video work, read these files in order:
 Every workflow rule change increments the version and must be recorded in `CHANGELOG.md`. If the change affects execution, update `STEPS.md` and/or `CONFIG.md` instead of burying it only in prose.
 
 Execution style rule: while working, report progress to the user as numbered steps. Say what Step/Phase is running, what is being checked, and what artifact proves it passed. Do not silently skip steps.
+
+Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its hard gates as blockers: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, and final summary gate. Do not claim final completion if any gate lacks evidence.
 
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
 

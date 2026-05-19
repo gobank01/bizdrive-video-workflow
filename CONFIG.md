@@ -40,6 +40,20 @@ topMuted: true
 bottomHasAudio: true
 ```
 
+## Mistake Prevention
+
+```text
+mistakeLog: MISTAKES.md
+readMistakeLogBeforeEveryEdit: true
+blockFinalIfHardGateFails: true
+openingGate: true start must be sustained speech, not first detectable sound
+audioSourceGate: choose raw vs polished source with evidence
+noiseGate: opening false start/noise checked before and after polish
+syncMetadataGate: final ffprobe video/audio stream start_time checked after render
+captionMapGate: captions remapped after every trim/dead-air/context cut
+summaryGate: final summary reports prevention gate status
+```
+
 ## Sync Policy
 
 ```text

@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v66 - noise/sync fix render ผ่าน QA
+สถานะล่าสุด: v67 - mistakes locked into hard gates
 
 วันที่บันทึก: 2026-05-19
 
@@ -22,6 +22,7 @@ v63 commit: 1fc1cd7 Add video2 context edit
 v64 commit: 4773216 Add v64 production guardrails
 v65 commit: 1bc100c Add v65 full edit test
 v66 commit: ea280c4 Add v66 noise and sync fix
+v67 commit: pending until saved
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -59,6 +60,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 28. v65 full test พยายามโหลด fresh B-roll แล้ว แต่ shell env ไม่มี `PEXELS_API_KEY` จึงใช้ local QA-passed stock; รอบต่อไปถ้าต้องการ stock growth ให้ export key ก่อนเริ่มงาน
 29. v66 เพิ่ม false-start cleanup: true start คือ sustained speech ไม่ใช่เสียงแรกที่ Whisper จับได้
 30. v66 เพิ่ม audio polish chain ใหม่จาก raw bottom audio และบันทึก sync compensation 21ms เมื่อมีหลักฐานจาก stream start mismatch
+31. v67 เพิ่ม `MISTAKES.md` เป็น incident log ถาวร และทุกงานต้องอ่านก่อนเริ่ม edit
+32. v67 เพิ่ม hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, final summary gate
 ```
 
 ## Commands Now Available

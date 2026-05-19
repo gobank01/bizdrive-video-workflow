@@ -1,18 +1,19 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v66 - practical edit map with false-start cleanup and logged sync compensation
+สถานะล่าสุด: v67 - practical edit map with mistake log hard gates
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
 ## Phase 1 — Intake
 
-1. อ่าน `WORKFLOW.md`, `CONFIG.md`, `QA.md`, `AGENTS.md`
+1. อ่าน `WORKFLOW.md`, `CONFIG.md`, `QA.md`, `AGENTS.md`, `MISTAKES.md`
 2. ระบุโจทย์จากผู้ใช้ เช่น full render, test render, shorten, B-roll, caption, QA
 3. ระบุ target duration ถ้ามี
 4. ถ้ามี target duration ให้ถือเป็นเพดาน/เป้าหมาย ไม่ต้องยืดให้ชนเวลา ถ้าสาระครบและสั้นกว่า เช่น 1:30 เหลือ 1:20 ให้ใช้ 1:20
 5. ระบุ output filename และ version ที่จะใช้
 5.1 ประกาศกับผู้ใช้ว่าอยู่ Step/Phase ไหนและกำลังทำอะไร
 5.2 ก่อนข้าม phase ให้เช็คว่า artifact/QA ของ phase ก่อนหน้าครบแล้ว
+5.3 ระบุ hard gates จาก `MISTAKES.md` ที่ต้องพิสูจน์ในงานนี้
 
 ## Phase 2 — Input And Sync
 
@@ -55,6 +56,7 @@
 30. สร้าง `top_deadair_cut.mp4` และ `bottom_deadair_cut.mp4`
 31. ตรวจว่าไม่เหลือ silence ยาวเกิน policy
 31.1 ตรวจว่า top/bottom ยังมีจำนวนเฟรมและ duration ตรงกันหลังตัดคู่ขนาน
+31.2 ตรวจ final-prep gate จาก `MISTAKES.md`: opening sustained speech, audio source proof, noise proof, caption map proof
 
 ## Phase 6 — Audio Polish
 

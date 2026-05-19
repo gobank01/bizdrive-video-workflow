@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v66 NOISE/SYNC FIX - ตัด false-start ต้นคลิป, ปรับ audio polish ใหม่ และชดเชย sync ที่วัดได้
+สถานะล่าสุด: v67 MISTAKE LOCK - บันทึก v65/v66 mistakes และเพิ่ม hard gates กันเกิดซ้ำ
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -13,6 +13,7 @@ STEPS_PRACTICAL_99.md     archived practical reference 99 steps
 STEPS_DETAILED_425.md     detailed automation reference 425 steps
 CONFIG.md                 ค่าที่แก้ได้ เช่น key terms, layout, audio, caption, B-roll
 QA.md                     checklist ก่อน render / หลัง render / final delivery
+MISTAKES.md               incident log และ hard gates กันความผิดพลาดซ้ำ
 SYNC_REPORT.md            template วิเคราะห์ top/bottom sync และ bottom-master decisions
 KEYTERM_QA.md             rule และ command สำหรับตรวจ key terms หลัง cut
 MOTION_BGM.md             rule สำหรับ zoom in/out และ BGM sound loop
@@ -52,7 +53,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v66
+version: v67
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -91,6 +92,7 @@ BGM final QA command: npm run qa:bgm
 BGM auto latest final command: npm run auto:bgm
 final report command: npm run report:final
 post-render finalize command: npm run finalize:video
+mistake prevention log: MISTAKES.md
 BGM default fallback: mixkit-480 Curiosity
 BGM tech fallback: mixkit-1167 Close Up
 BGM calm fallback: mixkit-441 Meditation
@@ -101,6 +103,7 @@ BGM mix command: npm run mix:bgm
 ## Master Pipeline
 
 1. Prepare input files.
+1.1. Read `MISTAKES.md` and identify active prevention gates.
 2. Inspect raw media metadata.
 3. Confirm top/bottom roles and sync.
 4. Find true spoken start; reject false starts before sustained speech.
@@ -124,6 +127,7 @@ BGM mix command: npm run mix:bgm
 22. Run `npm run check`.
 23. Render full MP4.
 24. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; after a full render, prefer `npm run finalize:video` to run Auto BGM and final report together.
+24.1. Run mistake prevention gates: opening true start, audio source proof, noise proof, final stream start_time sync, caption remap proof.
 25. Write frame edit report with `npm run report:frames`.
 26. Write final report with `npm run report:final`.
 27. Update changelog/workflow version when rules change.
@@ -191,6 +195,7 @@ no manual offset, speed change, frame shift, or independent retime unless explic
 4. B-roll โหลดใหม่ / generated / reused / optimized เท่าไร ถ้างานเกี่ยวกับ B-roll
 5. ตัดต่อไปกี่เฟรม เช่น B-roll replace top frame, transition mix, zoom/motion หรือ overlay สำคัญ
 6. เอาออกไปกี่เฟรม เช่น dropped content segments, soft-cut overlap, total net removed
+7. mistake prevention gates ผ่านหรือไม่ โดยเฉพาะ opening/noise/sync/caption
 ```
 
 ให้นับเฟรมด้วย `30fps` เป็นค่า default ของ workflow นี้ เว้นแต่ source หรือ output ระบุชัดว่าต้องใช้ fps อื่น
@@ -243,6 +248,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
 หลัง render/QA ให้สร้าง JSON + Markdown final report ด้วย `npm run report:final`
+ทุกงานต้องอ่าน `MISTAKES.md` และห้ามส่ง final ถ้า hard gate ในไฟล์นั้นยังไม่ผ่าน
 ทุก rule change ต้องนับ version
 ```
 
@@ -332,6 +338,7 @@ v63 ตัดต่อ video2 ใหม่ทั้งหมดเป็น 89.3
 v64 เพิ่มกฎ sync lock แบบ frame-accurate, Whisper required ทุกงาน, sequential execution gates, B-roll fresh-stock policy จน stock index ครบ 200 clips, B-roll density cap ไม่เกิน 4 อันต่อ 1 นาที และ duration target แบบ meaning-first ไม่ต้องยืดให้ชนเวลา
 v65 ทดสอบ full edit video2 ตามกฎ v64 สำเร็จ: sync lock ผ่าน, Whisper transcript พร้อม, B-roll ลดเหลือ 5 จุดตาม density cap, render output `stacked-output-v65-video2-v64-full-test.mp4`, frame report/final report พร้อมใช้งาน
 v66 แก้ noise/sync: ตัด false-start 0-2.3s, เปลี่ยนมา polish จาก raw bottom audio, เพิ่ม denoise/gate chain ใหม่, log audio delay 21ms เพื่อชดเชย stream start mismatch และ render output `stacked-output-v66-video2-noise-sync-fix.mp4`
+v67 เพิ่ม `MISTAKES.md` เพื่อบันทึกความผิดพลาด v65/v66 และ hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof และ final summary ต้องรายงาน gates เหล่านี้
 
 ## How To Continue Development
 
