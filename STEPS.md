@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v80 - clean Set B Phase 5 test: ล้างแล้ว rebuild ถึงจุดตรวจปากกับเสียง
+สถานะล่าสุด: v81 - golden Phase 10 proof: Set B proof ผ่าน human review ว่าสมบูรณ์แบบ ใช้เป็น baseline ก่อน final/BGM
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 

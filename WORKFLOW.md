@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v80 SET B CLEAN PHASE 5 TEST - ล้าง artifacts แล้ว rebuild Set B ถึง Phase 5 เพื่อ human lip-sync review
+สถานะล่าสุด: v81 GOLDEN PHASE 10 PROOF - Set B proof ผ่าน human review ว่าสมบูรณ์แบบและใช้เป็น baseline ต่อ final/BGM
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v80
+version: v81
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -113,7 +113,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v80 clean rebuild uses Set B only through Phase 5; continue only after human lip-sync review passes
+latest phase test: v81 golden Phase 10 proof passed human review; continue final/BGM only from this baseline
 ```
 
 ## Master Pipeline
@@ -154,6 +154,46 @@ latest phase test: v80 clean rebuild uses Set B only through Phase 5; continue o
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v81 Golden Phase 10 Proof
+
+ผู้ใช้ตรวจ `../preview-v80/v80-setB-phase10-proof.mp4` แล้วให้ผลว่า:
+
+```text
+สมบูรณ์ แบบไม่ผิดเลย นี้แหละ ที่ต้องการ
+```
+
+บันทึกเป็น golden checkpoint:
+
+```text
+golden proof = ../preview-v80/v80-setB-golden-phase10-proof.mp4
+source proof = ../preview-v80/v80-setB-phase10-proof.mp4
+report = reports/phase10/v80-setB-phase10-report.md
+composition = index.html
+```
+
+QA ที่ต้องรักษาห้ามถอย:
+
+```text
+video/audio start_time = 0.000000 / 0.000000
+start delta = 0ms
+duration = 80.766667s
+video frames = 2423
+loudness = -16.2 LUFS
+true peak = -1.5 dBFS
+B-roll = 5 fresh-selected Pexels clips in top frame only
+captions = 27 cues, no cue over 22 visible chars
+main video frames removed in Phase 10 = 0
+top/bottom/audio timing shifted in Phase 10 = 0
+```
+
+กติกาต่อจากจุดนี้:
+
+```text
+ห้ามเปลี่ยน timing ของ top/bottom/audio/captions จาก golden proof
+ถ้าจะเพิ่ม BGM ให้ mix ที่ 5% บน golden proof และ QA start_time/loudness/lip-sync ซ้ำ
+ถ้า BGM ทำให้เสียงพูดด้อยลง ให้ย้อนกลับ golden proof ทันที
+```
 
 ## v79 Root Cause: Why Set A Failed And Set B Passed
 

@@ -1,5 +1,37 @@
 # Changelog
 
+## v81
+
+Saved the Set B Phase 10 proof as the golden checkpoint after human review.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated index.html for the v80 Set B Phase 10 composition
+Saved golden proof locally: ../preview-v80/v80-setB-golden-phase10-proof.mp4
+```
+
+Result:
+
+```text
+User reviewed ../preview-v80/v80-setB-phase10-proof.mp4 and confirmed: "สมบูรณ์ แบบไม่ผิดเลย นี้แหละ ที่ต้องการ"
+Golden proof metadata: 1080x1920, 30fps, 80.766667s, 2423 frames
+Video/audio start_time: 0.000000 / 0.000000
+Start delta: 0ms
+Audio: -16.2 LUFS, true peak -1.5 dBFS
+B-roll: 27 fresh Pexels downloads, 5 selected, 0 reused, 22 rejected, 5 optimized
+Phase 10 main video frames removed: 0
+Phase 10 top/bottom/audio timing shifted: 0 frames
+```
+
+Reason:
+
+```text
+This is the first phase-gated proof in the rebuilt Set B flow that the user explicitly accepted as exactly correct. Future final/BGM steps must preserve this file's timing and visual/caption/B-roll behavior as the baseline.
+```
+
 ## v80
 
 Cleaned generated artifacts and rebuilt Set B through Phase 5.
