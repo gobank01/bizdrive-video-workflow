@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v79
+## Bizdrive Workflow Docs — v80
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -71,6 +71,8 @@ Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its h
 Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip sync must be treated as a blocker, not a best-effort check. Do not call an output final unless final stream start_time was checked, any compensation is logged in ms, at least 5 lip-sync spot-check points were reviewed, and residualRisk is none. If uncertain, report blocked.
 
 Raw bottom lip-sync human gate: metadata sync is not enough. Before accepting an input set or crossing Phase 5 into Phase 6, preview bottom face with its own bottom audio and require human/visual lip-sync pass. If one candidate set fails by human review while another passes, continue only with the passing set. A failed set is blocked until rebuilt from synced source or corrected with measured/logged compensation evidence.
+
+Latest v80 checkpoint: generated artifacts were cleared and Set B was rebuilt from raw media through Phase 5 only. Continue from v80 only after the user confirms the new bottom proof and stacked preview are truly mouth/audio synced.
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 

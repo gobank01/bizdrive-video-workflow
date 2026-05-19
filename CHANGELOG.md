@@ -1,5 +1,29 @@
 # Changelog
 
+## v80
+
+Cleaned generated artifacts and rebuilt Set B through Phase 5.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Created local report reports/phase5/v80-setB-clean-test.md
+Created preview files outside repo under ../preview-v80/
+```
+
+Result:
+
+```text
+Cleaned assets/, reports/phase4/, reports/phase5/, ../preview-v78/, and ../preview-v80/
+Rebuilt Set B only from raw test 2 top/bottom files
+Created bottom lip-sync proof MP4 and stacked phase preview MP4
+Frame/duration/start_time QA passed
+Silence >0.5s after Phase 5 cut passed
+Human lip-sync review is still required before Phase 6
+```
+
 ## v79
 
 Added the raw bottom lip-sync human gate.

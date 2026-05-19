@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v79 - raw bottom lip-sync human gate recorded
+สถานะล่าสุด: v80 - clean Set B Phase 5 test ready for human lip-sync review
 
 วันที่บันทึก: 2026-05-19
 
@@ -35,6 +35,7 @@ v76 commit: 1b46227 Add v76 choice-based decision gates
 v77 commit: 86ab0ab Add v77 rough direction trim gate
 v78 commit: current v78 workflow commit (Add v78 phase-gated testing rule)
 v79 commit: current v79 workflow commit (Add v79 raw bottom lip-sync human gate)
+v80 commit: current v80 workflow commit (Add v80 clean Set B phase test)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -102,6 +103,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 58. v77 เพิ่ม rough direction trim gate: Step 20.1-21 ต้องรับ user rough direction, สร้าง start/end candidates จาก hint+audio/transcript/silence evidence, รายงานถ้า evidence ขัดกับ hint และ lock trimStart/trimEnd พร้อม frame/sample/evidence
 59. v78 เพิ่ม phase-gated testing: ต่อจากนี้ให้ทดสอบทีละ Phase, จบ Phase ต้องแสดง artifact/QA/risk และรอ user เลือก ผ่าน / ย้อนแก้ / ขอหลักฐานเพิ่ม ก่อนข้าม Phase ถัดไป ยกเว้นสั่ง auto/full mode ชัดเจน
 60. v79 เพิ่ม raw bottom lip-sync human gate: Set A metadata ผ่านแต่ปากไม่ตรง ส่วน Set B ปากตรงเป๊ะ จึงห้ามรับ input set จาก metadata อย่างเดียว ต้อง preview bottom face + bottom audio และให้ human/reviewer ยืนยันก่อนข้าม Phase 5 ไป Phase 6
+61. v80 ล้าง generated artifacts แล้ว rebuild Set B เท่านั้นจนถึง Phase 5: `../preview-v80/v80-setB-bottom-lipsync-proof.mp4` และ `../preview-v80/v80-setB-phase5-preview.mp4`; frame/duration/start_time/silence QA ผ่าน รอผู้ใช้ยืนยันปากตรงก่อน Phase 6
 ```
 
 ## Latest v75 Delivery

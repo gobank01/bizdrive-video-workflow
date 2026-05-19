@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v79 RAW BOTTOM LIP-SYNC HUMAN GATE - metadata ตรงไม่พอ ต้องดูปากกับเสียงจริงก่อนข้าม phase
+สถานะล่าสุด: v80 SET B CLEAN PHASE 5 TEST - ล้าง artifacts แล้ว rebuild Set B ถึง Phase 5 เพื่อ human lip-sync review
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v79
+version: v80
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -113,6 +113,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
+latest phase test: v80 clean rebuild uses Set B only through Phase 5; continue only after human lip-sync review passes
 ```
 
 ## Master Pipeline
@@ -162,6 +163,41 @@ raw bottom lip-sync gate: metadata sync is not enough; before accepting an input
 Set A: video2/Ai ตัดต่อ Screen 1.mp4 + video2/Ai ตัดต่อ Screen 2.mp4
 Set B: test 2/top screen - video 2.mp4 + test 2/botton screen - video 2.mp4
 ```
+
+## v80 Clean Set B Phase 5 Test
+
+ล้าง generated artifacts แล้ว rebuild เฉพาะ Set B เพื่อพิสูจน์ซ้ำว่าปากกับเสียงยังตรงเมื่อเริ่มใหม่จากศูนย์
+
+```text
+cleaned:
+  assets/
+  reports/phase4/
+  reports/phase5/
+  ../preview-v78/
+  ../preview-v80/
+
+source:
+  top = test 2/top screen - video 2.mp4
+  bottom = test 2/botton screen - video 2.mp4
+  bg = video/bg.png
+
+cut:
+  trimStart = 8.000s
+  trimEnd = 90.900s
+  dead air cuts = 37.566667-38.100000, 40.800000-41.900000, 71.100000-71.600000
+
+outputs:
+  bottom proof = ../preview-v80/v80-setB-bottom-lipsync-proof.mp4
+  stacked preview = ../preview-v80/v80-setB-phase5-preview.mp4
+
+QA:
+  phase frames = 2423
+  phase duration = 80.766667s
+  video/audio start_time = 0.000000
+  silencedetect >0.5s after cut = pass
+```
+
+สถานะ: รอ human lip-sync review จากผู้ใช้ก่อนข้ามไป Phase 6
 
 ผลจาก human review:
 
@@ -606,6 +642,7 @@ v76 เพิ่ม choice-based user decision gate: ก่อนข้าม de
 v77 เพิ่ม rough direction trim gate: Step 20.1-21 ต้องรับ user rough direction, สร้าง start/end candidates จาก hint+evidence, ห้ามเดาล้วน, รายงานเมื่อ evidence ขัดกับ hint และ lock trim พร้อม frame/sample/evidence
 v78 เพิ่ม phase-gated testing: ทุกการทดสอบต้องจบทีละ Phase พร้อม artifact/QA/risk report และรอ user pass ก่อนข้าม Phase ถัดไป ยกเว้นสั่ง auto/full mode ชัดเจน
 v79 เพิ่ม raw bottom lip-sync human gate: metadata ตรงไม่พอ ต้อง preview bottom face + bottom audio จริงก่อนรับ set เข้า pipeline; human fail ถือเป็น blocker แม้ duration/frame/start_time จะตรง
+v80 ล้าง generated artifacts แล้ว rebuild Set B เท่านั้นจนถึง Phase 5 เพื่อทำ bottom lip-sync proof และ stacked preview ใหม่: frame/duration/start_time/silence QA ผ่าน รอ human lip-sync gate
 
 ## How To Continue Development
 
