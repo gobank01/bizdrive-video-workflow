@@ -96,6 +96,7 @@ borderStyle: yellow/gold gradient with visible glow
 
 ```text
 trueStartRule: start where speech continues 30s+
+falseStartRule: if an early sound/word is followed by silence or reset before sustained speech, drop that false start
 deadAirMinDuration: 0.5s
 silenceThresholdDefault: -35dB
 trimMode: parallel top/bottom only
@@ -104,14 +105,18 @@ trimMode: parallel top/bottom only
 ## Audio Polish
 
 ```text
-highpass: 80Hz
-noiseReduction: afftdn nf=-25 default
-compressor: threshold=-18dB ratio=3 attack=8 release=120
+preferredSource: raw bottom.mp4 unless a prior polished source is verified clean and in sync
+highpass: 90Hz
+lowpass: 12000Hz
+noiseReduction: afftdn nr=14 nf=-42 tn=1 rf=-38 gs=8
+noiseGate: agate threshold=0.015 ratio=2.5 attack=6 release=140 range=0.12 detection=rms
+compressor: threshold=-20dB ratio=2.5 attack=8 release=160 makeup=1.35
 loudnessTarget: -16 LUFS
 truePeakMax: -1.5 dBTP
-lra: 11
+lra: 9
 limiter: 0.95
 audioBitrate: 192k
+syncCompensation: allowed only when measured/logged; example v66 used 21ms audio delay after final stream showed video start 0.021s and audio start 0.000s
 ```
 
 ## Caption

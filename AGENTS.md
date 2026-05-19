@@ -61,6 +61,10 @@ Sync rule: treat bottom audio as the master timeline. If top/bottom duration, st
 
 Sync lock rule: bottom audio, bottom face video, top screen video, and subtitles must stay on one edited timeline. Do not manually shift, retime, offset, or speed-change top/bottom/caption independently. B-roll may replace only top visuals and must never change the timeline. If any sync risk appears, stop and fix/report sync before continuing.
 
+Audio cleanup rule: the true start is the first sustained speech, not the first sound Whisper can transcribe. If the opening has a short cough/word/noise followed by silence or a reset, cut that false start in parallel from top and bottom before denoise/transcription/caption. Prefer raw bottom audio for a new polish pass when the previous polished file has noise or sync risk. Use speech-first cleanup: highpass/lowpass, denoise, noise gate, compressor, loudnorm, limiter.
+
+Logged sync compensation rule: if final stream metadata or a visible/audio sync point shows audio/video offset, compensation is allowed only after measuring it and writing the value plus reason into context/final report. Never hide this as an unreported manual offset.
+
 Duration rule: user-provided target duration is a ceiling/meaning target, not a requirement to pad. If the user asks for 1:30 and the meaning is complete at 1:20, deliver the tighter 1:20 rather than stretching.
 
 Whisper rule: every editing workflow requires a timestamped Whisper transcript from the polished bottom audio before context cutting or captions. If HyperFrames transcription fails, use direct `whisper-cli` or another timestamped Whisper fallback; do not proceed without transcript unless the user explicitly pauses that requirement.

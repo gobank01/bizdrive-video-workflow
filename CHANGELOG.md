@@ -1,5 +1,40 @@
 # Changelog
 
+## v66
+
+Fixed the v65 review issues around opening noise and perceived lip sync.
+
+```text
+Built scripts/build-video2-v66-noise-sync-fix.js
+Dropped raw 0.0-2.3s because it contained a short false start/non-sustained opening sound followed by reset/silence before sustained speech
+Rebuilt top and bottom soft cuts in parallel from the same bottom-master cut list
+Changed bottom audio source from the previous polished 96k file back to raw assets/video2/bottom.mp4
+Added a speech-first audio chain: highpass, lowpass, afftdn, agate, compressor, loudnorm, limiter
+Logged and applied 21ms audio delay compensation because v65 final metadata showed audio start 0.000s while video stream started 0.021s
+Rendered ../stacked-output-v66-video2-noise-sync-fix.mp4
+Generated reports/frame-edit-report-v66-video2.json
+Generated reports/final-report-v66-video2.json and reports/final-report-v66-video2.md
+```
+
+Frame results:
+
+```text
+original: 115.946s / 3478 frames
+final: 87.054s / 2612 report frames, 2611 video stream frames
+content dropped: 28.446s / 853 frames
+soft-cut overlap removed: 0.446s / 13 frames
+total net removed: 28.892s / 867 frames
+B-roll top replacement: 15s / 450 frames
+transition mix: 2.36s / 71 frames
+visible inner-media motion: 87.02s / 2611 frames
+```
+
+Reason:
+
+```text
+The user reported that v65 opening noise was not acceptable and mouth/audio still felt off. Root-cause checks found the opening had a false start before sustained speech and the rendered MP4 had a video stream start around 21ms after audio. v66 cuts the false start, uses a stronger but still speech-first audio chain from the raw bottom source, and logs the sync compensation.
+```
+
 ## v65
 
 Ran a full video2 edit test under the v64 production guardrails.

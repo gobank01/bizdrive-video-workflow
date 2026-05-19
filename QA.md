@@ -12,8 +12,10 @@
 [ ] top/bottom trim timestamps match
 [ ] top/bottom clean durations match
 [ ] top/bottom frame counts match after every parallel trim/dead-air/context cut, except container rounding
+[ ] opening false start/noise/reset was checked; true start begins at sustained speech
 [ ] no remaining dead air longer than policy
-[ ] audio polish completed
+[ ] audio polish completed from verified clean bottom source, preferably raw bottom audio when prior polish has noise/sync risk
+[ ] denoise/gate does not make voice thin, robotic, or masked
 [ ] loudness checked
 [ ] transcript generated from polished audio
 [ ] transcript was generated with Whisper or timestamped Whisper fallback
@@ -38,6 +40,7 @@
 [ ] captions obey max length policy
 [ ] captions are mapped to edited timeline, not raw pre-cut timestamps
 [ ] caption timing spot check matches bottom speech
+[ ] any measured sync compensation is logged in context/final report with ms value and reason
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
 [ ] npm run check:motion passes after zoom/motion changes

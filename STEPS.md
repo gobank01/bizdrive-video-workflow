@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v65 - practical edit map tested on full video2 under v64 gates
+สถานะล่าสุด: v66 - practical edit map with false-start cleanup and logged sync compensation
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -38,6 +38,7 @@
 17. ใช้ bottom audio เป็นหลักในการหา start
 18. ตัด cough, throat clear, false start, pause/reset ก่อนเริ่มจริง
 19. true start คือจุดที่เริ่มพูดจริงและพูดต่อเนื่องประมาณ 30s+
+19.1 ถ้าช่วงแรกมีเสียง/คำสั้นแล้วตามด้วย silence/reset ก่อนพูดยาว ให้ถือเป็น false start แม้ Whisper จะจับคำได้
 20. หา end ที่เนื้อหาจบจริงหรือเข้าสู่ trailing silence
 21. บันทึก trimStart, trimEnd และเหตุผล
 
@@ -57,8 +58,9 @@
 
 ## Phase 6 — Audio Polish
 
-32. ใช้ bottom clean เป็น source
-33. apply highpass, noise reduction, compressor, loudness normalization และ limiter
+32. ใช้ bottom clean เป็น source; ถ้าไฟล์ polished เดิมมี noise/sync risk ให้กลับไปใช้ raw bottom audio
+33. apply speech-first chain: highpass/lowpass, afftdn, agate noise gate, compressor, loudness normalization และ limiter
+33.1 ถ้า final stream หรือ sync point บอกว่า audio/video start offset จริง ให้ชดเชยได้เฉพาะเมื่อบันทึกค่า ms และเหตุผลใน context/report
 34. target loudness คือ -16 LUFS และ true peak ไม่เกิน -1.5 dBTP
 35. สร้าง `bottom_audio_polished.mp4`
 36. ตรวจ loudness report และ spot check เสียงพูด
