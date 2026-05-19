@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v76 - choice-based user gates + single final output + edit-first master
+สถานะล่าสุด: v77 - rough direction trim gate + choice-based user gates
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -46,8 +46,12 @@
 19.1 ถ้าช่วงแรกมีเสียง/คำสั้นแล้วตามด้วย silence/reset ก่อนพูดยาว ให้ถือเป็น false start แม้ Whisper จะจับคำได้
 19.2 ก่อน lock true start ให้ถามเป็นตัวเลือกถ้ายังไม่มี user hint: ใช้ hint ผู้ใช้ / ให้ AI หาเอง / ส่ง candidates ให้เลือก
 20. หา end ที่เนื้อหาจบจริงหรือเข้าสู่ trailing silence
-20.1 ก่อน lock end ให้ถามเป็นตัวเลือกถ้ายังไม่รู้ direction: จบหลัง CTA / ให้ AI หา end / ส่ง candidates ให้เลือก
-21. บันทึก trimStart, trimEnd, user choice, rejected candidates และเหตุผล
+20.1 รับ user rough direction ถ้ามี เช่น start คร่าว ๆ, end คร่าว ๆ, must keep, must remove, target duration และ tone การตัด
+20.2 AI สร้าง start/end candidates จาก user hint + audio evidence + rough transcript + silence/VAD evidence ไม่ใช่จากการเดาล้วน
+20.3 ถ้ามี user hint ต้องใช้เป็น anchor เสมอ; AI ห้ามเลือกจุดตัดที่ไม่สัมพันธ์กับ hint โดยไม่อธิบายเหตุผล
+20.4 ถ้าหลักฐานขัดกับ user hint ต้องรายงานก่อน เช่น ผู้ใช้บอกเริ่ม 24s แต่เสียงพูดจริงเริ่ม 23.6s แล้วให้เลือก/ยืนยันก่อน lock
+20.5 ก่อน lock end ให้ถามเป็นตัวเลือกถ้ายังไม่รู้ direction: จบหลัง CTA / ให้ AI หา end / ส่ง candidates ให้เลือก
+21. lock trimStart/trimEnd พร้อม user choice, rough direction, selected candidate, rejected candidates, frame/sample values, evidence และเหตุผล
 
 ## Phase 5 — Parallel Trim And Dead Air
 

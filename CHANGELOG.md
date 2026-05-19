@@ -1,5 +1,23 @@
 # Changelog
 
+## v77
+
+Added the rough direction trim gate for Step 20.1-21.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+The user pointed out that the Phase 4 trim lock still did not explicitly require user rough direction, start/end candidates, evidence, and conflict reporting. v77 makes Step 20.1-21 a real decision gate: user hint becomes the anchor, AI must build candidates from evidence, and trimStart/trimEnd cannot be locked from guessing alone.
+```
+
 ## v76
 
 Added choice-based user decision gates.

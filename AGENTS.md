@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v76
+## Bizdrive Workflow Docs — v77
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -61,6 +61,8 @@ Every workflow rule change increments the version and must be recorded in `CHANG
 Execution style rule: while working, report progress to the user as numbered steps. Say what Step/Phase is running, what is being checked, and what artifact proves it passed. Do not silently skip steps.
 
 Choice-based decision rule: before important editorial/creative decisions, ask the user with 2-3 simple options instead of open-ended typing. Put the recommended option first, keep labels short, and use clickable choices when the UI/tool supports it. If clickable choices are unavailable, use A/B/C options and accept a one-letter or short reply. If the user already gave direction at the start, use that as the answer and do not ask again.
+
+Rough direction trim gate: before locking `trimStart`/`trimEnd`, collect user rough direction if available: approximate start, approximate end, must keep, must remove, target duration, and cut tone. AI must create start/end candidates from user hint plus audio evidence, rough transcript, and silence/VAD evidence. If evidence conflicts with user hint, report it before locking the cut. The lock record must include selected candidate, rejected candidates, frame/sample values, evidence, and reason.
 
 Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its hard gates as blockers: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, and final summary gate. Do not claim final completion if any gate lacks evidence.
 
