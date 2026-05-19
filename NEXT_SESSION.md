@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v72 - video2 edit-first final delivered, modular workflow recorded
+สถานะล่าสุด: v73 - completion marker rule recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -27,7 +27,8 @@ v68 commit: bd330bc Add v68 lip sync zero tolerance
 v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
 v70 commit: f3356ba Add v70 timestamped clip QA
 v71 commit: 34e6937 Add v71 lip-sync safe final edit
-v72 commit: included in current commit (Add v72 edit-first master workflow)
+v72 commit: 4a49374 Add v72 edit-first master workflow
+v73 commit: included in current commit (Add v73 completion marker rule)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -86,6 +87,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 49. v72 ใช้ B-roll 5 จุด: fresh download 0 เพราะ shell env ไม่มี `PEXELS_API_KEY/OPENROUTER_API_KEY`, reused local stock 5, optimized 5, rejected 0
 50. v72 QA pass: edit-first master proof, `npm run check`, `npm run check:transition`, `npm run check:motion`, final silencedetect >0.5s none, keyterm QA pass, final report pass
 51. เพิ่ม `MODULES.md` เพื่อแยกงานเป็น transcript, sync-inspect, context-index, edl-build, editorial-master, broll-source, caption-build, layout-render, final-mux, final-qa
+52. v73 เพิ่ม completion marker rule: เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมี `✅✅✅` แบบบรรทัดเดี่ยวให้เห็นชัดเจน
 ```
 
 ## Latest v72 Delivery
@@ -493,6 +495,7 @@ Bottom audio remains master.
 Production/full render must use edit-first editorial masters before HyperFrames layout.
 HyperFrames should render visual-only, then mux speech audio master back after render.
 Top/bottom trims and cuts remain parallel.
+When a task is fully complete and verified, final response must include a standalone ✅✅✅ marker.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.
 Do not move/scale top or bottom frame borders during transition.

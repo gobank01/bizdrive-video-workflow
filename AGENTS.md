@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v72
+## Bizdrive Workflow Docs — v73
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -136,6 +136,8 @@ When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest
 When the final MP4, context index, B-roll manifest, and key term report are ready, prefer `npm run finalize:video` for post-render delivery. It runs Auto BGM first, then creates the final report.
 
 Every task summary must include what changed, output/report paths, QA commands and results, and frame counts. Report edited frames such as B-roll top replacement, transition mix, zoom/motion, or overlays, plus removed frames such as dropped content, soft-cut overlap, and total net removed. Use `npm run report:frames` when context index, B-roll manifest, and final MP4 are available.
+
+Completion marker rule: when a task is fully complete and verified, the final response must include a clearly visible standalone `✅✅✅`. Do not use this marker for blocked, partial, or unverified work.
 
 When the user wants to split the workflow into smaller projects, use the modules in `MODULES.md`: transcript, sync-inspect, context-index, edl-build, editorial-master, broll-source, caption-build, layout-render, final-mux, and final-qa. Each module must read/write files so the next session can continue without relying on chat memory.
 

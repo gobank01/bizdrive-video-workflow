@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v72 - practical edit map with edit-first master + 1-second timestamped clip QA
+สถานะล่าสุด: v73 - completion marker + edit-first master + 1-second timestamped clip QA
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -128,6 +128,7 @@
 62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
 62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
 62.4 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ
+62.5 เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมีบรรทัด `✅✅✅` ให้เห็นชัดเจน ถ้า task ยัง blocked หรือยังไม่ verify ห้ามใช้ marker นี้
 
 ## Modular Subprojects
 

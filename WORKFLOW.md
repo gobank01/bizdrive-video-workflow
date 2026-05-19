@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v72 EDIT-FIRST MASTER - ตัดต่อให้จบและล็อก sync ก่อนวางลง background/HyperFrames
+สถานะล่าสุด: v73 COMPLETION MARKER - เมื่อ Task เสร็จสมบูรณ์ต้องแสดง ✅✅✅ ให้เห็นชัดเจน
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v72
+version: v73
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -106,6 +106,7 @@ BGM tech fallback: mixkit-1167 Close Up
 BGM calm fallback: mixkit-441 Meditation
 BGM final-real-file QA: required
 BGM mix command: npm run mix:bgm
+completion marker: when a task is fully complete and verified, final response must include a clear standalone `✅✅✅`
 ```
 
 ## Master Pipeline
@@ -260,6 +261,7 @@ forbidden:
 6. เอาออกไปกี่เฟรม เช่น dropped content segments, soft-cut overlap, total net removed
 7. mistake prevention gates ผ่านหรือไม่ โดยเฉพาะ opening/noise/sync/caption
 8. lip-sync status: finalStreamStartDeltaMs, compensationMs, spotCheckPoints และ residualRisk
+9. ถ้า task เสร็จสมบูรณ์และ verify แล้ว ให้แสดง `✅✅✅` แบบบรรทัดเดี่ยวให้เห็นชัดเจน
 ```
 
 ให้นับเฟรมด้วย `30fps` เป็นค่า default ของ workflow นี้ เว้นแต่ source หรือ output ระบุชัดว่าต้องใช้ fps อื่น
@@ -317,6 +319,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 ทุกงานต้องอ่าน `MISTAKES.md` และห้ามส่ง final ถ้า hard gate ในไฟล์นั้นยังไม่ผ่าน
 ทุกงานต้องอ่าน `LIPSYNC_QA.md`; ถ้า lip sync ยังไม่มั่นใจ 100% ให้หยุดและรายงาน blocked
 ทุก rule change ต้องนับ version
+เมื่อ task จบสมบูรณ์และตรวจแล้ว ต้องใส่ ✅✅✅ ใน final response เสมอ
 ```
 
 ## Latest Proven Output
@@ -445,6 +448,7 @@ v69 บันทึก root cause lip-sync: v66 xfade bottom face และ acro
 v70 เพิ่ม timestamped clip QA: ทุกครั้งที่ตรวจคลิปต้องสร้าง contact sheet ที่มี timestamp กำกับทุก 1 วินาที ด้วย `npm run qa:timestamps` เพื่อไล่ lip sync, cut, caption, B-roll และ timeline ได้แม่นขึ้น
 v71 ตัดต่อ video2 ใหม่ทั้งหมดแบบ final: ใช้ bottom audio เป็น master, ตัด false start/dead air, ตัดแบบ lip-sync-safe hard concat ไม่มี visible bottom xfade, B-roll 5 จุดตาม density cap, BGM Mixkit 5%, timestamp QA ทุก 1 วินาที, cut contact sheet และ final report ผ่าน
 v72 เปลี่ยน architecture เป็น edit-first master: สร้าง top visual, bottom visual และ speech audio master ที่ frame/sample lock ก่อนเข้า HyperFrames, render visual-only แล้ว mux speech audio กลับทีหลัง เพื่อกัน lip-sync drift จาก layout/render stage
+v73 เพิ่ม completion marker rule: ทุกครั้งที่ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องแสดง `✅✅✅` แบบชัดเจน
 
 ## How To Continue Development
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## v73
+
+Added a clear task completion marker rule.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+The user wants every fully completed task to end with a highly visible `✅✅✅` marker. The marker is allowed only after the task is complete and verified, so it remains a clear signal rather than decoration.
+```
+
 ## v72
 
 Rebuilt video2 with an edit-first master architecture to remove the remaining lip-sync workflow risk.
