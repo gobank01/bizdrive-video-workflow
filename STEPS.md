@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v86 - perfect workflow checkpoint: ใช้เป็น baseline สมบูรณ์ก่อนพัฒนารอบถัดไป
+สถานะล่าสุด: v87 - video div final render ผ่านครบ pipeline: ใช้เป็นตัวอย่างล่าสุดของ full/auto mode หลังผู้ใช้อนุมัติ phase gate
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 

@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v86
+## Bizdrive Workflow Docs — v87
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -71,6 +71,8 @@ Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its h
 Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip sync must be treated as a blocker, not a best-effort check. Do not call an output final unless final stream start_time was checked, any compensation is logged in ms, at least 5 lip-sync spot-check points were reviewed, and residualRisk is none. If uncertain, report blocked.
 
 Raw bottom lip-sync human gate: metadata sync is not enough. Before accepting an input set or crossing Phase 5 into Phase 6, preview bottom face with its own bottom audio and require human/visual lip-sync pass. If one candidate set fails by human review while another passes, continue only with the passing set. A failed set is blocked until rebuilt from synced source or corrected with measured/logged compensation evidence.
+
+Latest v87 checkpoint: `../preview-v87/v87-video-div-final.mp4` was built from folder `../video div` after the user directed trimming the first 24 seconds and then approved finishing the job. It is the latest real-folder final render proof: 103.466667s, 3104 frames, video/audio start_time 0.000000, BGM 5%, B-roll top-frame only, final QA pass with one timeline_track_too_dense warning.
 
 Latest v81 checkpoint: Set B Phase 10 proof `../preview-v80/v80-setB-phase10-proof.mp4` was reviewed by the user and accepted as "สมบูรณ์ แบบไม่ผิดเลย นี้แหละ ที่ต้องการ". The golden copy is `../preview-v80/v80-setB-golden-phase10-proof.mp4`. Continue final/BGM only from this baseline, and do not change top/bottom/audio/caption timing.
 

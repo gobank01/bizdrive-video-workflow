@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v86 - perfect workflow checkpoint saved; v83 final remains accepted output
+สถานะล่าสุด: v87 - video div final render completed and QA passed
 
 วันที่บันทึก: 2026-05-19
 
@@ -41,7 +41,8 @@ v82 commit: 1b91667 Add v82 BGM frame lock checkpoint
 v83 commit: 21a4955 Add v83 accepted final checkpoint
 v84 commit: 6df7852 Add v84 caption gold spacing rule
 v85 commit: 5f100b5 Add v85 caption gold phase placement
-v86 commit: current v86 perfect workflow checkpoint commit
+v86 commit: d17a95a Save v86 perfect workflow checkpoint
+v87 commit: this commit (Add v87 video div final render)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -49,6 +50,12 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 ## What Is Done
 
 ```text
+0. v87 video div final output: ../preview-v87/v87-video-div-final.mp4
+0.1 v87 duration/frame lock: 103.466667s, 3104 frames, video/audio start_time 0.000000
+0.2 v87 removed frames: 809 total = 720 opening trim + 89 dead-air frames
+0.3 v87 B-roll: 0 fresh downloads, 0 AI generations, 5 reused QA-passed indexed sources, 5 optimized derivatives
+0.4 v87 BGM: Mixkit mixkit-1167 Close Up, finance_business, 5%, frameLock pass
+0.5 v87 QA reports: reports/phase11/v87-final-report.md and reports/phase11/v87-timestamps/timestamp-qa-sheet.jpg
 1. BGM stock library มี 15 เพลงจาก Mixkit
 2. default BGM level = 5%
 3. BGM intent = แทบไม่ได้ยิน / felt more than heard

@@ -1,5 +1,42 @@
 # Changelog
 
+## v87
+
+Rendered the `video div` job through the full edit-first Bizdrive pipeline after the user approved the 24s trim and requested completion.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated index.html
+Added scripts/build-v87-video-div-composition.js
+Created final output: ../preview-v87/v87-video-div-final.mp4
+Created final report: reports/phase11/v87-final-report.md
+Created timestamp QA: reports/phase11/v87-timestamps/timestamp-qa-sheet.jpg
+```
+
+Result:
+
+```text
+Final output: ../preview-v87/v87-video-div-final.mp4
+Duration: 103.466667s
+Video: 1080x1920, 30fps, 3104 frames, start_time 0.000000
+Audio: AAC 48kHz stereo, start_time 0.000000
+Removed frames: 809 total = 720 opening trim + 89 dead-air
+Edited frames: 450 B-roll replacement frames
+B-roll newly downloaded/reused/generated: 0/5/0
+Optimized B-roll derivatives: 5
+BGM: Mixkit mixkit-1167 Close Up, 5%, frame-lock pass
+QA: caption-gold pass, motion pass, transition pass, keyterms pass, npm run check pass with one timeline_track_too_dense warning only
+```
+
+Reason:
+
+```text
+This records the latest real-folder proof that the edit-first architecture can trim, remove dead air, preserve bottom-master lip sync, add captions, insert B-roll only in the top frame, mux speech audio back after visual render, and add 5% BGM without changing frame count.
+```
+
 ## v86
 
 Saved the current workflow as the most complete perfect checkpoint.

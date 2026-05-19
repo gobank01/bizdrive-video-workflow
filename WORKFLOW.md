@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v86 PERFECT WORKFLOW CHECKPOINT - บันทึกฐาน workflow ที่สมบูรณ์ที่สุดล่าสุด
+สถานะล่าสุด: v87 VIDEO DIV FINAL RENDER - ตัด 24s แรก, ทำ final render ครบ pipeline และบันทึกผล QA
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v86
+version: v87
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -713,6 +713,28 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 ```
 
 ## Latest Proven Output
+
+```text
+version: v87 video div final render
+output: /Users/gobank01/Documents/Video V2/preview-v87/v87-video-div-final.mp4
+duration: 103.466667s
+frames: 3104 video frames at 30fps
+video: h264 1080x1920, 30fps, start_time 0.000000
+audio: AAC, 48kHz, stereo, BGM mixed at 5%, start_time 0.000000
+source duration: 130.433333s / 3913 frames
+content dropped: 26.966667s / 809 frames
+opening trim: 24.000s / 720 frames
+dead-air removed: 2.966667s / 89 frames
+B-roll: 5 reused QA-passed indexed sources, 5 optimized derivatives, 0 new downloads, 0 AI generations, 0 rejected candidates
+B-roll fresh sourcing: blocked because PEXELS_API_KEY/OPENROUTER_API_KEY were not present in shell env
+B-roll replacement: 15s / 450 frames, top-frame only
+BGM: Mixkit mixkit-1167 Close Up, finance_business, 5%, frame-lock pass
+QA: caption-gold pass, motion pass, transition pass, keyterms pass, npm run check pass with only timeline_track_too_dense warning
+timestamp QA: reports/phase11/v87-timestamps/timestamp-qa-sheet.jpg
+final report: reports/phase11/v87-final-report.md
+```
+
+Previous proven output:
 
 ```text
 version: v74 video2 test edit
