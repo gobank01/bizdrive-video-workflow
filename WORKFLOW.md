@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v85 CAPTION GOLD PHASE PLACEMENT - ระบุชัดว่า gold spacing อยู่ Phase 10 / Caption Build และ Caption QA
+สถานะล่าสุด: v86 PERFECT WORKFLOW CHECKPOINT - บันทึกฐาน workflow ที่สมบูรณ์ที่สุดล่าสุด
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v85
+version: v86
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -116,7 +116,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v85 caption gold spacing placement clarified; v83 remains accepted final output
+latest phase test: v86 perfect workflow checkpoint saved; v83 remains accepted final output
 ```
 
 ## Master Pipeline
@@ -158,6 +158,45 @@ latest phase test: v85 caption gold spacing placement clarified; v83 remains acc
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v86 Perfect Workflow Checkpoint
+
+ผู้ใช้ยืนยันว่า:
+
+```text
+save ทุกอย่างให้เรียบร้อย นี้คือ version ที่สมบูรณ์ที่สุด
+```
+
+บันทึกเป็นฐาน workflow สมบูรณ์ล่าสุด:
+
+```text
+workflow checkpoint = v86
+accepted final output = ../preview-v80/v83-setB-final-accepted.mp4
+accepted final report = reports/phase11/v83-final-report.md
+latest rule checkpoint = v85 caption gold placement
+current git baseline = v86 perfect workflow checkpoint
+```
+
+QA ณ จุดบันทึก:
+
+```text
+npm run check:caption-gold = pass, 27 captions, 0 issues
+npm run check = pass, 0 errors, 1 existing warning: timeline_track_too_dense
+worktree before v86 edits = clean
+main video frames changed = 0
+main video frames removed = 0
+B-roll newly downloaded = 0
+B-roll reused = 0
+AI-generated B-roll = 0
+```
+
+กติกา:
+
+```text
+ใช้ v86 เป็น workflow baseline ก่อนพัฒนารอบถัดไป
+ถ้าจะเปลี่ยน rule/logic ต่อจากนี้ ให้เริ่ม v87
+v83 ยังเป็น accepted final MP4 ของคลิปทดสอบนี้
+```
 
 ## v85 Placement: Caption Gold Spacing
 

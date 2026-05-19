@@ -1,5 +1,35 @@
 # Changelog
 
+## v86
+
+Saved the current workflow as the most complete perfect checkpoint.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+```
+
+Result:
+
+```text
+User requested: "save ทุกอย่างให้เรียบร้อย นี้คือ version ที่สมบูรณ์ที่สุด"
+Workflow checkpoint: v86
+Accepted final output remains: ../preview-v80/v83-setB-final-accepted.mp4
+Latest rule checkpoint included: v85 caption gold placement
+QA before save: npm run check:caption-gold pass, npm run check pass with only the existing timeline_track_too_dense warning
+Main video frames changed: 0
+Main video frames removed: 0
+B-roll newly downloaded/reused/generated: 0/0/0
+```
+
+Reason:
+
+```text
+v86 is the clean baseline for the next development round. Future workflow changes should start at v87.
+```
+
 ## v85
 
 Clarified the exact workflow phase for the caption gold-spacing rule.
