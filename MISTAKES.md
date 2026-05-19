@@ -152,9 +152,46 @@ spot check caption timing around first 10s and around each cut/B-roll point
 7. Lip-sync zero-tolerance gate: `LIPSYNC_QA.md` checks pass; if uncertain, final is blocked
 8. Bottom visible cut gate: bottom face must not be xfade blended while visible; cut contact sheet must show no ghost/double-mouth frames
 9. Edit-first master gate: production render must have locked top visual, bottom visual, and speech audio masters before HyperFrames layout
+10. BGM frame-lock gate: BGM mix must preserve final video frame count, video duration, video start_time, and audio start_time; frameDelta must be 0
 ```
 
 ถ้า gate ใดไม่ผ่าน ห้ามเรียกงานว่าเสร็จ
+
+## v82 BGM Mix Shortened The Accepted Proof
+
+What happened:
+
+```text
+หลัง v81 golden proof ผ่าน human review แล้ว มีการ mix BGM 5% เพื่อทำ final candidate
+BGM candidate แรกมี video frames ลดจาก 2423 เหลือ 2421
+video duration ลดจาก 80.766667s เหลือ 80.700000s
+สาเหตุนี้เสี่ยงทำให้ final ไม่ตรงกับ golden proof ที่ผู้ใช้ยืนยันแล้ว
+```
+
+Root cause:
+
+```text
+scripts/mix-bgm.js ใช้ ffmpeg `-shortest`
+หลังผสมเสียง audio stream สั้นกว่า video stream เล็กน้อย
+`-shortest` จึงทำให้ mux จบตาม audio และ drop video ท้าย 2 frames
+```
+
+Never again:
+
+```text
+ห้ามใช้ `-shortest` ใน BGM mix ของ final/golden proof
+BGM mix ต้อง preserve video stream จากไฟล์ที่ผ่าน review แล้ว
+หลัง BGM mix ต้องเปรียบเทียบ frame count, video duration, video start_time และ audio start_time กับไฟล์ต้นฉบับ
+ถ้า frameDelta ไม่ใช่ 0 ห้ามส่ง final
+```
+
+Required proof:
+
+```text
+reports/phase*/...bgm-qa.json ต้องมี frameLock.status=pass
+frameLock.frameDelta=0
+final ffprobe ต้องรายงาน video frames เท่ากับ baseline
+```
 
 ## v68 Lip-Sync Zero Tolerance
 

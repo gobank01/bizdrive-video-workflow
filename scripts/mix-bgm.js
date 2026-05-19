@@ -135,11 +135,12 @@ function buildFilter(args, duration) {
   const fadeIn = Math.max(0, args.fadeIn).toFixed(3);
   const fadeOut = Math.max(0, args.fadeOut).toFixed(3);
   const bgmBase = `[1:a]volume=${bgmVolume},afade=t=in:st=0:d=${fadeIn},afade=t=out:st=${fadeOutStart}:d=${fadeOut}[bgm0]`;
+  const audioTailLock = `,apad,atrim=0:${duration.toFixed(6)},asetpts=PTS-STARTPTS[a]`;
 
   if (args.duck) {
-    return `${bgmBase};[bgm0][0:a]sidechaincompress=threshold=${args.duckThreshold}:ratio=${args.duckRatio}:attack=20:release=250[bgm];[0:a][bgm]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false[a]`;
+    return `${bgmBase};[bgm0][0:a]sidechaincompress=threshold=${args.duckThreshold}:ratio=${args.duckRatio}:attack=20:release=250[bgm];[0:a][bgm]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false${audioTailLock}`;
   }
-  return `${bgmBase};[0:a][bgm0]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false[a]`;
+  return `${bgmBase};[0:a][bgm0]amix=inputs=2:duration=first:dropout_transition=0:normalize=0,alimiter=limit=${args.limiterLimit}:level=false${audioTailLock}`;
 }
 
 function main() {
@@ -166,7 +167,6 @@ function main() {
     "aac",
     "-b:a",
     args.audioBitrate,
-    "-shortest",
     "-movflags",
     "+faststart",
     args.output

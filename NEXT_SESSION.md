@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v81 - golden Phase 10 proof accepted by human review; continue final/BGM from this baseline only
+สถานะล่าสุด: v82 - final BGM candidate built from v81 golden proof; frame/timing/loudness QA pass
 
 วันที่บันทึก: 2026-05-19
 
@@ -36,7 +36,8 @@ v77 commit: 86ab0ab Add v77 rough direction trim gate
 v78 commit: current v78 workflow commit (Add v78 phase-gated testing rule)
 v79 commit: current v79 workflow commit (Add v79 raw bottom lip-sync human gate)
 v80 commit: 408cc68 Add v80 clean Set B phase test
-v81 commit: current v81 golden Phase 10 checkpoint commit
+v81 commit: 46e407c Add v81 golden phase 10 checkpoint
+v82 commit: current v82 final BGM frame-lock checkpoint commit
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -109,6 +110,12 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 63. v81 golden proof ถูก copy เป็น `../preview-v80/v80-setB-golden-phase10-proof.mp4`; metadata 1080x1920, 30fps, 80.766667s, 2423 frames, video/audio start_time 0/0, loudness -16.2 LUFS, true peak -1.5 dBFS
 64. v81 B-roll ใน golden proof: fresh Pexels download 27, selected 5, reused 0, generated 0, rejected 22, optimized 5; B-roll อยู่ top frame only และ bottom face/audio/captions ไม่ถูกเลื่อน
 65. ต่อจาก v81 ถ้าจะทำ BGM/final ต้องใช้ golden proof เป็น baseline เท่านั้น ห้ามเปลี่ยน timing; mix BGM 5% แล้ว QA start_time/loudness/lip-sync ซ้ำ
+66. v82 สร้าง final BGM candidate จาก golden proof: `../preview-v80/v81-setB-final-bgm.mp4`
+67. v82 BGM เลือกจาก title/transcript/context: style `tech_explainer`, track `mixkit-175 Digital Clouds`, provider Mixkit, license `https://mixkit.co/license/`, gain 5%
+68. v82 แก้ bug สำคัญ: BGM candidate แรกสั้นลง 2 frames เพราะ `mix-bgm.js` ใช้ `-shortest`; ห้ามใช้ output ที่ frameDelta ไม่ใช่ 0 เป็น final
+69. v82 `mix-bgm.js` ถูกแก้ให้ไม่ใช้ `-shortest` และ lock audio filter ด้วย `apad,atrim=0:<duration>,asetpts=PTS-STARTPTS`
+70. v82 `qa-bgm-final.js` เพิ่ม `frameLock` check: frames/duration/start_time ต้องตรงกับไฟล์ final ก่อน BGM
+71. v82 QA pass: 2423 -> 2423 frames, video duration 80.766667s, start_time 0/0, loudness -16.3 LUFS, true peak -1.7 dBFS, timestamp sheet `reports/phase11/timestamps/timestamp-qa-sheet.jpg`
 ```
 
 ## Latest v75 Delivery

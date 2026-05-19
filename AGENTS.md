@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v81
+## Bizdrive Workflow Docs — v82
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -73,6 +73,10 @@ Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip 
 Raw bottom lip-sync human gate: metadata sync is not enough. Before accepting an input set or crossing Phase 5 into Phase 6, preview bottom face with its own bottom audio and require human/visual lip-sync pass. If one candidate set fails by human review while another passes, continue only with the passing set. A failed set is blocked until rebuilt from synced source or corrected with measured/logged compensation evidence.
 
 Latest v81 checkpoint: Set B Phase 10 proof `../preview-v80/v80-setB-phase10-proof.mp4` was reviewed by the user and accepted as "สมบูรณ์ แบบไม่ผิดเลย นี้แหละ ที่ต้องการ". The golden copy is `../preview-v80/v80-setB-golden-phase10-proof.mp4`. Continue final/BGM only from this baseline, and do not change top/bottom/audio/caption timing.
+
+Latest v82 checkpoint: BGM final candidate `../preview-v80/v81-setB-final-bgm.mp4` was built from the v81 golden proof with Mixkit `mixkit-175 Digital Clouds` at 5%. QA passed only after preserving the original video stream: 2423 frames, 80.766667s, video start_time 0.000000, audio start_time 0.000000, loudness -16.3 LUFS, true peak -1.7 dBFS.
+
+BGM frame-lock rule: BGM mix must not shorten, extend, shift, retime, or drop frames from the accepted final/golden proof. `mix-bgm.js` must not use `-shortest`; `qa-bgm-final.js` frameLock must pass. If frameDelta is not 0, do not deliver the file.
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 

@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v81 - golden Phase 10 proof: Set B proof ผ่าน human review ว่าสมบูรณ์แบบ ใช้เป็น baseline ก่อน final/BGM
+สถานะล่าสุด: v82 - final BGM candidate: เพิ่ม BGM 5% จาก v81 golden proof โดย frame/timing lock ผ่าน
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -154,15 +154,16 @@ C. ขอหลักฐานเพิ่ม
 61.3 หลัง render visual-only ให้ mux `speech_audio_master.wav` กลับเข้า MP4 แล้วค่อยทำ BGM mix/QA
 61.4 ก่อน BGM ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ใส่ BGM 5% / ไม่ใส่ BGM / ให้ AI เลือกหลังวิเคราะห์
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
-62.0 ก่อน full render ให้สรุป decision choices ทั้งหมดแล้วถาม confirm เป็นตัวเลือก: Render final / แก้ decision / หยุดรอ
-62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
-62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
-62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
-62.4 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ
-62.5 เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมีบรรทัด `✅✅✅` ให้เห็นชัดเจน ถ้า task ยัง blocked หรือยังไม่ verify ห้ามใช้ marker นี้
-62.6 ตอนส่งผลลัพธ์ให้ผู้ใช้ ให้แสดง Output MP4 เพียงไฟล์เดียวคือ Final เท่านั้น; visual-only, no-BGM, preview, master และ report เป็น QA/internal artifact ไม่ต้อง list เป็น output หลัก ยกเว้นผู้ใช้ขอ
-62.7 ทุกคำถามกับผู้ใช้ควรเป็น choice-based ก่อน: 2-3 ตัวเลือก, recommended option อยู่ก่อน, ถ้า UI รองรับให้ใช้ปุ่ม/choice prompt; ถ้าไม่รองรับให้ใช้ A/B/C และให้ตอบสั้นที่สุด
-62.8 หลังจบทุก Phase ให้ทำ Phase Gate Report: Phase ที่ทำ, artifact ที่ได้, QA ที่ผ่าน/ไม่ผ่าน, risk ที่เหลือ และตัวเลือก A/B/C ให้ผู้ใช้ตัดสินใจก่อนข้าม Phase
+62.0 หลัง BGM mix ต้องตรวจ frame lock เทียบกับไฟล์ final ก่อน BGM: video frames, video duration, video start_time และ audio start_time ต้องไม่เปลี่ยน; ถ้า frameDelta ไม่ใช่ 0 ห้ามส่ง final และต้อง rebuild โดยไม่ใช้ `-shortest`
+62.1 ก่อน full render ให้สรุป decision choices ทั้งหมดแล้วถาม confirm เป็นตัวเลือก: Render final / แก้ decision / หยุดรอ
+62.2 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
+62.3 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
+62.4 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
+62.5 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ
+62.6 เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมีบรรทัด `✅✅✅` ให้เห็นชัดเจน ถ้า task ยัง blocked หรือยังไม่ verify ห้ามใช้ marker นี้
+62.7 ตอนส่งผลลัพธ์ให้ผู้ใช้ ให้แสดง Output MP4 เพียงไฟล์เดียวคือ Final เท่านั้น; visual-only, no-BGM, preview, master และ report เป็น QA/internal artifact ไม่ต้อง list เป็น output หลัก ยกเว้นผู้ใช้ขอ
+62.8 ทุกคำถามกับผู้ใช้ควรเป็น choice-based ก่อน: 2-3 ตัวเลือก, recommended option อยู่ก่อน, ถ้า UI รองรับให้ใช้ปุ่ม/choice prompt; ถ้าไม่รองรับให้ใช้ A/B/C และให้ตอบสั้นที่สุด
+62.9 หลังจบทุก Phase ให้ทำ Phase Gate Report: Phase ที่ทำ, artifact ที่ได้, QA ที่ผ่าน/ไม่ผ่าน, risk ที่เหลือ และตัวเลือก A/B/C ให้ผู้ใช้ตัดสินใจก่อนข้าม Phase
 
 ## Modular Subprojects
 

@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v81 GOLDEN PHASE 10 PROOF - Set B proof ผ่าน human review ว่าสมบูรณ์แบบและใช้เป็น baseline ต่อ final/BGM
+สถานะล่าสุด: v82 FINAL BGM CANDIDATE - เพิ่ม BGM 5% จาก v81 golden proof โดย preserve 2423 frames และ timing เดิมครบ
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v81
+version: v82
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -96,6 +96,7 @@ BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check be
 BGM selector: npm run select:bgm
 BGM selector keywords: bgm-library/style-keywords-v53.json
 BGM final QA command: npm run qa:bgm
+BGM frame lock: required; BGM mix must preserve final video frames, video duration, and video/audio start_time
 BGM auto latest final command: npm run auto:bgm
 final report command: npm run report:final
 post-render finalize command: npm run finalize:video
@@ -113,7 +114,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v81 golden Phase 10 proof passed human review; continue final/BGM only from this baseline
+latest phase test: v82 BGM final candidate built from v81 golden proof; timing/loudness QA pass, human listening review still recommended
 ```
 
 ## Master Pipeline
@@ -146,6 +147,7 @@ latest phase test: v81 golden Phase 10 proof passed human review; continue final
 24. Run `npm run check`.
 25. Render visual-only MP4.
 26. Mux the speech audio master back onto the visual render, then mix BGM at 5% if enabled.
+26.0. BGM mix must preserve the original final video stream: same frame count, same video duration, same video start_time, and same audio start_time. Never use an audio-shortened mux as final.
 26.1. Mark exactly one MP4 as the user-facing Final output.
 27. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; after a full render, prefer `npm run finalize:video` to run Auto BGM and final report together.
 27.1. Run mistake prevention gates: opening true start, audio source proof, noise proof, edit-first master proof, final stream start_time sync, caption remap proof.
@@ -154,6 +156,49 @@ latest phase test: v81 golden Phase 10 proof passed human review; continue final
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v82 Final BGM Candidate
+
+ต่อจาก v81 golden proof ได้ทดสอบ BGM 5% บนไฟล์จริง:
+
+```text
+final candidate = ../preview-v80/v81-setB-final-bgm.mp4
+base = ../preview-v80/v80-setB-golden-phase10-proof.mp4
+BGM style = tech_explainer
+BGM track = mixkit-175 Digital Clouds
+provider/license = Mixkit / https://mixkit.co/license/
+gain = 5% (-26.0206 dB)
+```
+
+QA:
+
+```text
+video frames = 2423 -> 2423
+video duration = 80.766667s -> 80.766667s
+video start_time = 0.000000 -> 0.000000
+audio start_time = 0.000000
+audio duration = 80.766000s
+loudness = -16.2 LUFS -> -16.3 LUFS
+true peak = -1.5 dBFS -> -1.7 dBFS
+BGM QA status = pass
+timestamp QA sheet = reports/phase11/timestamps/timestamp-qa-sheet.jpg
+```
+
+Root cause ที่แก้:
+
+```text
+`mix-bgm.js` เดิมใช้ `-shortest` ทำให้ BGM candidate แรกสั้นลง 2 frames (2423 -> 2421)
+แก้โดยตัด `-shortest` ออก และ lock audio filter ด้วย `apad,atrim=0:<duration>,asetpts=PTS-STARTPTS`
+`qa-bgm-final.js` เพิ่ม frameLock check เพื่อ fail/review ทันทีถ้า BGM ทำให้ video frames/duration/start_time เปลี่ยน
+```
+
+กติกาต่อจาก v82:
+
+```text
+ถ้าเพิ่ม BGM หรือแก้ final audio ต้องตรวจ frameLock ทุกครั้ง
+ถ้า frameDelta ไม่ใช่ 0 ห้ามส่ง final
+ถ้า BGM ชัดเกินไปหรือรบกวนเสียงพูด ให้ลดต่ำกว่า 5% หรือย้อนกลับ v81 golden proof
+```
 
 ## v81 Golden Phase 10 Proof
 

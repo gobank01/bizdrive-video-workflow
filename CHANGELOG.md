@@ -1,5 +1,45 @@
 # Changelog
 
+## v82
+
+Built and QA'd the final BGM candidate from the v81 golden proof, then fixed the BGM mixer so it cannot shorten the video stream.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated MISTAKES.md
+Updated scripts/mix-bgm.js
+Updated scripts/qa-bgm-final.js
+Created local final candidate: ../preview-v80/v81-setB-final-bgm.mp4
+Created local reports under reports/phase11/
+```
+
+Result:
+
+```text
+BGM selected style: tech_explainer
+BGM selected track: mixkit-175 Digital Clouds
+Provider/license: Mixkit / https://mixkit.co/license/
+Gain: 5% (-26.0206 dB)
+Base video frames: 2423
+BGM final video frames: 2423
+Frame delta: 0
+Video duration: 80.766667s
+Video/audio start_time: 0.000000 / 0.000000
+Loudness: -16.3 LUFS
+True peak: -1.7 dBFS
+BGM QA: pass
+Timestamp QA: reports/phase11/timestamps/timestamp-qa-sheet.jpg
+```
+
+Reason:
+
+```text
+The first BGM candidate used `-shortest` and silently shortened video from 2423 to 2421 frames. That violates the golden proof timing contract. v82 removes `-shortest`, pads/trims mixed audio to the source duration, and adds automatic frameLock QA so future BGM mixes fail/review if frame count, video duration, or stream start_time changes.
+```
+
 ## v81
 
 Saved the Set B Phase 10 proof as the golden checkpoint after human review.

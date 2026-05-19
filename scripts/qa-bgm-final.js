@@ -104,11 +104,61 @@ function ffprobe(file) {
     "-v",
     "error",
     "-show_entries",
-    "format=duration,size,bit_rate:stream=codec_type,codec_name,width,height,sample_rate",
+    "format=duration,size,bit_rate:stream=codec_type,codec_name,width,height,sample_rate,start_time,duration,nb_frames,r_frame_rate,avg_frame_rate",
     "-of",
     "json",
     file
   ], { encoding: "utf8" }));
+}
+
+function videoStream(metadata) {
+  return metadata.streams.find((stream) => stream.codec_type === "video");
+}
+
+function frameLockStatus(originalMetadata, mixedMetadata) {
+  const originalVideo = videoStream(originalMetadata);
+  const mixedVideo = videoStream(mixedMetadata);
+  if (!originalVideo || !mixedVideo) {
+    return {
+      status: "review",
+      notes: "Could not compare video streams."
+    };
+  }
+
+  const originalFrames = Number(originalVideo.nb_frames);
+  const mixedFrames = Number(mixedVideo.nb_frames);
+  const originalStart = Number(originalVideo.start_time || 0);
+  const mixedStart = Number(mixedVideo.start_time || 0);
+  const originalDuration = Number(originalVideo.duration);
+  const mixedDuration = Number(mixedVideo.duration);
+  const frameDelta = Number.isFinite(originalFrames) && Number.isFinite(mixedFrames)
+    ? mixedFrames - originalFrames
+    : null;
+  const durationDelta = Number.isFinite(originalDuration) && Number.isFinite(mixedDuration)
+    ? mixedDuration - originalDuration
+    : null;
+  const startDelta = Number.isFinite(originalStart) && Number.isFinite(mixedStart)
+    ? mixedStart - originalStart
+    : null;
+  const pass = frameDelta === 0
+    && Math.abs(durationDelta ?? 999) <= 0.001
+    && Math.abs(startDelta ?? 999) <= 0.001;
+
+  return {
+    status: pass ? "pass" : "fail",
+    originalFrames: Number.isFinite(originalFrames) ? originalFrames : originalVideo.nb_frames,
+    mixedFrames: Number.isFinite(mixedFrames) ? mixedFrames : mixedVideo.nb_frames,
+    frameDelta,
+    originalVideoDuration: originalVideo.duration,
+    mixedVideoDuration: mixedVideo.duration,
+    durationDelta: durationDelta === null ? null : Number(durationDelta.toFixed(6)),
+    originalVideoStart: originalVideo.start_time || "0",
+    mixedVideoStart: mixedVideo.start_time || "0",
+    startDeltaMs: startDelta === null ? null : Number((startDelta * 1000).toFixed(3)),
+    notes: pass
+      ? "Video stream frame count, duration, and start_time are locked to the original final."
+      : "BGM mix changed video timing; do not deliver this output."
+  };
 }
 
 function loudnessFromStderr(file) {
@@ -170,15 +220,17 @@ function readJson(file) {
   return JSON.parse(fs.readFileSync(file, "utf8"));
 }
 
-function qaStatus(originalLoudness, mixedLoudness) {
+function qaStatus(originalLoudness, mixedLoudness, frameLock) {
   const lufsDelta = mixedLoudness.integratedLufs - originalLoudness.integratedLufs;
   const peakOk = mixedLoudness.truePeakDbfs <= -1.5;
   const lufsOk = Math.abs(lufsDelta) <= 1.0;
+  const timingOk = frameLock.status === "pass";
   return {
-    status: peakOk && lufsOk ? "pass" : "review",
+    status: peakOk && lufsOk && timingOk ? "pass" : "review",
     lufsDelta: Number(lufsDelta.toFixed(2)),
     peakOk,
     lufsOk,
+    timingOk,
     notes: peakOk && lufsOk
       ? "BGM final QA is within speech-first defaults."
       : "Review by listening; adjust gain/track/limiter if BGM distracts or peak is too high."
@@ -241,6 +293,9 @@ function main() {
 
   const originalLoudness = loudnessFromStderr(args.final);
   const mixedLoudness = loudnessFromStderr(args.output);
+  const originalMetadata = ffprobe(args.final);
+  const mixedMetadata = ffprobe(args.output);
+  const frameLock = frameLockStatus(originalMetadata, mixedMetadata);
   const report = {
     version: 54,
     finalInput: args.final,
@@ -256,11 +311,12 @@ function main() {
     audibilityIntent: "barely audible ambient bed, felt more than heard",
     originalPreview,
     mixedPreview,
-    originalMetadata: ffprobe(args.final),
-    mixedMetadata: ffprobe(args.output),
+    originalMetadata,
+    mixedMetadata,
+    frameLock,
     originalLoudness,
     mixedLoudness,
-    qa: qaStatus(originalLoudness, mixedLoudness),
+    qa: qaStatus(originalLoudness, mixedLoudness, frameLock),
     commands: {
       select: selectCommand,
       mix: mixCommand
