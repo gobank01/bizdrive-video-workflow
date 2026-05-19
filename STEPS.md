@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v73 - completion marker + edit-first master + 1-second timestamped clip QA
+สถานะล่าสุด: v74 - test edit render + completion marker + edit-first master + 1-second timestamped clip QA
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 

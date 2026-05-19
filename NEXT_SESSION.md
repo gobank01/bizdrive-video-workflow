@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v73 - completion marker rule recorded
+สถานะล่าสุด: v74 - test edit render completed
 
 วันที่บันทึก: 2026-05-19
 
@@ -28,7 +28,8 @@ v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
 v70 commit: f3356ba Add v70 timestamped clip QA
 v71 commit: 34e6937 Add v71 lip-sync safe final edit
 v72 commit: 4a49374 Add v72 edit-first master workflow
-v73 commit: included in current commit (Add v73 completion marker rule)
+v73 commit: e475c2b Add v73 completion marker rule
+v74 commit: included in current commit (Add v74 test edit record)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -88,26 +89,27 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 50. v72 QA pass: edit-first master proof, `npm run check`, `npm run check:transition`, `npm run check:motion`, final silencedetect >0.5s none, keyterm QA pass, final report pass
 51. เพิ่ม `MODULES.md` เพื่อแยกงานเป็น transcript, sync-inspect, context-index, edl-build, editorial-master, broll-source, caption-build, layout-render, final-mux, final-qa
 52. v73 เพิ่ม completion marker rule: เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมี `✅✅✅` แบบบรรทัดเดี่ยวให้เห็นชัดเจน
+53. v74 ทดสอบตัดต่อ full render สำเร็จด้วย edit-first master pipeline: visual-only render -> mux speech master -> BGM 5% -> final QA
+54. v74 final: `../stacked-output-v74-video2-test-edit-final-bgm.mp4`
+55. v74 QA pass: lint/validate/inspect with timeout 30000, transition pass, motion pass, keyterm pass, BGM pass, silence >0.5s none, timestamp QA created
 ```
 
-## Latest v72 Delivery
+## Latest v74 Delivery
 
 ```text
-final output: ../stacked-output-v72-video2-edit-first-final-bgm.mp4
-non-BGM final: ../stacked-output-v72-video2-edit-first-final.mp4
-visual-only render: ../stacked-output-v72-video2-edit-first-visual.mp4
+final output: ../stacked-output-v74-video2-test-edit-final-bgm.mp4
+non-BGM final: ../stacked-output-v74-video2-test-edit-final.mp4
+visual-only render: ../stacked-output-v74-video2-test-edit-visual.mp4
 editorial proof: assets/video2/bottom_editorial_master_v72.mp4
 top master: assets/video2/top_edit_master_v72.mp4
 bottom visual master: assets/video2/bottom_visual_master_v72.mp4
 speech audio master: assets/video2/speech_audio_master_v72.wav
 context: assets/context/video2-v72-edit-first-final.json
 B-roll manifest: assets/broll/optimized/video2-v72/manifest.json
-frame report: reports/frame-report-v72-video2.json
-final report: reports/final-report-v72-video2.md
-BGM QA: reports/bgm-qa-v72-video2.json
-timestamp QA: render-checks/video2-v72-final-bgm-timestamps/v72-final-bgm-sheet.jpg
-cut QA: render-checks/video2-v72-final-cuts/contact-sheet.jpg
-B-roll QA: render-checks/video2-v72-final-broll/contact-sheet.jpg
+frame report: reports/frame-report-v74-video2-test-edit.json
+final report: reports/final-report-v74-video2-test-edit.md
+BGM QA: reports/bgm-qa-v74-video2-test-edit.json
+timestamp QA: render-checks/video2-v74-test-edit-timestamps/v74-test-edit-sheet.jpg
 ```
 
 ## Commands Now Available

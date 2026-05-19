@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v73
+## Bizdrive Workflow Docs — v74
 
 For Bizdrive stacked-video work, read these files in order:
 

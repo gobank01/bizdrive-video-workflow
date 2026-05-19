@@ -1,5 +1,41 @@
 # Changelog
 
+## v74
+
+Tested a fresh full edit render through the edit-first master pipeline.
+
+```text
+Rendered visual-only output: ../stacked-output-v74-video2-test-edit-visual.mp4
+Muxed speech audio master: ../stacked-output-v74-video2-test-edit-final.mp4
+Mixed BGM at 5%: ../stacked-output-v74-video2-test-edit-final-bgm.mp4
+Created timestamp QA sheet: render-checks/video2-v74-test-edit-timestamps/v74-test-edit-sheet.jpg
+Created frame report: reports/frame-report-v74-video2-test-edit.json
+Created final report: reports/final-report-v74-video2-test-edit.md
+```
+
+Final metrics:
+
+```text
+source duration: 115.946s
+final duration: 85.200s
+final frames: 2556
+content removed: 30.746s / 922 frames
+B-roll replacement: 15s / 450 frames
+transition mix: 2.52s / 76 frames
+B-roll new downloads: 0
+B-roll reused local stock: 5
+B-roll optimized derivatives: 5
+B-roll rejected candidates: 0
+BGM: Mixkit stock mixkit-726 Uplifting Bass, 5%, QA pass
+QA: pass; only timeline_track_too_dense warning remains
+```
+
+Reason:
+
+```text
+The user asked to test editing. v74 verifies that the current edit-first pipeline still renders correctly after the v73 completion-marker rule, with speech timing locked by the v72 editorial masters.
+```
+
 ## v73
 
 Added a clear task completion marker rule.

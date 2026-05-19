@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v73 COMPLETION MARKER - เมื่อ Task เสร็จสมบูรณ์ต้องแสดง ✅✅✅ ให้เห็นชัดเจน
+สถานะล่าสุด: v74 TEST EDIT - ทดสอบตัดต่อด้วย edit-first master pipeline ผ่าน QA
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v73
+version: v74
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -325,8 +325,8 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 ## Latest Proven Output
 
 ```text
-version: v72 video2 edit-first final
-output: /Users/gobank01/Documents/Video V2/stacked-output-v72-video2-edit-first-final-bgm.mp4
+version: v74 video2 test edit
+output: /Users/gobank01/Documents/Video V2/stacked-output-v74-video2-test-edit-final-bgm.mp4
 duration: 85.200s
 frames: 2556 video frames at 30fps
 video: h264 1080x1920, 30fps
@@ -343,7 +343,19 @@ render flow: visual-only HyperFrames render, then speech_audio_master mux, then 
 sync proof: editorial masters share exact 85.200s duration and 2556 frames; final video/audio stream start_time both 0.000s before BGM, BGM final starts at 0.000s with AAC tail rounding only
 QA: pass, with only timeline_track_too_dense warning
 reports: reports/frame-report-v72-video2.json, reports/final-report-v72-video2.md, reports/bgm-qa-v72-video2.json
-contact sheets: render-checks/video2-v72-final-bgm-timestamps/v72-final-bgm-sheet.jpg, render-checks/video2-v72-final-cuts/contact-sheet.jpg, render-checks/video2-v72-final-broll/contact-sheet.jpg
+v74 reports: reports/frame-report-v74-video2-test-edit.json, reports/final-report-v74-video2-test-edit.md, reports/bgm-qa-v74-video2-test-edit.json
+v74 timestamp QA: render-checks/video2-v74-test-edit-timestamps/v74-test-edit-sheet.jpg
+note: v74 uses the same v72 edit-first masters and verifies the current v73/v74 workflow path with a fresh render
+```
+
+Previous proven output:
+
+```text
+version: v72 video2 edit-first final
+output: /Users/gobank01/Documents/Video V2/stacked-output-v72-video2-edit-first-final-bgm.mp4
+duration: 85.200s
+frames: 2556 video frames at 30fps
+note: first proven edit-first master final
 ```
 
 Previous proven output:
@@ -449,6 +461,7 @@ v70 เพิ่ม timestamped clip QA: ทุกครั้งที่ตร
 v71 ตัดต่อ video2 ใหม่ทั้งหมดแบบ final: ใช้ bottom audio เป็น master, ตัด false start/dead air, ตัดแบบ lip-sync-safe hard concat ไม่มี visible bottom xfade, B-roll 5 จุดตาม density cap, BGM Mixkit 5%, timestamp QA ทุก 1 วินาที, cut contact sheet และ final report ผ่าน
 v72 เปลี่ยน architecture เป็น edit-first master: สร้าง top visual, bottom visual และ speech audio master ที่ frame/sample lock ก่อนเข้า HyperFrames, render visual-only แล้ว mux speech audio กลับทีหลัง เพื่อกัน lip-sync drift จาก layout/render stage
 v73 เพิ่ม completion marker rule: ทุกครั้งที่ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องแสดง `✅✅✅` แบบชัดเจน
+v74 ทดสอบตัดต่อ full render ด้วย edit-first master pipeline: render visual-only, mux speech audio master, mix BGM 5%, สร้าง timestamp QA, frame report, keyterm QA และ final report ผ่าน
 
 ## How To Continue Development
 
