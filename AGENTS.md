@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v74
+## Bizdrive Workflow Docs — v75
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -136,6 +136,8 @@ When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest
 When the final MP4, context index, B-roll manifest, and key term report are ready, prefer `npm run finalize:video` for post-render delivery. It runs Auto BGM first, then creates the final report.
 
 Every task summary must include what changed, output/report paths, QA commands and results, and frame counts. Report edited frames such as B-roll top replacement, transition mix, zoom/motion, or overlays, plus removed frames such as dropped content, soft-cut overlap, and total net removed. Use `npm run report:frames` when context index, B-roll manifest, and final MP4 are available.
+
+Single final output rule: in user-facing delivery, show only one MP4 output path: the Final file. Do not list visual-only, no-BGM, preview, master, or intermediate MP4s as outputs unless the user explicitly asks for debug/internal artifacts. Reports and QA artifacts may be mentioned separately, but not as video outputs.
 
 Completion marker rule: when a task is fully complete and verified, the final response must include a clearly visible standalone `✅✅✅`. Do not use this marker for blocked, partial, or unverified work.
 

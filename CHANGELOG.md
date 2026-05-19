@@ -1,5 +1,23 @@
 # Changelog
 
+## v75
+
+Added the single final output delivery rule.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+The user wants future editing tasks to return only one user-facing MP4 output: the Final file. Visual-only renders, no-BGM renders, previews, masters, and other intermediates may still be created for QA, but they should stay internal unless the user asks for debug artifacts.
+```
+
 ## v74
 
 Tested a fresh full edit render through the edit-first master pipeline.

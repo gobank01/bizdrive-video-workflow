@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v74 TEST EDIT - ทดสอบตัดต่อด้วย edit-first master pipeline ผ่าน QA
+สถานะล่าสุด: v75 SINGLE FINAL OUTPUT - ส่ง Output เดียวคือ Final เท่านั้น
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v74
+version: v75
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -107,6 +107,7 @@ BGM calm fallback: mixkit-441 Meditation
 BGM final-real-file QA: required
 BGM mix command: npm run mix:bgm
 completion marker: when a task is fully complete and verified, final response must include a clear standalone `✅✅✅`
+delivery output: show only one user-facing MP4 output, the Final file; intermediate visual/no-BGM files are internal QA artifacts
 ```
 
 ## Master Pipeline
@@ -138,6 +139,7 @@ completion marker: when a task is fully complete and verified, final response mu
 24. Run `npm run check`.
 25. Render visual-only MP4.
 26. Mux the speech audio master back onto the visual render, then mix BGM at 5% if enabled.
+26.1. Mark exactly one MP4 as the user-facing Final output.
 27. QA output frames, audio, BGM, motion, captions, key terms, and B-roll; after a full render, prefer `npm run finalize:video` to run Auto BGM and final report together.
 27.1. Run mistake prevention gates: opening true start, audio source proof, noise proof, edit-first master proof, final stream start_time sync, caption remap proof.
 27.2. Run lip-sync zero-tolerance gate from `LIPSYNC_QA.md`; if uncertain, mark output blocked, not final.
@@ -262,6 +264,7 @@ forbidden:
 7. mistake prevention gates ผ่านหรือไม่ โดยเฉพาะ opening/noise/sync/caption
 8. lip-sync status: finalStreamStartDeltaMs, compensationMs, spotCheckPoints และ residualRisk
 9. ถ้า task เสร็จสมบูรณ์และ verify แล้ว ให้แสดง `✅✅✅` แบบบรรทัดเดี่ยวให้เห็นชัดเจน
+10. แสดง user-facing video output เพียงไฟล์เดียว คือ Final MP4; ห้าม list visual-only/no-BGM/intermediate เป็น output หลัก ยกเว้นผู้ใช้ขอ debug artifact
 ```
 
 ให้นับเฟรมด้วย `30fps` เป็นค่า default ของ workflow นี้ เว้นแต่ source หรือ output ระบุชัดว่าต้องใช้ fps อื่น
@@ -292,6 +295,7 @@ Whisper จำเป็นทุกงาน ถ้า HyperFrames transcribe fa
 ห้ามเลื่อน top, bottom, audio หรือ captions แยกกันเด็ดขาด ต้องใช้ timeline เดียวกัน
 ตัดต่อ production ต้องใช้ edit-first master: ตัด top/bottom/audio ให้เสร็จและ QA sync ก่อนเข้า HyperFrames layout
 HyperFrames final render ใน workflow นี้ควรเป็น visual-only แล้ว mux speech audio master กลับทีหลัง
+เวลาส่งงานให้ผู้ใช้ แสดง Output เดียวเท่านั้นคือ Final MP4; intermediate ใช้ภายใน QA ไม่ต้อง list เป็น output
 caption timing ต้อง map หลัง trim/dead-air/context cut แล้ว ไม่ใช้ timestamp raw โดยตรง
 B-roll ต้องไม่มี text/logo/watermark/other brand/distracting graphic
 B-roll ต้องพยายามโหลด fresh candidate ก่อนเพื่อสะสม stock/index จนมี QA-passed stock อย่างน้อย 200 clips
@@ -462,6 +466,7 @@ v71 ตัดต่อ video2 ใหม่ทั้งหมดแบบ final: 
 v72 เปลี่ยน architecture เป็น edit-first master: สร้าง top visual, bottom visual และ speech audio master ที่ frame/sample lock ก่อนเข้า HyperFrames, render visual-only แล้ว mux speech audio กลับทีหลัง เพื่อกัน lip-sync drift จาก layout/render stage
 v73 เพิ่ม completion marker rule: ทุกครั้งที่ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องแสดง `✅✅✅` แบบชัดเจน
 v74 ทดสอบตัดต่อ full render ด้วย edit-first master pipeline: render visual-only, mux speech audio master, mix BGM 5%, สร้าง timestamp QA, frame report, keyterm QA และ final report ผ่าน
+v75 เพิ่ม single final output rule: เวลาส่งงานให้ผู้ใช้แสดง Output เดียวคือ Final MP4 เท่านั้น ส่วน visual-only/no-BGM/intermediate เป็น internal QA artifact
 
 ## How To Continue Development
 

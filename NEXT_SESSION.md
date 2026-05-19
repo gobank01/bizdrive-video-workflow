@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v74 - test edit render completed
+สถานะล่าสุด: v75 - single final output rule recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -29,7 +29,8 @@ v70 commit: f3356ba Add v70 timestamped clip QA
 v71 commit: 34e6937 Add v71 lip-sync safe final edit
 v72 commit: 4a49374 Add v72 edit-first master workflow
 v73 commit: e475c2b Add v73 completion marker rule
-v74 commit: included in current commit (Add v74 test edit record)
+v74 commit: 02084a6 Add v74 test edit record
+v75 commit: included in current commit (Add v75 single final output rule)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -92,24 +93,14 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 53. v74 ทดสอบตัดต่อ full render สำเร็จด้วย edit-first master pipeline: visual-only render -> mux speech master -> BGM 5% -> final QA
 54. v74 final: `../stacked-output-v74-video2-test-edit-final-bgm.mp4`
 55. v74 QA pass: lint/validate/inspect with timeout 30000, transition pass, motion pass, keyterm pass, BGM pass, silence >0.5s none, timestamp QA created
+56. v75 เพิ่ม single final output rule: ตอนส่งงานให้ผู้ใช้ แสดง Output MP4 เดียวคือ Final เท่านั้น; intermediate ใช้ภายใน QA และไม่ list เป็น output หลัก
 ```
 
-## Latest v74 Delivery
+## Latest v75 Delivery
 
 ```text
-final output: ../stacked-output-v74-video2-test-edit-final-bgm.mp4
-non-BGM final: ../stacked-output-v74-video2-test-edit-final.mp4
-visual-only render: ../stacked-output-v74-video2-test-edit-visual.mp4
-editorial proof: assets/video2/bottom_editorial_master_v72.mp4
-top master: assets/video2/top_edit_master_v72.mp4
-bottom visual master: assets/video2/bottom_visual_master_v72.mp4
-speech audio master: assets/video2/speech_audio_master_v72.wav
-context: assets/context/video2-v72-edit-first-final.json
-B-roll manifest: assets/broll/optimized/video2-v72/manifest.json
-frame report: reports/frame-report-v74-video2-test-edit.json
-final report: reports/final-report-v74-video2-test-edit.md
-BGM QA: reports/bgm-qa-v74-video2-test-edit.json
-timestamp QA: render-checks/video2-v74-test-edit-timestamps/v74-test-edit-sheet.jpg
+Final MP4 output: ../stacked-output-v74-video2-test-edit-final-bgm.mp4
+QA/report artifacts remain available internally: reports/final-report-v74-video2-test-edit.md, reports/frame-report-v74-video2-test-edit.json, render-checks/video2-v74-test-edit-timestamps/v74-test-edit-sheet.jpg
 ```
 
 ## Commands Now Available
@@ -498,6 +489,7 @@ Production/full render must use edit-first editorial masters before HyperFrames 
 HyperFrames should render visual-only, then mux speech audio master back after render.
 Top/bottom trims and cuts remain parallel.
 When a task is fully complete and verified, final response must include a standalone ✅✅✅ marker.
+When delivering a video edit, show only one MP4 output path: the Final file.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.
 Do not move/scale top or bottom frame borders during transition.
