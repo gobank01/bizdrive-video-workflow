@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v77 - rough direction trim gate recorded
+สถานะล่าสุด: v78 - phase-gated testing recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -32,7 +32,8 @@ v73 commit: e475c2b Add v73 completion marker rule
 v74 commit: 02084a6 Add v74 test edit record
 v75 commit: 364be31 Add v75 single final output rule
 v76 commit: 1b46227 Add v76 choice-based decision gates
-v77 commit: included in current commit (Add v77 rough direction trim gate)
+v77 commit: 86ab0ab Add v77 rough direction trim gate
+v78 commit: current v78 workflow commit (Add v78 phase-gated testing rule)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -98,6 +99,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 56. v75 เพิ่ม single final output rule: ตอนส่งงานให้ผู้ใช้ แสดง Output MP4 เดียวคือ Final เท่านั้น; intermediate ใช้ภายใน QA และไม่ list เป็น output หลัก
 57. v76 เพิ่ม choice-based user decision gates: ก่อน decision สำคัญให้ถามเป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย เช่น start/end, dead air, cut aggressiveness, B-roll, BGM, caption style, final render confirm
 58. v77 เพิ่ม rough direction trim gate: Step 20.1-21 ต้องรับ user rough direction, สร้าง start/end candidates จาก hint+audio/transcript/silence evidence, รายงานถ้า evidence ขัดกับ hint และ lock trimStart/trimEnd พร้อม frame/sample/evidence
+59. v78 เพิ่ม phase-gated testing: ต่อจากนี้ให้ทดสอบทีละ Phase, จบ Phase ต้องแสดง artifact/QA/risk และรอ user เลือก ผ่าน / ย้อนแก้ / ขอหลักฐานเพิ่ม ก่อนข้าม Phase ถัดไป ยกเว้นสั่ง auto/full mode ชัดเจน
 ```
 
 ## Latest v75 Delivery
@@ -495,6 +497,7 @@ Top/bottom trims and cuts remain parallel.
 When a task is fully complete and verified, final response must include a standalone ✅✅✅ marker.
 When delivering a video edit, show only one MP4 output path: the Final file.
 Ask important editorial/creative decisions as simple choices; use clickable options if available, otherwise A/B/C.
+Test/edit one Phase at a time; after each Phase, stop with artifact/QA/risk and wait for user pass before going to the next Phase unless auto/full mode is explicitly requested.
 Before locking trimStart/trimEnd, use user rough direction as anchor and require candidates plus evidence.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.

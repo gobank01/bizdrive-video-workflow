@@ -1,8 +1,22 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v77 - rough direction trim gate + choice-based user gates
+สถานะล่าสุด: v78 - phase-gated testing: ทดสอบทีละ Phase ผ่านแล้วค่อยไปต่อ
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
+
+## Phase Gate Mode
+
+ตั้งแต่งาน v78 เป็นต้นไป การทดสอบและการตัดต่อให้ทำทีละ Phase เสมอ เมื่อจบ Phase ต้องหยุดและแสดงหลักฐานให้ผู้ใช้ตรวจ ก่อนข้ามไป Phase ถัดไป
+
+ตัวเลือกหลังจบแต่ละ Phase:
+
+```text
+A. ผ่าน ไป Phase ถัดไป (Recommended เมื่อหลักฐานครบ)
+B. ไม่ผ่าน ย้อนแก้ Phase นี้
+C. ขอหลักฐานเพิ่ม
+```
+
+ห้ามข้าม Phase ถ้า user ยังไม่กดผ่าน/ตอบผ่าน ยกเว้นผู้ใช้สั่งชัดเจนว่าให้ทำแบบ auto/full โดยไม่ต้องรอ gate ระหว่างทาง ถ้า Phase ใดไม่ผ่าน QA ให้ย้อนแก้ Phase นั้นก่อน แล้วส่งหลักฐานใหม่จนกว่าจะผ่าน
 
 ## Phase 1 — Intake
 
@@ -17,6 +31,7 @@
 5.4 ระบุ lip-sync proof ที่ต้องมีตาม `LIPSYNC_QA.md`
 5.5 ถ้างานเป็น production/full render ให้ประกาศว่าจะใช้ edit-first master: ตัดต่อและล็อก sync ก่อนเข้า HyperFrames layout
 5.6 ถ้าโจทย์ยังขาด creative/editorial direction ให้ถามผู้ใช้เป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย ไม่บังคับพิมพ์ยาว
+5.7 ตั้ง Phase Gate Mode: หลังจบแต่ละ Phase ต้องสรุป artifact/QA และรอ user เลือก ผ่าน / ย้อนแก้ / ขอหลักฐานเพิ่ม ก่อนข้าม Phase ถัดไป
 
 ## Phase 2 — Input And Sync
 
@@ -144,6 +159,7 @@
 62.5 เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมีบรรทัด `✅✅✅` ให้เห็นชัดเจน ถ้า task ยัง blocked หรือยังไม่ verify ห้ามใช้ marker นี้
 62.6 ตอนส่งผลลัพธ์ให้ผู้ใช้ ให้แสดง Output MP4 เพียงไฟล์เดียวคือ Final เท่านั้น; visual-only, no-BGM, preview, master และ report เป็น QA/internal artifact ไม่ต้อง list เป็น output หลัก ยกเว้นผู้ใช้ขอ
 62.7 ทุกคำถามกับผู้ใช้ควรเป็น choice-based ก่อน: 2-3 ตัวเลือก, recommended option อยู่ก่อน, ถ้า UI รองรับให้ใช้ปุ่ม/choice prompt; ถ้าไม่รองรับให้ใช้ A/B/C และให้ตอบสั้นที่สุด
+62.8 หลังจบทุก Phase ให้ทำ Phase Gate Report: Phase ที่ทำ, artifact ที่ได้, QA ที่ผ่าน/ไม่ผ่าน, risk ที่เหลือ และตัวเลือก A/B/C ให้ผู้ใช้ตัดสินใจก่อนข้าม Phase
 
 ## Modular Subprojects
 

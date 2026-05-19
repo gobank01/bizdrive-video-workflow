@@ -1,5 +1,23 @@
 # Changelog
 
+## v78
+
+Added phase-gated testing.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+The user wants future workflow tests to proceed one Phase at a time. v78 makes every Phase boundary a user gate: show artifact, QA, and remaining risk; then wait for pass/revise/more-evidence before continuing. This prevents the editor from skipping ahead after a weak or failed Phase.
+```
+
 ## v77
 
 Added the rough direction trim gate for Step 20.1-21.
