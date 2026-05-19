@@ -22,11 +22,10 @@ templates/_shared/env/.env
 *.m4a
 *.aac
 
-# Source media folders at repo root (V2 holdovers)
-/video/
-/video div/
-/video2/
-/test 2/
+# Raw source media library (large files; never commit)
+/raw-media/
+
+# Other top-level work folders not part of this repo
 /robot/
 
 # Per-job artifacts (kept only as needed)

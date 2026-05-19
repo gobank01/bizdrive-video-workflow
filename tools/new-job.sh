@@ -3,28 +3,52 @@
 # Scaffold a new job from a template.
 #
 # Usage:
-#   bash tools/new-job.sh <template-number> <slug>
+#   bash tools/new-job.sh <template-number> <slug> [--raw <raw-media-slug>] [--date <YYYY-MM-DD>]
 #
-# Example:
+# Examples:
+#   # 1. Scaffold empty job (drop files into input/ manually later)
 #   bash tools/new-job.sh 01 promo-may-25
-#   → creates jobs/2026-MM-DD-promo-may-25/{input,intermediates,output,workspace}
-#   → workspace has copy of template-01 + symlinks to intermediates and _shared resources
+#
+#   # 2. Scaffold + symlink input/ to existing raw clip
+#   bash tools/new-job.sh 01 promo-may-25 --raw 2026-05-20-promo-may-recording
+#
+#   # 3. Scaffold with explicit date
+#   bash tools/new-job.sh 01 promo-may-25 --date 2026-05-25
 #
 # Requirements: bash, ln, cp, mkdir
 
 set -e
 
-if [ $# -lt 2 ]; then
-  echo "Usage: bash tools/new-job.sh <template-number> <slug>" >&2
-  echo "Example: bash tools/new-job.sh 01 promo-may-25" >&2
+# --- Parse args ---
+TEMPLATE_NUM=""
+SLUG=""
+RAW_SLUG=""
+DATE=$(date +%Y-%m-%d)
+POSITIONAL=()
+
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --raw)
+      RAW_SLUG="$2"; shift 2 ;;
+    --date)
+      DATE="$2"; shift 2 ;;
+    -h|--help)
+      sed -n '2,17p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
+      exit 0 ;;
+    *)
+      POSITIONAL+=("$1"); shift ;;
+  esac
+done
+
+if [ ${#POSITIONAL[@]} -lt 2 ]; then
+  echo "Usage: bash tools/new-job.sh <template-number> <slug> [--raw <raw-media-slug>] [--date YYYY-MM-DD]" >&2
   exit 1
 fi
-
-TEMPLATE_NUM=$1
-SLUG=$2
+TEMPLATE_NUM=${POSITIONAL[0]}
+SLUG=${POSITIONAL[1]}
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 
-# Find template dir by prefix
+# --- Find template ---
 TEMPLATE_DIR=$(find "$REPO_ROOT/templates" -maxdepth 1 -type d -name "${TEMPLATE_NUM}-*" | head -1)
 if [ -z "$TEMPLATE_DIR" ]; then
   echo "✗ No template found matching ${TEMPLATE_NUM}-*. Available templates:" >&2
@@ -34,8 +58,20 @@ fi
 TEMPLATE_NAME=$(basename "$TEMPLATE_DIR")
 echo "→ Using template: $TEMPLATE_NAME"
 
-# Build job dir name
-DATE=$(date +%Y-%m-%d)
+# --- Validate --raw if provided ---
+RAW_DIR=""
+if [ -n "$RAW_SLUG" ]; then
+  RAW_DIR="$REPO_ROOT/raw-media/$RAW_SLUG"
+  if [ ! -d "$RAW_DIR" ]; then
+    echo "✗ Raw clip not found: $RAW_DIR" >&2
+    echo "  Available raw clips:" >&2
+    find "$REPO_ROOT/raw-media" -maxdepth 1 -type d -not -name '_*' -not -path "$REPO_ROOT/raw-media" -exec basename {} \; >&2 2>/dev/null
+    exit 1
+  fi
+  echo "→ Will symlink input/ from: raw-media/$RAW_SLUG"
+fi
+
+# --- Build job dir ---
 JOB_NAME="${DATE}-${SLUG}"
 JOB_DIR="$REPO_ROOT/jobs/$JOB_NAME"
 
@@ -51,7 +87,19 @@ mkdir -p "$JOB_DIR/output/finals"
 mkdir -p "$JOB_DIR/output/reports"
 mkdir -p "$JOB_DIR/workspace"
 
-# Write job manifest
+# --- Symlink input/ from raw-media if --raw provided ---
+if [ -n "$RAW_DIR" ]; then
+  for f in top.mp4 bottom.mp4 bg.png; do
+    if [ -e "$RAW_DIR/$f" ]; then
+      ln -sf "../../../raw-media/$RAW_SLUG/$f" "$JOB_DIR/input/$f"
+      echo "  ✓ input/$f → raw-media/$RAW_SLUG/$f"
+    else
+      echo "  ⚠ raw-media/$RAW_SLUG/$f missing — skipping"
+    fi
+  done
+fi
+
+# --- Write job manifest ---
 cat > "$JOB_DIR/manifest.json" <<EOF
 {
   "id": "${JOB_NAME}",
@@ -59,26 +107,26 @@ cat > "$JOB_DIR/manifest.json" <<EOF
   "createdAt": "${DATE}",
   "status": "scaffolded",
   "source": {
+    "rawSlug": "${RAW_SLUG}",
     "top": "input/top.mp4",
     "bottom": "input/bottom.mp4",
     "bg": "input/bg.png"
   },
-  "notes": "Drop source files into input/, then follow templates/_shared/docs/V88_PLAYBOOK.md"
+  "notes": "Follow templates/_shared/docs/V88_PLAYBOOK.md to run the pipeline."
 }
 EOF
 
+# --- Write job notes ---
 cat > "$JOB_DIR/notes.md" <<EOF
 # Job Notes — ${JOB_NAME}
 
 Template: ${TEMPLATE_NAME}
 Scaffolded: ${DATE}
+Raw clip: ${RAW_SLUG:-"(not linked — drop files manually into input/)"}
 
 ## Next steps
 
-1. Drop input files:
-   - \`input/top.mp4\` (screen recording, will be muted in final)
-   - \`input/bottom.mp4\` (face video, contains master audio)
-   - \`input/bg.png\` (background image)
+1. ${RAW_SLUG:+input/ already symlinked to raw-media/${RAW_SLUG}/.}${RAW_SLUG:-Drop input files into input/{top.mp4, bottom.mp4, bg.png}.}
 
 2. Follow the 15-step playbook:
    - Open \`templates/_shared/docs/V88_PLAYBOOK.md\`
@@ -90,14 +138,13 @@ Scaffolded: ${DATE}
    - Step 10 (post-process): \`templates/_shared/docs/SUBAGENT_PROMPTS.md\` Section B
    - Slot defaults for ${TEMPLATE_NAME}: \`${TEMPLATE_DIR#$REPO_ROOT/}/prompts/\`
 
-4. Render happens in \`workspace/\` (already set up with symlinks).
+4. Render in \`workspace/\` (already set up with symlinks).
 EOF
 
-# Build workspace
+# --- Build workspace ---
 WS="$JOB_DIR/workspace"
 echo "→ Building workspace at $WS"
 
-# Copy core composition files
 cp "$TEMPLATE_DIR/index.html" "$WS/" 2>/dev/null || echo "  (no index.html in template — create one)"
 cp "$TEMPLATE_DIR/hyperframes.json" "$WS/" 2>/dev/null || true
 cp "$TEMPLATE_DIR/meta.json" "$WS/" 2>/dev/null || true
@@ -117,21 +164,26 @@ ln -sf "../../../templates/_shared/schemas" "$WS/schemas"
 ln -sf "../../../templates/_shared/env/.env" "$WS/.env"
 ln -sf "../../../templates/_shared/env/.env.example" "$WS/.env.example"
 
-# Set up assets/ with paths that match template's index.html expectations
+# Assets — paths match template's index.html
 mkdir -p "$WS/assets"
-ln -sf "../../intermediates" "$WS/assets/intermediates"  # generic catch-all
+ln -sf "../../intermediates" "$WS/assets/intermediates"
 ln -sf "../../../../templates/_shared/broll" "$WS/assets/broll"
 ln -sf "../../../../templates/_shared/bgm" "$WS/assets/bgm"
-
-# Symlink input/ for convenience
 ln -sf "../input" "$WS/assets/input"
 
 echo ""
 echo "✓ Job scaffolded: $JOB_DIR"
 echo ""
-echo "Next:"
-echo "  1. Drop input files into: jobs/${JOB_NAME}/input/{top.mp4, bottom.mp4, bg.png}"
-echo "  2. Follow templates/_shared/docs/V88_PLAYBOOK.md"
-echo "  3. Render workspace: cd jobs/${JOB_NAME}/workspace && npm run check"
+if [ -n "$RAW_SLUG" ]; then
+  echo "Raw clip already linked. Next:"
+  echo "  1. Follow templates/_shared/docs/V88_PLAYBOOK.md"
+  echo "  2. cd jobs/${JOB_NAME}/workspace && npm run check"
+else
+  echo "Next:"
+  echo "  1. Drop input files into: jobs/${JOB_NAME}/input/{top.mp4, bottom.mp4, bg.png}"
+  echo "     (OR put them in raw-media/<slug>/ and re-run with --raw <slug>)"
+  echo "  2. Follow templates/_shared/docs/V88_PLAYBOOK.md"
+  echo "  3. cd jobs/${JOB_NAME}/workspace && npm run check"
+fi
 echo ""
-echo "For Template ${TEMPLATE_NUM} specific defaults: ${TEMPLATE_DIR#$REPO_ROOT/}/prompts/"
+echo "Template ${TEMPLATE_NUM} prompt defaults: ${TEMPLATE_DIR#$REPO_ROOT/}/prompts/"
