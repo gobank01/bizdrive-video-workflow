@@ -51,6 +51,57 @@ QA:
 ไม่ใช้ motion ถี่เกิน 1 ครั้งทุก 2-3 วินาที
 ```
 
+## Transition Mix v59
+
+ใช้กับจังหวะ B-roll หรือ footage สลับเข้า/ออก เพื่อให้การตัดต่อเนียนขึ้นโดยไม่รบกวนหน้า speaker, caption, หรือกรอบทอง
+
+หลักคิด:
+
+```text
+transition mix คือการทำให้ top footage -> B-roll -> top footage กลับมาเนียน
+ใช้กับทุก B-roll entry/exit
+ถ้า B-roll ใช้ปิด jump cut ให้ใช้ bridge mode
+ต้องไม่ขยับกรอบ top/bottom และไม่แตะ bottom face/audio
+```
+
+ค่า default:
+
+```text
+soft mode:
+  in: 0.22s
+  out: 0.22s
+  ease: power2.out
+
+bridge mode:
+  in: 0.26s
+  out: 0.26s
+  ease in: power3.out
+  ease out: power2.inOut
+
+pan:
+  object-position 49%-51%
+  ใช้ subtle pan ภายใน B-roll แทนการ scale frame
+```
+
+กฎการเลือก mode:
+
+```text
+soft = B-roll ปกติที่ใช้เพิ่มภาพประกอบ
+bridge = B-roll ที่คร่อมหรือปิด jump cut / footage cut / ช่วงกลับเข้า top ที่เสี่ยงกระโดด
+```
+
+QA:
+
+```text
+รัน npm run check:transition
+B-roll ทุก slot ต้องมี data-transition-mode, data-transition-in, data-transition-out, data-pan-from, data-pan-to
+slot ที่มี coverCut ต้องเป็น bridge
+transition duration ต้องไม่ยาวเกิน 1/3 ของ B-roll duration
+ห้ามใช้ transform scale กับ frame wrapper เพราะจะทำให้ border ขยับ
+bottom face/audio ต้องไม่โดน transition
+caption ต้องไม่ถูก fade หรือ pan ตาม B-roll
+```
+
 ## BGM Loop
 
 หลักคิด:

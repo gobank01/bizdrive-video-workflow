@@ -89,7 +89,11 @@
 
       .broll-frame {
         object-fit: cover;
+        object-position: 50% 50%;
         opacity: 0;
+        visibility: hidden;
+        filter: brightness(0.98) contrast(1.02) saturate(1.02);
+        will-change: opacity, filter, object-position;
         z-index: 4;
       }
 
@@ -210,6 +214,11 @@
         data-start="1.000"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="soft"
+        data-transition-in="0.22"
+        data-transition-out="0.22"
+        data-pan-from="49% 50%"
+        data-pan-to="51% 50%"
         data-track-index="4"
         data-volume="0"
         muted
@@ -223,6 +232,11 @@
         data-start="3.900"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="bridge"
+        data-transition-in="0.26"
+        data-transition-out="0.26"
+        data-pan-from="50% 49%"
+        data-pan-to="50% 51%"
         data-track-index="5"
         data-volume="0"
         muted
@@ -236,6 +250,11 @@
         data-start="8.400"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="soft"
+        data-transition-in="0.22"
+        data-transition-out="0.22"
+        data-pan-from="51% 50%"
+        data-pan-to="49% 50%"
         data-track-index="6"
         data-volume="0"
         muted
@@ -249,6 +268,11 @@
         data-start="14.800"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="bridge"
+        data-transition-in="0.26"
+        data-transition-out="0.26"
+        data-pan-from="50% 51%"
+        data-pan-to="50% 49%"
         data-track-index="7"
         data-volume="0"
         muted
@@ -262,6 +286,11 @@
         data-start="18.700"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="bridge"
+        data-transition-in="0.26"
+        data-transition-out="0.26"
+        data-pan-from="49% 50%"
+        data-pan-to="51% 50%"
         data-track-index="8"
         data-volume="0"
         muted
@@ -275,6 +304,11 @@
         data-start="25.900"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="soft"
+        data-transition-in="0.22"
+        data-transition-out="0.22"
+        data-pan-from="50% 49%"
+        data-pan-to="50% 51%"
         data-track-index="9"
         data-volume="0"
         muted
@@ -288,6 +322,11 @@
         data-start="32.700"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="soft"
+        data-transition-in="0.22"
+        data-transition-out="0.22"
+        data-pan-from="51% 50%"
+        data-pan-to="49% 50%"
         data-track-index="10"
         data-volume="0"
         muted
@@ -301,6 +340,11 @@
         data-start="39.800"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="soft"
+        data-transition-in="0.22"
+        data-transition-out="0.22"
+        data-pan-from="50% 51%"
+        data-pan-to="50% 49%"
         data-track-index="11"
         data-volume="0"
         muted
@@ -314,6 +358,11 @@
         data-start="42.700"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="bridge"
+        data-transition-in="0.26"
+        data-transition-out="0.26"
+        data-pan-from="49% 50%"
+        data-pan-to="51% 50%"
         data-track-index="12"
         data-volume="0"
         muted
@@ -327,6 +376,11 @@
         data-start="46.900"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="bridge"
+        data-transition-in="0.26"
+        data-transition-out="0.26"
+        data-pan-from="50% 49%"
+        data-pan-to="50% 51%"
         data-track-index="13"
         data-volume="0"
         muted
@@ -385,13 +439,28 @@
       document.querySelectorAll(".broll-frame").forEach((clip) => {
         const start = Number(clip.dataset.start || 0);
         const duration = Number(clip.dataset.duration || 0);
+        const mode = clip.dataset.transitionMode || "soft";
+        const fallbackDuration = mode === "bridge" ? 0.26 : 0.22;
+        const inDuration = Math.min(Number(clip.dataset.transitionIn || fallbackDuration), duration / 3);
+        const outDuration = Math.min(Number(clip.dataset.transitionOut || fallbackDuration), duration / 3);
+        const exitStart = Math.max(start + duration - outDuration, start + inDuration);
+        const panFrom = clip.dataset.panFrom || "50% 50%";
+        const panTo = clip.dataset.panTo || "50% 50%";
+        const enterEase = mode === "bridge" ? "power3.out" : "power2.out";
+        const exitEase = mode === "bridge" ? "power2.inOut" : "power2.out";
+        tl.set(clip, { autoAlpha: 0, objectPosition: panFrom, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
         tl.fromTo(
           clip,
-          { opacity: 0 },
-          { opacity: 1, duration: 0.16, ease: "power2.out", immediateRender: false },
+          { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" },
+          { autoAlpha: 1, filter: "brightness(1) contrast(1.03) saturate(1.04)", duration: inDuration, ease: enterEase, immediateRender: false },
           start,
         );
-        tl.to(clip, { opacity: 0, duration: 0.16, ease: "power2.out" }, Math.max(start + duration - 0.16, start));
+        tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(
+          clip,
+          { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase },
+          exitStart,
+        );
       });
 
       document.querySelectorAll(".subtitle-cue").forEach((cue) => {

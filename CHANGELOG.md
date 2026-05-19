@@ -1,5 +1,25 @@
 # Changelog
 
+## v59
+
+Added B-roll Transition Mix Engine.
+
+```text
+Updated index.html B-roll entry/exit animation from simple opacity fade to transition mix
+Added soft transition mode for normal B-roll and bridge transition mode for jump-cover B-roll
+Added subtle object-position pan inside B-roll instead of scaling the frame wrapper
+Added transitionMix metadata to context/manifest generation
+Created scripts/check-transition-mix.js
+Added npm script: check:transition
+Updated WORKFLOW.md, CONFIG.md, MOTION_BGM.md, QA.md, STEPS.md, AGENTS.md, and final report slot output
+```
+
+Reason:
+
+```text
+The user wants every edit to feel smoother, especially where B-roll or footage switches in and out. Transition mix makes top footage -> B-roll -> top footage feel more intentional, and bridge mode helps hide jump cuts without moving the bottom face, captions, or gold frame borders.
+```
+
 ## v58
 
 Added a post-render finalize command.

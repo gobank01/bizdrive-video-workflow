@@ -10,6 +10,7 @@
     "check": "npx --yes hyperframes@0.6.16 lint && npx --yes hyperframes@0.6.16 validate && npx --yes hyperframes@0.6.16 inspect",
     "check:bgm": "node scripts/check-bgm-library.js",
     "check:keyterms": "node scripts/check-keyterms.js",
+    "check:transition": "node scripts/check-transition-mix.js",
     "finalize:video": "node scripts/finalize-video.js",
     "generate:broll": "node scripts/generate-openrouter-broll.js",
     "generate:broll:test-models": "node scripts/openrouter-broll-library.js",

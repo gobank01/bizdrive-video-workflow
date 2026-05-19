@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v58 - เพิ่ม post-render finalize command
+สถานะล่าสุด: v59 - เพิ่ม B-roll Transition Mix Engine
 
 วันที่บันทึก: 2026-05-19
 
@@ -13,6 +13,7 @@ v54 commit: 5a90e2f Add automatic final BGM QA
 v55 commit: f897a32 Add next session handoff
 v56 commit: 145f10f Add final report generator
 v57 commit: 485facb Add auto final BGM wrapper
+v58 commit: dc3b0fa Add post-render finalize command
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -30,6 +31,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 8. Final Report Generator รวม final MP4 metadata, context, B-roll, BGM QA, key term QA เป็น JSON + Markdown ได้
 9. Auto Final BGM wrapper เลือก final MP4 ล่าสุดที่ไม่ใช่ preview/BGM แล้วเรียก QA BGM ต่อได้
 10. Finalize command รวม Auto BGM + Final Report หลัง render ได้ในคำสั่งเดียว
+11. B-roll Transition Mix Engine ทำ soft/bridge transition ตอน B-roll เข้าออกได้ โดยไม่ขยับกรอบ top/bottom และไม่กระทบ bottom audio/caption
+12. มี transition QA command ตรวจ metadata ทุก B-roll slot และบังคับให้ B-roll ที่ cover jump cut ใช้ bridge mode
 ```
 
 ## Commands Now Available
@@ -73,6 +76,12 @@ npm run qa:bgm -- \
 npm run check:bgm
 ```
 
+ตรวจ B-roll transition mix:
+
+```bash
+npm run check:transition
+```
+
 สร้าง final report:
 
 ```bash
@@ -98,6 +107,38 @@ npm run finalize:video -- \
 ```
 
 ## Latest Verified Test
+
+v59 full render:
+
+```text
+../stacked-output-v59-transition-mix-full-test.mp4
+duration: 59.354333s
+size: 35.1 MB
+video: h264 1080x1920
+audio: aac 48000 Hz
+```
+
+v59 transition mix:
+
+```text
+B-roll count: 10
+soft transition slots: 5
+bridge transition slots: 5
+soft duration: 0.22s in/out
+bridge duration: 0.26s in/out
+QA command: npm run check:transition -- --output reports/transition-mix-v59-test2.json
+QA status: pass
+visual contact sheet: render-checks/v59-transition-mix/contact-sheet.jpg
+```
+
+v59 final report:
+
+```text
+reports/final-report-v59-transition-mix.json
+reports/final-report-v59-transition-mix.md
+status: review
+reason: B-roll QA pass, transition QA pass, BGM QA disabled for this render, key term QA warn from existing v45 report missing "prompt"
+```
 
 Input final:
 
@@ -174,15 +215,23 @@ reason: key term QA warn from existing v45 report missing "prompt"
 
 ## Tomorrow Recommended Next Work
 
-1. **Unified Context Decision**
+1. **Watch v59 Output**
+   - Review the transition mix by eye on the full output.
+   - Confirm B-roll entry/exit feels smoother and does not distract from speech.
+
+2. **Finalize v59 With BGM**
+   - After visual approval, run `npm run finalize:video` using `../stacked-output-v59-transition-mix-full-test.mp4`.
+   - Keep BGM at 5% unless the user explicitly asks for a different level.
+
+3. **Unified Context Decision**
    - Use the same context index to drive both B-roll and BGM.
    - Store `clipStyle`, `brollIntent`, `bgmStyle`, and `reason` in one report.
 
-2. **Full Pipeline Orchestrator**
+4. **Full Pipeline Orchestrator**
    - Later combine: inspect -> cut -> captions -> B-roll -> render -> finalize.
    - Target command: `npm run bizdrive:render`.
 
-3. **Run On A New Real Job Folder**
+5. **Run On A New Real Job Folder**
    - The current system is proven on Test 2.
    - Next important proof is running it on the next raw top/bottom pair.
 
@@ -196,4 +245,8 @@ Always test BGM on final MP4, not only bottom source.
 Never claim copyright-free without source/license.
 Bottom audio remains master.
 Top/bottom trims and cuts remain parallel.
+B-roll transition replaces top frame only.
+Use soft transition for normal B-roll and bridge transition when covering jump cuts.
+Do not move/scale top or bottom frame borders during transition.
+Run npm run check:transition after B-roll timing or transition edits.
 ```

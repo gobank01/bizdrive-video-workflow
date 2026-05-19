@@ -243,6 +243,7 @@ function normalizeBrollSlot(slot) {
     output: slot.output,
     usage: slot.usage ?? null,
     coverCut: slot.coverCut ?? null,
+    transitionMix: slot.transitionMix ?? null,
     contextSegment: slot.contextSegment,
     qaStatus: slot.qaStatus ?? "unknown",
     sourceUrl: slot.sourceUrl ?? null,
@@ -384,7 +385,7 @@ function writeOutputs(report, args) {
 
 function renderMarkdown(report) {
   const brollLines = report.broll.slots.map((slot) => (
-    `| ${slot.slot} | ${slot.start ?? ""}s | ${slot.keyword || ""} | ${slot.provider || ""} | ${slot.qaStatus || ""} | ${slot.output || ""} |`
+    `| ${slot.slot} | ${slot.start ?? ""}s | ${slot.keyword || ""} | ${slot.provider || ""} | ${slot.transitionMix?.mode || ""} | ${slot.qaStatus || ""} | ${slot.output || ""} |`
   )).join("\n");
 
   return `# Final Video Report
@@ -433,9 +434,9 @@ function renderMarkdown(report) {
 | Rejected Candidates | ${safe(report.broll.counts.rejectedCandidates)} |
 | QA | ${safe(report.broll.qaStatus)} |
 
-| Slot | Start | Keyword | Provider | QA | Output |
-| --- | ---: | --- | --- | --- | --- |
-${brollLines || "| - | - | - | - | - | - |"}
+| Slot | Start | Keyword | Provider | Transition | QA | Output |
+| --- | ---: | --- | --- | --- | --- | --- |
+${brollLines || "| - | - | - | - | - | - | - |"}
 
 ## Audio / BGM
 

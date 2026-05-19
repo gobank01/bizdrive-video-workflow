@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v58 VIDEO WORKFLOW - เพิ่ม Finalize command หลัง render
+สถานะล่าสุด: v59 VIDEO WORKFLOW - เพิ่ม B-roll Transition Mix Engine
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -52,7 +52,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v58
+version: v59
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -65,6 +65,8 @@ soft cut: always, default 0.12s crossfade
 B-roll duration: 3s each
 B-roll count: usually 5-10, minimum 3
 B-roll provider order: Pexels -> OpenRouter veo-3.1-lite -> OpenRouter kling-v3.0-std
+B-roll transition mix: enabled, soft 0.22s, bridge 0.26s for jump-cover slots
+transition QA command: npm run check:transition
 caption max length: about 20 Thai characters, never split Thai words
 sync master: bottom audio
 notify on sync mismatch: true
@@ -109,7 +111,7 @@ BGM mix command: npm run mix:bgm
 17. Re-encode selected B-roll.
 18. Build captions with Bizdrive style.
 19. If BGM is enabled, run `npm run select:bgm` to select from stock using title/transcript/context; generate only when no stock mood fits.
-20. Add optional zoom motion and BGM loop if enabled.
+20. Add B-roll transition mix, optional zoom motion, and BGM loop if enabled.
 21. Update HyperFrames composition.
 22. Run `npm run check`.
 23. Render full MP4.
@@ -130,6 +132,8 @@ bottom audio เป็น master timeline และสำคัญกว่า t
 ใช้ screen sampling เป็นตัวช่วย ไม่ใช่ตัวหลักของความหมาย
 ห้ามตัด key spoken terms จนหายจากเสียงพูดจริง
 B-roll ต้องไม่มี text/logo/watermark/other brand/distracting graphic
+B-roll เข้า/ออกต้องใช้ transition mix เสมอ และถ้าปิด jump cut ให้ใช้ bridge mode
+transition mix ห้ามขยับกรอบ top/bottom หรือ caption
 zoom motion ต้อง subtle และใช้เพื่อ emphasis เท่านั้น
 BGM ต้องอยู่ใต้เสียงพูดเสมอ default 5% และต้องมีสิทธิ์ใช้งาน
 BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่ช่วยไม่ให้คลิปแห้ง ถ้า melody ชัดจนคนสนใจเพลงถือว่าดังเกิน
@@ -141,6 +145,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 หลัง render full แล้วใช้ `npm run auto:bgm` ได้ถ้าต้องการให้ระบบเลือก final MP4 ล่าสุดให้อัตโนมัติ
 หลัง render full และมี context/B-roll/keyterm report แล้วใช้ `npm run finalize:video` เพื่อทำ BGM + final report ในคำสั่งเดียว
 หลังแก้ index.html ต้องรัน npm run check
+หลังแก้ B-roll timing/transition ต้องรัน npm run check:transition
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
 หลัง render/QA ให้สร้าง JSON + Markdown final report ด้วย `npm run report:final`
@@ -182,6 +187,7 @@ v55 เพิ่ม `NEXT_SESSION.md` เพื่อบันทึก checkpoi
 v56 เพิ่ม `scripts/final-report.js` และ `npm run report:final` สำหรับรวม final MP4 metadata, context cut, B-roll, BGM QA, key term QA เป็น JSON + Markdown report
 v57 เพิ่ม `scripts/auto-final-bgm.js` และ `npm run auto:bgm` สำหรับเลือก final MP4 ล่าสุดที่ยังไม่ใช่ BGM/preview แล้วส่งเข้า Auto Final BGM QA
 v58 เพิ่ม `scripts/finalize-video.js` และ `npm run finalize:video` สำหรับรวม post-render Auto BGM + final report เป็นคำสั่งเดียว
+v59 เพิ่ม B-roll Transition Mix Engine, metadata `transitionMix`, และ `npm run check:transition` เพื่อตรวจ B-roll entry/exit, bridge transition และ border-stable pan
 
 ## How To Continue Development
 

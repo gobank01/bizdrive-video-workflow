@@ -23,6 +23,8 @@
 [ ] B-roll candidates QA checked
 [ ] selected B-roll manifest exists
 [ ] selected B-roll re-encoded render-safe
+[ ] B-roll transition metadata exists for every selected slot
+[ ] npm run check:transition passes after B-roll timing/composition changes
 [ ] captions do not split Thai words
 [ ] captions obey max length policy
 [ ] caption gold baseline looks correct
@@ -83,6 +85,10 @@ optimized manifest.json
 [ ] top video is muted
 [ ] B-roll replaces only top frame
 [ ] bottom circle remains visible during B-roll
+[ ] B-roll entry/exit transition is smooth
+[ ] jump-cover B-roll slots use bridge transition
+[ ] transition mix does not move top/bottom frame borders
+[ ] captions do not fade/pan with B-roll transition
 [ ] captions remain visible and readable
 [ ] key spoken terms are audible
 [ ] soft cuts do not sound abrupt

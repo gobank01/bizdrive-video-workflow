@@ -156,6 +156,26 @@ minimumGapBetweenZooms: 2s
 zoomFrameRule: transform inner media only, not frame/border wrapper
 ```
 
+## Transition Mix
+
+```text
+transitionMixEnabled: true
+defaultBrollTransition: soft-crossfade-pan
+jumpCutBrollTransition: bridge-crossfade-pan
+softTransitionIn: 0.22s
+softTransitionOut: 0.22s
+bridgeTransitionIn: 0.26s
+bridgeTransitionOut: 0.26s
+transitionEaseIn: power2.out / power3.out for bridge
+transitionEaseOut: power2.out / power2.inOut for bridge
+panRange: 49%-51% object-position only
+borderStable: true
+applyTo: B-roll/top-frame media opacity, filter, object-position
+avoid: scaling frame wrapper, moving top/bottom border, moving captions
+bridgeRule: if B-roll covers a jump cut, use bridge mode and let B-roll overlap the cut point
+qaCommand: npm run check:transition
+```
+
 ## BGM Loop
 
 ```text

@@ -225,6 +225,13 @@ const selectedCandidates = [
   { slot: 10, candidate: 3 },
 ];
 
+const panPairs = [
+  ["49% 50%", "51% 50%"],
+  ["50% 49%", "50% 51%"],
+  ["51% 50%", "49% 50%"],
+  ["50% 51%", "50% 49%"],
+];
+
 const brollTiming = [
   { id: "broll01", start: 1.0, contextSegment: "hook", coverCut: null },
   { id: "broll02", start: 3.9, contextSegment: "hook_to_two_sources", coverCut: 4.38 },
@@ -236,7 +243,18 @@ const brollTiming = [
   { id: "broll08", start: 39.8, contextSegment: "ai_processing_steps", coverCut: null },
   { id: "broll09", start: 42.7, contextSegment: "processing_to_captions", coverCut: 43.2 },
   { id: "broll10", start: 46.9, contextSegment: "captions_to_final", coverCut: 47.32 },
-];
+].map((timing, index) => {
+  const isBridge = Boolean(timing.coverCut);
+  const [panFrom, panTo] = panPairs[index % panPairs.length];
+  return {
+    ...timing,
+    transitionMode: isBridge ? "bridge" : "soft",
+    transitionIn: isBridge ? 0.26 : 0.22,
+    transitionOut: isBridge ? 0.26 : 0.22,
+    panFrom,
+    panTo,
+  };
+});
 
 function round(n) {
   return Math.round(n * 1000) / 1000;
@@ -376,6 +394,11 @@ function buildBrollTags() {
         data-start="${timing.start.toFixed(3)}"
         data-duration="3"
         data-media-start="1"
+        data-transition-mode="${timing.transitionMode}"
+        data-transition-in="${timing.transitionIn}"
+        data-transition-out="${timing.transitionOut}"
+        data-pan-from="${timing.panFrom}"
+        data-pan-to="${timing.panTo}"
         data-track-index="${4 + index}"
         data-volume="0"
         muted
@@ -440,6 +463,13 @@ function writeContextAndManifest(selected) {
         intent: segment?.intent ?? null,
         coverCut: timing.coverCut,
         brollCoverRecommended: Boolean(timing.coverCut),
+        transitionMix: {
+          mode: timing.transitionMode,
+          inDuration: timing.transitionIn,
+          outDuration: timing.transitionOut,
+          panFrom: timing.panFrom,
+          panTo: timing.panTo,
+        },
         qaStatus: "pass",
       };
     }),
@@ -497,6 +527,14 @@ function writeContextAndManifest(selected) {
         selectedCandidate: source.candidate,
         coverCut: timing.coverCut,
         contextSegment: timing.contextSegment,
+        transitionMix: {
+          mode: timing.transitionMode,
+          inDuration: timing.transitionIn,
+          outDuration: timing.transitionOut,
+          panFrom: timing.panFrom,
+          panTo: timing.panTo,
+          borderStable: true,
+        },
         qaStatus: "pass",
         qaReason: null,
       };

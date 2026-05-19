@@ -61,6 +61,8 @@ When context cuts may remove important spoken terms, run `npm run check:keyterms
 
 Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free/generated-with-rights, loop smoothly, fade out, and stay clearly under the bottom voice.
 
+B-roll transition rule: every B-roll insert must have transition mix metadata and smooth entry/exit. Use `soft` transition for normal B-roll and `bridge` transition when the B-roll covers a jump cut. Keep transitions border-stable: do not scale or move the top/bottom frame wrapper, bottom face/audio, or captions. Run `npm run check:transition` after B-roll timing or composition changes.
+
 When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source. Default BGM level is 5% (`--gain-percent 5`, about -26.02dB). Never claim a track is copyright-free unless its source/license is documented. Report the BGM source, license/usage-rights note, level percent, gain, ducking, output, and QA result.
 
 Before generating or sourcing new BGM, check `bgm-library/mixkit-stock-v50.json` and run `npm run check:bgm`. Prefer a local stock track whose `bestFor` matches the clip style. Report whether the BGM was reused from stock or newly generated/downloaded.
