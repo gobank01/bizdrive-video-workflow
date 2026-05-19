@@ -71,8 +71,8 @@ function main() {
   if (!Number.isInteger(args.width) || args.width < 120) throw new Error("--width must be an integer >= 120");
 
   const duration = ffprobeDuration(args.input);
-  const frameCount = Math.ceil(duration);
-  const rows = Math.ceil(frameCount / args.cols);
+  const expectedFrames = Math.max(1, Math.floor(duration));
+  const rows = Math.ceil(expectedFrames / args.cols);
   const outputDir = args.outputDir;
   const framesDir = path.join(outputDir, "frames");
   const sheetPath = path.join(outputDir, `${args.prefix}-sheet.jpg`);
@@ -124,7 +124,7 @@ function main() {
     sheetPath: path.resolve(sheetPath),
     durationSeconds: Number(duration.toFixed(3)),
     intervalSeconds: 1,
-    expectedFrames: frameCount,
+    expectedFrames,
     cols: args.cols,
     rows,
     width: args.width,
