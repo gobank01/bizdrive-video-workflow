@@ -1,5 +1,42 @@
 # Changelog
 
+## v63
+
+Completed a full video2 re-edit to about 1:30.
+
+```text
+Built scripts/build-video2-v63-context90.js for repeatable video2 context-cut renders
+Used bottom audio as the master timeline and cut top/bottom in parallel
+Reduced 115.946s raw source to 89.354333s final output
+Kept the core hook, feature proof, technology-readiness explanation, assistant benefit, and CTA
+Dropped repeated/secondary sections with 0.12s video/audio soft cuts
+Re-encoded top/bottom soft-cut media at 30fps, GOP 30, faststart, and bottom audio 48k
+Created 8 job-specific B-roll derivatives from local Pexels stock
+Rejected 3 earlier B-roll candidates because of graphic/text risk
+Rendered ../stacked-output-v63-video2-context90-full.mp4
+Generated reports/frame-edit-report-v63-video2.json
+Generated reports/final-report-v63-video2.json and reports/final-report-v63-video2.md
+```
+
+Frame results:
+
+```text
+original: 115.946s / 3478 frames
+final: 89.354s / 2681 report frames, 2680 video stream frames
+content dropped: 26.146s / 784 frames
+soft-cut overlap removed: 0.446s / 13 frames
+total net removed: 26.592s / 798 frames
+B-roll top replacement: 24s / 720 frames
+transition mix: 3.76s / 113 frames
+visible inner-media motion: 89.32s / 2680 frames
+```
+
+Reason:
+
+```text
+The user asked to fully re-edit the new video2 clip of about 1:30. The workflow was exercised end-to-end with context analysis, semantic shortening, soft cuts, B-roll replacement, motion safety, transition QA, render QA, and final reporting.
+```
+
 ## v62
 
 Added slow inner-media motion with frame safety checks.

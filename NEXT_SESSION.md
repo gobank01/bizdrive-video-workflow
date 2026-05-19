@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v62 - เพิ่ม slow inner-media zoom โดย frame ห้ามขยับ
+สถานะล่าสุด: v63 - video2 full edit ประมาณ 1:30 พร้อม context cut, soft cut, transition mix และ B-roll QA
 
 วันที่บันทึก: 2026-05-19
 
@@ -17,6 +17,8 @@ v58 commit: dc3b0fa Add post-render finalize command
 v59 commit: f02d694 Add B-roll transition mix
 v60 commit: 216073c Add frame edit reporting
 v61 commit: 91d3f9b Add B-roll spacing rule
+v62 commit: 9e1d85a Add safe inner-media motion
+v63 commit: pending in current session
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -41,6 +43,9 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 15. B-roll spacing rule: ห้าม B-roll ติดกันจนลายตา ต้องห่างกันอย่างน้อย 6s ระหว่าง start และมี footage จริงของ top อย่างน้อย 3s ระหว่าง insert
 16. Slow inner-media motion: top/B-roll ขยับได้ช้า ๆ เฉพาะ media ข้างใน frame; top frame shell และ bottom frame ห้ามขยับเด็ดขาด
 17. Motion safety command ตรวจไม่ให้ animate frame/border หรือ bottom face
+18. video2 v63 full edit render แล้วที่ `../stacked-output-v63-video2-context90-full.mp4`
+19. video2 v63 ใช้ B-roll 8 จุดจาก local Pexels stock, re-encode ใหม่ 8 derivatives, reject 3 candidate ที่เสี่ยง graphic/text
+20. video2 v63 frame report และ final report พร้อมใช้ต่อ: `reports/frame-edit-report-v63-video2.json`, `reports/final-report-v63-video2.md`
 ```
 
 ## Commands Now Available
@@ -139,6 +144,33 @@ npm run finalize:video -- \
 ```
 
 ## Latest Verified Test
+
+v63 video2 full edit:
+
+```text
+../stacked-output-v63-video2-context90-full.mp4
+duration: 89.354333s
+size: 55.6 MB
+video: h264 1080x1920, 30fps, 2680 stream frames
+audio: aac 48000 Hz
+render: completed
+npm run check: pass with warning timeline_track_too_dense
+npm run check:transition: pass
+npm run check:motion: pass
+frame report: reports/frame-edit-report-v63-video2.json
+final report: reports/final-report-v63-video2.md
+B-roll manifest: assets/broll/optimized/video2-v63/manifest.json
+B-roll new downloads: 0
+B-roll AI generations: 0
+B-roll reused local stock: 8
+B-roll optimized derivatives: 8
+B-roll rejected candidates: 3
+content dropped: 784 frames
+soft-cut overlap removed: 13 frames
+total net removed: 798 frames
+B-roll top replacement: 720 frames
+transition mix: 113 frames
+```
 
 v59 full render:
 
