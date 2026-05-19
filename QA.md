@@ -9,10 +9,12 @@
 [ ] bottom audio is treated as master timeline
 [ ] sync lock is active: top, bottom audio/video, and captions share one edited timeline
 [ ] MISTAKES.md was read and all hard gates are active for this job
+[ ] LIPSYNC_QA.md was read and lip-sync zero-tolerance gate is active
 [ ] user is notified if top/bottom duration, start offset, or drift mismatch is found
 [ ] top/bottom trim timestamps match
 [ ] top/bottom clean durations match
 [ ] top/bottom frame counts match after every parallel trim/dead-air/context cut, except container rounding
+[ ] intermediate lip-sync evidence recorded: edited top/bottom duration and frame count match
 [ ] opening false start/noise/reset was checked; true start begins at sustained speech
 [ ] no remaining dead air longer than policy
 [ ] audio polish completed from verified clean bottom source, preferably raw bottom audio when prior polish has noise/sync risk
@@ -43,6 +45,9 @@
 [ ] caption timing spot check matches bottom speech
 [ ] any measured sync compensation is logged in context/final report with ms value and reason
 [ ] final ffprobe stream start_time was checked for video and audio after render
+[ ] finalStreamStartDeltaMs is reported
+[ ] lip-sync spot-check was done at 5+ points: hook, hard consonant, after cuts, around B-roll bridge, CTA
+[ ] residual lip-sync risk is none; if uncertain, output is blocked and not called final
 [ ] final summary includes mistake prevention gate status
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders

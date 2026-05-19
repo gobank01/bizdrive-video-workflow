@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v67 - mistakes locked into hard gates
+สถานะล่าสุด: v68 - lip-sync zero-tolerance gate
 
 วันที่บันทึก: 2026-05-19
 
@@ -23,6 +23,7 @@ v64 commit: 4773216 Add v64 production guardrails
 v65 commit: 1bc100c Add v65 full edit test
 v66 commit: ea280c4 Add v66 noise and sync fix
 v67 commit: 5284118 Add v67 mistake prevention gates
+v68 commit: pending until saved
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -62,6 +63,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 30. v66 เพิ่ม audio polish chain ใหม่จาก raw bottom audio และบันทึก sync compensation 21ms เมื่อมีหลักฐานจาก stream start mismatch
 31. v67 เพิ่ม `MISTAKES.md` เป็น incident log ถาวร และทุกงานต้องอ่านก่อนเริ่ม edit
 32. v67 เพิ่ม hard gates: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, final summary gate
+33. v68 เพิ่ม `LIPSYNC_QA.md` และกำหนด lip sync เป็น zero-tolerance blocker
+34. v68 ห้ามเรียก output ว่า final ถ้าไม่มี final stream start_time check, compensationMs/reason ถ้ามี offset, spot-check อย่างน้อย 5 จุด และ residualRisk=none
 ```
 
 ## Commands Now Available

@@ -1,5 +1,26 @@
 # Changelog
 
+## v68
+
+Added zero-tolerance lip-sync rules.
+
+```text
+Created LIPSYNC_QA.md as the required lip-sync verification document
+Updated MISTAKES.md with a v68 lip-sync zero-tolerance lesson
+Updated WORKFLOW.md, CONFIG.md, QA.md, STEPS.md, AGENTS.md, NEXT_SESSION.md, and local bizdrive-video skill
+Made lip sync a hard blocker, not a best-effort QA item
+Required final stream start_time check after render
+Required at least 5 lip-sync spot-check points before final delivery
+Required compensationMs and reason when any offset is applied
+Required residualRisk=none; otherwise output is blocked and cannot be called final
+```
+
+Reason:
+
+```text
+The user emphasized that lip sync must never fail. v68 makes lip-sync verification a zero-tolerance gate with explicit proof requirements and a stop rule.
+```
+
 ## v67
 
 Locked the v65/v66 mistakes into the workflow so they cannot be missed in future sessions.

@@ -41,12 +41,13 @@ For Bizdrive stacked-video work, read these files in order:
 3. `CONFIG.md` — editable settings such as key terms, layout, audio, captions, and B-roll provider order
 4. `QA.md` — required QA checklists
 5. `MISTAKES.md` — real incident log and hard gates that must not regress
-6. `SYNC_REPORT.md` — sync mismatch/bottom-master reporting template
-7. `KEYTERM_QA.md` — key term preservation QA rules
-8. `MOTION_BGM.md` — zoom motion and BGM loop rules
-9. `BGM_LIBRARY.md` — BGM stock index and style map
-10. `REPORT_TEMPLATE.md` — final report format
-11. `CHANGELOG.md` — workflow version history
+6. `LIPSYNC_QA.md` — zero-tolerance lip-sync gate and report format
+7. `SYNC_REPORT.md` — sync mismatch/bottom-master reporting template
+8. `KEYTERM_QA.md` — key term preservation QA rules
+9. `MOTION_BGM.md` — zoom motion and BGM loop rules
+10. `BGM_LIBRARY.md` — BGM stock index and style map
+11. `REPORT_TEMPLATE.md` — final report format
+12. `CHANGELOG.md` — workflow version history
 
 `STEPS_PRACTICAL_99.md` is an archived 99-step reference. Use it only when the 62-step edit map needs more detail.
 
@@ -59,6 +60,8 @@ Every workflow rule change increments the version and must be recorded in `CHANG
 Execution style rule: while working, report progress to the user as numbered steps. Say what Step/Phase is running, what is being checked, and what artifact proves it passed. Do not silently skip steps.
 
 Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its hard gates as blockers: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, and final summary gate. Do not claim final completion if any gate lacks evidence.
+
+Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip sync must be treated as a blocker, not a best-effort check. Do not call an output final unless final stream start_time was checked, any compensation is logged in ms, at least 5 lip-sync spot-check points were reviewed, and residualRisk is none. If uncertain, report blocked.
 
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
 

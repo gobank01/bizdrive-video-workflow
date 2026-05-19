@@ -44,12 +44,16 @@ bottomHasAudio: true
 
 ```text
 mistakeLog: MISTAKES.md
+lipSyncQa: LIPSYNC_QA.md
 readMistakeLogBeforeEveryEdit: true
 blockFinalIfHardGateFails: true
 openingGate: true start must be sustained speech, not first detectable sound
 audioSourceGate: choose raw vs polished source with evidence
 noiseGate: opening false start/noise checked before and after polish
 syncMetadataGate: final ffprobe video/audio stream start_time checked after render
+lipSyncZeroTolerance: true
+lipSyncSpotCheckMinimum: 5
+lipSyncBlockIfUncertain: true
 captionMapGate: captions remapped after every trim/dead-air/context cut
 summaryGate: final summary reports prevention gate status
 ```
@@ -63,6 +67,10 @@ topRole: visual screen layer only
 topAudioPolicy: ignore/mute
 syncLockRequired: true
 frameAccurateSync: true
+lipSyncZeroTolerance: true
+lipSyncQaRequired: true
+lipSyncSpotCheckMinimum: 5
+lipSyncPassRequiresResidualRiskNone: true
 timelineUnit: edited bottom-master timeline
 notifyUserOnMismatch: true
 durationMismatchAction: inspect before trim

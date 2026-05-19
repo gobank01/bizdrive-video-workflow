@@ -149,6 +149,35 @@ spot check caption timing around first 10s and around each cut/B-roll point
 4. Sync metadata gate: final video/audio stream start_time checked after render
 5. Caption map gate: captions mapped to edited timeline after every cut
 6. Report gate: final summary includes what failed before and how this run prevents it
+7. Lip-sync zero-tolerance gate: `LIPSYNC_QA.md` checks pass; if uncertain, final is blocked
 ```
 
 ถ้า gate ใดไม่ผ่าน ห้ามเรียกงานว่าเสร็จ
+
+## v68 Lip-Sync Zero Tolerance
+
+User rule:
+
+```text
+ปัญหา lip sync ห้ามเกิดขึ้นเด็ดขาด
+ต้องโฟกัสเป็นพิเศษทุกครั้ง
+ถ้าไม่มั่นใจ 100% ห้ามส่ง final
+```
+
+Never again:
+
+```text
+ห้ามสรุป sync pass จาก duration/frame count อย่างเดียว
+ต้องตรวจ final MP4 stream start_time หลัง render ทุกครั้ง
+ต้องมี spot-check จุดปาก/เสียงจริงอย่างน้อย 5 จุด
+ถ้าเกิด offset ต้อง log ค่า ms และเหตุผลก่อน compensate
+ถ้ายังไม่มั่นใจ ให้รายงาน blocked แทนการส่งงาน
+```
+
+Required proof:
+
+```text
+อ่านและทำตาม LIPSYNC_QA.md
+final report มี lipSyncStatus
+final summary มี finalStreamStartDeltaMs, compensationMs และ spotCheckPoints
+```
