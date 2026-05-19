@@ -173,6 +173,10 @@ borderStable: true
 applyTo: B-roll/top-frame media opacity, filter, object-position
 avoid: scaling frame wrapper, moving top/bottom border, moving captions
 bridgeRule: if B-roll covers a jump cut, use bridge mode and let B-roll overlap the cut point
+spacingRule: do not place 2 B-rolls inside the same 6s viewing window
+minBrollStartGap: 6s
+minRealTopFootageGap: 3s
+denseClusterFallback: choose the stronger B-roll, move the weaker slot later, or cover the jump with one bridge B-roll instead of two rapid inserts
 qaCommand: npm run check:transition
 ```
 

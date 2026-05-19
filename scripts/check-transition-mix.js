@@ -5,7 +5,9 @@ import path from "node:path";
 const DEFAULTS = {
   html: "index.html",
   context: "assets/context/test2-v35-full-context-index.json",
-  output: null
+  output: null,
+  minStartGap: 6,
+  minTopGap: 3
 };
 
 function parseArgs(argv) {
@@ -22,12 +24,24 @@ function parseArgs(argv) {
     } else if (arg === "--output") {
       args.output = next;
       i += 1;
+    } else if (arg === "--min-start-gap") {
+      args.minStartGap = Number(next);
+      i += 1;
+    } else if (arg === "--min-top-gap") {
+      args.minTopGap = Number(next);
+      i += 1;
     } else if (arg === "--help" || arg === "-h") {
       printHelp();
       process.exit(0);
     }
   }
   if (!fs.existsSync(args.html)) throw new Error(`HTML not found: ${args.html}`);
+  if (!Number.isFinite(args.minStartGap) || args.minStartGap <= 0) {
+    throw new Error("--min-start-gap must be a positive number");
+  }
+  if (!Number.isFinite(args.minTopGap) || args.minTopGap < 0) {
+    throw new Error("--min-top-gap must be zero or a positive number");
+  }
   return args;
 }
 
@@ -70,7 +84,7 @@ function numberAttr(tag, name) {
   return Number.isFinite(number) ? number : null;
 }
 
-function validate(tags, context) {
+function validate(tags, context, args) {
   const issues = [];
   const contextSlots = new Map((context?.brollSlots || []).map((slot) => [slot.id, slot]));
   const seenTrackIndexes = new Set();
@@ -98,6 +112,27 @@ function validate(tags, context) {
     }
   }
 
+  const sortedTags = tags
+    .filter((tag) => Number.isFinite(tag.start) && Number.isFinite(tag.duration))
+    .slice()
+    .sort((a, b) => a.start - b.start);
+  for (let index = 1; index < sortedTags.length; index += 1) {
+    const previous = sortedTags[index - 1];
+    const current = sortedTags[index];
+    const startGap = current.start - previous.start;
+    const topGap = current.start - (previous.start + previous.duration);
+    if (startGap < args.minStartGap - 0.001) {
+      issues.push(
+        `${previous.id}->${current.id}: B-roll starts are too close (${startGap.toFixed(2)}s < ${args.minStartGap}s)`,
+      );
+    }
+    if (topGap < args.minTopGap - 0.001) {
+      issues.push(
+        `${previous.id}->${current.id}: real top footage gap is too short (${topGap.toFixed(2)}s < ${args.minTopGap}s)`,
+      );
+    }
+  }
+
   return issues;
 }
 
@@ -106,11 +141,11 @@ function main() {
   const html = fs.readFileSync(args.html, "utf8");
   const context = readOptionalJson(args.context);
   const tags = parseBrollTags(html);
-  const issues = validate(tags, context);
+  const issues = validate(tags, context, args);
   const bridgeCount = tags.filter((tag) => tag.mode === "bridge").length;
   const softCount = tags.filter((tag) => tag.mode === "soft").length;
   const report = {
-    version: 59,
+    version: 61,
     status: issues.length ? "fail" : "pass",
     html: args.html,
     context: context ? args.context : null,
@@ -120,6 +155,8 @@ function main() {
     defaults: {
       softTransitionSeconds: 0.22,
       bridgeTransitionSeconds: 0.26,
+      minBrollStartGapSeconds: args.minStartGap,
+      minRealTopFootageGapSeconds: args.minTopGap,
       borderStable: true,
       bottomUnaffected: true
     },
@@ -143,6 +180,8 @@ Options:
   --html <path>     Composition HTML, default ${DEFAULTS.html}
   --context <path>  Optional context index used to validate bridge slots
   --output <path>   Optional JSON report path
+  --min-start-gap <seconds>  Hard minimum between B-roll starts, default ${DEFAULTS.minStartGap}
+  --min-top-gap <seconds>    Hard minimum real top footage between B-rolls, default ${DEFAULTS.minTopGap}
 `);
 }
 

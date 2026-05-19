@@ -1,5 +1,21 @@
 # Changelog
 
+## v61
+
+Added B-roll spacing guardrail.
+
+```text
+Updated current v59/Test 2 B-roll timing so starts are spaced every 6s
+Added minimum B-roll start gap and real top footage gap validation to scripts/check-transition-mix.js
+Updated WORKFLOW.md, CONFIG.md, QA.md, STEPS.md, AGENTS.md, and NEXT_SESSION.md with the new pacing rule
+```
+
+Reason:
+
+```text
+The user noticed that rapid B-roll clusters feel confusing, especially patterns like B-roll -> 2s real top footage -> B-roll. The workflow now treats this as a hard QA failure: do not put two B-rolls in the same 6-second viewing window, and keep enough real top footage between inserts so the viewer can settle.
+```
+
 ## v60
 
 Added required summary and frame edit reporting.

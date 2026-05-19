@@ -24,6 +24,7 @@
 [ ] selected B-roll manifest exists
 [ ] selected B-roll re-encoded render-safe
 [ ] B-roll transition metadata exists for every selected slot
+[ ] B-roll spacing is not too dense: no two B-roll starts closer than 6s and at least 3s real top footage between inserts
 [ ] npm run check:transition passes after B-roll timing/composition changes
 [ ] captions do not split Thai words
 [ ] captions obey max length policy
@@ -85,6 +86,7 @@ optimized manifest.json
 [ ] top video is muted
 [ ] B-roll replaces only top frame
 [ ] bottom circle remains visible during B-roll
+[ ] B-roll pacing is comfortable and never feels like B-roll/top/B-roll flashing inside a few seconds
 [ ] B-roll entry/exit transition is smooth
 [ ] jump-cover B-roll slots use bridge transition
 [ ] transition mix does not move top/bottom frame borders

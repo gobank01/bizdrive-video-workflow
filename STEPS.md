@@ -90,7 +90,8 @@
 58. fallback เป็น OpenRouter `google/veo-3.1-lite` และ premium fallback เป็น `kwaivgi/kling-v3.0-std`
 59. reject text, logo, watermark, other brand, distracting graphic
 60. re-encode selected B-roll และสร้าง manifest พร้อม downloaded/generated/reused/optimized/rejected counts
-60.1 ใส่ transition mix metadata ทุก slot: soft สำหรับ B-roll ปกติ, bridge สำหรับ B-roll ที่ cover jump cut, แล้วรัน `npm run check:transition`
+60.1 เว้นจังหวะ B-roll ให้ไม่ลายตา: B-roll starts ห่างกันอย่างน้อย 6s และมี footage จริงของ top อย่างน้อย 3s ระหว่าง insert; ถ้า jump cut ถี่ ให้เลือก B-roll เดียวที่สำคัญกว่า หรือใช้ bridge B-roll หนึ่งอันแทนการใส่ติดกัน
+60.2 ใส่ transition mix metadata ทุก slot: soft สำหรับ B-roll ปกติ, bridge สำหรับ B-roll ที่ cover jump cut, แล้วรัน `npm run check:transition`
 
 ## Phase 10 — Captions, Composition, QA
 

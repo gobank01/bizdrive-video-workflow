@@ -4,6 +4,8 @@ import { spawnSync } from "node:child_process";
 const VERSION = 35;
 const XFADE = 0.12;
 const COMPOSITION_DURATION = 59.33;
+const BROLL_MIN_START_GAP = 6;
+const BROLL_MIN_TOP_GAP = 3;
 
 const keepSegments = [
   {
@@ -234,15 +236,15 @@ const panPairs = [
 
 const brollTiming = [
   { id: "broll01", start: 1.0, contextSegment: "hook", coverCut: null },
-  { id: "broll02", start: 3.9, contextSegment: "hook_to_two_sources", coverCut: 4.38 },
-  { id: "broll03", start: 8.4, contextSegment: "two_sources_and_ai", coverCut: null },
-  { id: "broll04", start: 14.8, contextSegment: "two_sources_to_prompt", coverCut: 15.36 },
-  { id: "broll05", start: 18.7, contextSegment: "prompt_to_processing", coverCut: 19.2 },
-  { id: "broll06", start: 25.9, contextSegment: "ai_processing_steps", coverCut: null },
-  { id: "broll07", start: 32.7, contextSegment: "ai_processing_steps", coverCut: null },
-  { id: "broll08", start: 39.8, contextSegment: "ai_processing_steps", coverCut: null },
-  { id: "broll09", start: 42.7, contextSegment: "processing_to_captions", coverCut: 43.2 },
-  { id: "broll10", start: 46.9, contextSegment: "captions_to_final", coverCut: 47.32 },
+  { id: "broll02", start: 7.0, contextSegment: "hook_to_two_sources", coverCut: null },
+  { id: "broll03", start: 13.0, contextSegment: "two_sources_and_ai", coverCut: 15.36 },
+  { id: "broll04", start: 19.0, contextSegment: "two_sources_to_prompt", coverCut: 19.2 },
+  { id: "broll05", start: 25.0, contextSegment: "prompt_to_processing", coverCut: null },
+  { id: "broll06", start: 31.0, contextSegment: "ai_processing_steps", coverCut: null },
+  { id: "broll07", start: 37.0, contextSegment: "ai_processing_steps", coverCut: null },
+  { id: "broll08", start: 43.0, contextSegment: "ai_processing_steps", coverCut: 43.2 },
+  { id: "broll09", start: 49.0, contextSegment: "processing_to_captions", coverCut: null },
+  { id: "broll10", start: 55.0, contextSegment: "captions_to_final", coverCut: null },
 ].map((timing, index) => {
   const isBridge = Boolean(timing.coverCut);
   const [panFrom, panTo] = panPairs[index % panPairs.length];
@@ -437,6 +439,11 @@ function writeContextAndManifest(selected) {
     outputDuration,
     compositionDuration: COMPOSITION_DURATION,
     xfadeSeconds: XFADE,
+    brollSpacing: {
+      minStartGapSeconds: BROLL_MIN_START_GAP,
+      minRealTopFootageGapSeconds: BROLL_MIN_TOP_GAP,
+      rule: "Do not place two B-roll inserts inside the same 6-second viewing window.",
+    },
     screenSampling: {
       path: "render-checks/test2-v34-screen-sample/contact-sheet.jpg",
       intervalSeconds: 5,
@@ -502,6 +509,8 @@ function writeContextAndManifest(selected) {
       openRouterGenerationsNew: 0,
       optimizedDerivativeCount: selected.length,
       rejectedCandidateCount: rejectedCandidates.length,
+      minStartGapSeconds: BROLL_MIN_START_GAP,
+      minRealTopFootageGapSeconds: BROLL_MIN_TOP_GAP,
       note: "Full v35 test uses fresh Pexels sources selected from broad context keywords and retimed to cover important jump cuts.",
     },
     qaRule: "Reject any B-roll with visible text, logo, watermark, other brand, distracting graphic, or poor relevance.",
