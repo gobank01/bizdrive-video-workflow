@@ -170,6 +170,7 @@ goldHighlight: #FFD93D -> #F4C20F -> #B8860B
 goldBaseline: same as normal text
 goldSpacing: word-safe spacing before/after highlighted token; visual margin about 0.08em with first/last child guard
 goldSpacingRule: if ABC has B highlighted, render as A B C; if BCD needs separated highlighted tokens, render as B C D
+goldSpacingPhase: Phase 10 / Step 61 Caption Build / Step 61.2 Caption Gold Spacing QA
 goldSpacingQaCommand: npm run check:caption-gold
 ```
 

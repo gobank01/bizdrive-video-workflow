@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v84 CAPTION GOLD SPACING - เพิ่ม rule เว้นวรรคหน้าหลังคำสีเหลืองและ QA command
+สถานะล่าสุด: v85 CAPTION GOLD PHASE PLACEMENT - ระบุชัดว่า gold spacing อยู่ Phase 10 / Caption Build และ Caption QA
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v84
+version: v85
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -116,7 +116,7 @@ decision question style: choice-based, 2-3 simple options, recommended first, mi
 rough direction trim gate: before lock trimStart/trimEnd, collect user rough direction if available and create candidates from hint + evidence
 phase gate mode: required; after every Phase, stop with proof and wait for user pass before continuing unless user explicitly requests auto/full mode
 raw bottom lip-sync gate: metadata sync is not enough; before accepting an input set, preview raw/phase bottom face with its own bottom audio and require human/visual lip-sync pass
-latest phase test: v84 caption gold spacing rule/check added; v83 remains accepted final output
+latest phase test: v85 caption gold spacing placement clarified; v83 remains accepted final output
 ```
 
 ## Master Pipeline
@@ -142,7 +142,7 @@ latest phase test: v84 caption gold spacing rule/check added; v83 remains accept
 17. Search/download/index B-roll first; reuse only when indexed stock is clearly the best match or stock count is already mature.
 18. QA B-roll and reject text/logo/brand/graphic failures.
 19. Re-encode selected B-roll.
-20. Build captions with Bizdrive style. Gold-highlight terms must be separated from adjacent normal text with word-safe spacing.
+20. Build captions with Bizdrive style. Gold-highlight terms must be separated from adjacent normal text with word-safe spacing. This belongs to Phase 10 Caption Build, before HyperFrames render and before BGM/final mux.
 21. If BGM is enabled, run `npm run select:bgm` to select from stock using title/transcript/context; generate only when no stock mood fits.
 22. Add B-roll transition mix, optional zoom motion, and BGM loop if enabled.
 23. Update HyperFrames composition using visual masters only and keep render audio disabled.
@@ -158,6 +158,27 @@ latest phase test: v84 caption gold spacing rule/check added; v83 remains accept
 28. Write frame edit report with `npm run report:frames`.
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
+
+## v85 Placement: Caption Gold Spacing
+
+ตำแหน่งที่ถูกต้องของ rule นี้:
+
+```text
+Phase: Phase 10 — Captions, Composition, QA
+Sub-step: 61 Caption Build
+QA sub-step: 61.2 Caption Gold Spacing QA
+Module: caption-build
+Timing: หลัง transcript/context/cut timeline lock แล้ว, ก่อน HyperFrames render, ก่อน BGM/final mux
+Command: npm run check:caption-gold
+```
+
+เหตุผล:
+
+```text
+gold spacing เป็นปัญหาในชั้น caption HTML/style ไม่ใช่ B-roll, BGM, final mux หรือ delivery
+ต้องตรวจทันทีหลังสร้าง/แก้ caption HTML เพราะถ้ารอไปตรวจหลัง render จะเสียเวลาย้อนงาน
+rule นี้ไม่เปลี่ยน audio, sync, B-roll timing, final mux หรือ frame count
+```
 
 ## v84 Caption Gold Spacing Rule
 

@@ -82,7 +82,7 @@ Latest v83 checkpoint: accepted final output is `../preview-v80/v83-setB-final-a
 
 Final report rule: report video frames/start metadata and BGM frameLock. B-roll QA statuses ending in `pass` count as pass.
 
-Caption gold-spacing rule: gold-highlighted caption tokens must be separated from adjacent normal text. Example: `ABC` with `B` highlighted should render as `A B C`; if `BCD` needs separated highlighted tokens, render `B C D`. Run `npm run check:caption-gold` after caption HTML/style changes.
+Caption gold-spacing rule: this belongs to Phase 10 / Step 61 Caption Build and Step 61.2 Caption Gold Spacing QA, before HyperFrames render and before BGM/final mux. Gold-highlighted caption tokens must be separated from adjacent normal text. Example: `ABC` with `B` highlighted should render as `A B C`; if `BCD` needs separated highlighted tokens, render `B C D`. Run `npm run check:caption-gold` after caption HTML/style changes.
 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 

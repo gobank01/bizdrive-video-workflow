@@ -1,5 +1,35 @@
 # Changelog
 
+## v85
+
+Clarified the exact workflow phase for the caption gold-spacing rule.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated CONFIG.md
+Updated QA.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+```
+
+Placement:
+
+```text
+Phase: Phase 10 — Captions, Composition, QA
+Sub-step: 61 Caption Build
+QA sub-step: 61.2 Caption Gold Spacing QA
+Module: caption-build
+When: after transcript/context/cut timeline lock, before HyperFrames render, before BGM/final mux
+Command: npm run check:caption-gold
+```
+
+Reason:
+
+```text
+The rule is about caption HTML/style generation. It should be checked immediately after caption build, not later in B-roll, BGM, final mux, or delivery.
+```
+
 ## v84
 
 Added the caption gold-spacing rule and a QA command for highlight spacing.

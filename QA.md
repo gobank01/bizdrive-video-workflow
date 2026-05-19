@@ -48,7 +48,7 @@
 [ ] captions obey max length policy
 [ ] captions are mapped to edited timeline, not raw pre-cut timestamps
 [ ] caption timing spot check matches bottom speech
-[ ] caption gold highlights have word-safe spacing from adjacent normal text; run npm run check:caption-gold
+[ ] Phase 10 / Step 61.2 caption gold spacing QA was run: npm run check:caption-gold
 [ ] any measured sync compensation is logged in context/final report with ms value and reason
 [ ] final ffprobe stream start_time was checked for video and audio after render
 [ ] finalStreamStartDeltaMs is reported

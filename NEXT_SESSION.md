@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v84 - caption gold spacing rule saved; v83 final remains accepted output
+สถานะล่าสุด: v85 - caption gold spacing placement clarified; v83 final remains accepted output
 
 วันที่บันทึก: 2026-05-19
 
@@ -39,7 +39,8 @@ v80 commit: 408cc68 Add v80 clean Set B phase test
 v81 commit: 46e407c Add v81 golden phase 10 checkpoint
 v82 commit: 1b91667 Add v82 BGM frame lock checkpoint
 v83 commit: 21a4955 Add v83 accepted final checkpoint
-v84 commit: current v84 caption gold spacing checkpoint commit
+v84 commit: 6df7852 Add v84 caption gold spacing rule
+v85 commit: current v85 caption gold phase placement checkpoint commit
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -128,6 +129,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 79. v84 เพิ่ม caption gold-spacing rule: token สีเหลืองต้องแยกช่องว่างจากข้อความธรรมดา เช่น ABC highlight B -> A B C
 80. v84 เพิ่ม `scripts/check-caption-gold-spacing.js` และ `npm run check:caption-gold`; current index.html pass, 27 captions, issues 0
 81. v84 `index.html` ปรับ `.gold` ให้มี margin แนวนอนแบบคุมได้ พร้อม first/last child guard เพื่อไม่ให้ช่องว่างเกินที่หัว/ท้าย caption
+82. v85 ระบุ phase ที่ถูกต้องของ gold spacing: Phase 10 / Step 61 Caption Build และ Step 61.2 Caption Gold Spacing QA
+83. v85 gold spacing อยู่ใน module `caption-build`; ต้องตรวจหลังสร้าง/แก้ caption HTML และก่อน HyperFrames render/BGM/final mux
 ```
 
 ## Latest v75 Delivery
