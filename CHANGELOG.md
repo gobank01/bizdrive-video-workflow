@@ -1,5 +1,23 @@
 # Changelog
 
+## v76
+
+Added choice-based user decision gates.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+The user wants important workflow questions to be easy to answer with clicks/options instead of long typing. Future editorial and creative gates should present 2-3 simple choices, recommended first, and use the user's initial direction as the anchor when already provided.
+```
+
 ## v75
 
 Added the single final output delivery rule.

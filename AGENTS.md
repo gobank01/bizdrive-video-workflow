@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v75
+## Bizdrive Workflow Docs — v76
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -59,6 +59,8 @@ For Bizdrive stacked-video work, read these files in order:
 Every workflow rule change increments the version and must be recorded in `CHANGELOG.md`. If the change affects execution, update `STEPS.md` and/or `CONFIG.md` instead of burying it only in prose.
 
 Execution style rule: while working, report progress to the user as numbered steps. Say what Step/Phase is running, what is being checked, and what artifact proves it passed. Do not silently skip steps.
+
+Choice-based decision rule: before important editorial/creative decisions, ask the user with 2-3 simple options instead of open-ended typing. Put the recommended option first, keep labels short, and use clickable choices when the UI/tool supports it. If clickable choices are unavailable, use A/B/C options and accept a one-letter or short reply. If the user already gave direction at the start, use that as the answer and do not ask again.
 
 Mistake prevention rule: read `MISTAKES.md` before every video edit. Treat its hard gates as blockers: opening sustained speech, audio source proof, noise proof, final stream start_time sync, caption remap proof, and final summary gate. Do not claim final completion if any gate lacks evidence.
 
@@ -136,6 +138,8 @@ When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest
 When the final MP4, context index, B-roll manifest, and key term report are ready, prefer `npm run finalize:video` for post-render delivery. It runs Auto BGM first, then creates the final report.
 
 Every task summary must include what changed, output/report paths, QA commands and results, and frame counts. Report edited frames such as B-roll top replacement, transition mix, zoom/motion, or overlays, plus removed frames such as dropped content, soft-cut overlap, and total net removed. Use `npm run report:frames` when context index, B-roll manifest, and final MP4 are available.
+
+User decision gates to ask as choices when direction is missing: start/end hints, dead-air style, cut aggressiveness, B-roll on/off/count, B-roll sourcing, caption style, BGM on/off, and final render confirmation.
 
 Single final output rule: in user-facing delivery, show only one MP4 output path: the Final file. Do not list visual-only, no-BGM, preview, master, or intermediate MP4s as outputs unless the user explicitly asks for debug/internal artifacts. Reports and QA artifacts may be mentioned separately, but not as video outputs.
 

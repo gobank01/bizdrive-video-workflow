@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v75 - single final output rule recorded
+สถานะล่าสุด: v76 - choice-based user decision gates recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -30,7 +30,8 @@ v71 commit: 34e6937 Add v71 lip-sync safe final edit
 v72 commit: 4a49374 Add v72 edit-first master workflow
 v73 commit: e475c2b Add v73 completion marker rule
 v74 commit: 02084a6 Add v74 test edit record
-v75 commit: included in current commit (Add v75 single final output rule)
+v75 commit: 364be31 Add v75 single final output rule
+v76 commit: included in current commit (Add v76 choice-based decision gates)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -94,6 +95,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 54. v74 final: `../stacked-output-v74-video2-test-edit-final-bgm.mp4`
 55. v74 QA pass: lint/validate/inspect with timeout 30000, transition pass, motion pass, keyterm pass, BGM pass, silence >0.5s none, timestamp QA created
 56. v75 เพิ่ม single final output rule: ตอนส่งงานให้ผู้ใช้ แสดง Output MP4 เดียวคือ Final เท่านั้น; intermediate ใช้ภายใน QA และไม่ list เป็น output หลัก
+57. v76 เพิ่ม choice-based user decision gates: ก่อน decision สำคัญให้ถามเป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย เช่น start/end, dead air, cut aggressiveness, B-roll, BGM, caption style, final render confirm
 ```
 
 ## Latest v75 Delivery
@@ -490,6 +492,7 @@ HyperFrames should render visual-only, then mux speech audio master back after r
 Top/bottom trims and cuts remain parallel.
 When a task is fully complete and verified, final response must include a standalone ✅✅✅ marker.
 When delivering a video edit, show only one MP4 output path: the Final file.
+Ask important editorial/creative decisions as simple choices; use clickable options if available, otherwise A/B/C.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.
 Do not move/scale top or bottom frame borders during transition.

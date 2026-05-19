@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v75 SINGLE FINAL OUTPUT - ส่ง Output เดียวคือ Final เท่านั้น
+สถานะล่าสุด: v76 CHOICE-BASED USER GATES - ก่อน decision สำคัญให้ถามเป็นตัวเลือกง่าย ๆ
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -55,7 +55,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v75
+version: v76
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -108,6 +108,8 @@ BGM final-real-file QA: required
 BGM mix command: npm run mix:bgm
 completion marker: when a task is fully complete and verified, final response must include a clear standalone `✅✅✅`
 delivery output: show only one user-facing MP4 output, the Final file; intermediate visual/no-BGM files are internal QA artifacts
+user decision gate: ask before important editorial/creative decisions when possible
+decision question style: choice-based, 2-3 simple options, recommended first, minimal typing
 ```
 
 ## Master Pipeline
@@ -116,6 +118,7 @@ delivery output: show only one user-facing MP4 output, the Final file; intermedi
 1.1. Read `MISTAKES.md` and `LIPSYNC_QA.md`; identify active prevention gates.
 2. Inspect raw media metadata.
 3. Confirm top/bottom roles and sync.
+3.1. Ask user decision gates as choices when the answer affects creative/editorial direction.
 4. Find true spoken start; reject false starts before sustained speech.
 5. Trim top and bottom in parallel.
 6. Cut dead air in parallel.
@@ -148,6 +151,40 @@ delivery output: show only one user-facing MP4 output, the Final file; intermedi
 29. Write final report with `npm run report:final`.
 30. Update changelog/workflow version when rules change.
 
+## User Decision Gate
+
+ก่อนข้าม decision สำคัญ ให้ถามผู้ใช้ถ้าถามได้ โดยถามเป็นตัวเลือกง่าย ๆ:
+
+```text
+question style: 2-3 choices, recommended choice first
+input style: click/select if UI supports it; otherwise A/B/C short reply
+free text: allowed only as optional "อื่น ๆ" when needed
+default: if user already gave direction at the beginning, use that as the answer and do not ask again
+stop rule: if answer changes edit direction and is missing, ask before cutting/rendering
+```
+
+ต้องถาม/ยืนยันเป็นตัวเลือกในจุดเหล่านี้เมื่อยังไม่รู้คำตอบ:
+
+```text
+start/end: ให้ผู้ใช้บอกคร่าว ๆ หรือให้ AI หาเอง
+cut aggressiveness: Conservative / Medium / Aggressive
+dead air: ตัด silence >0.5s ทั้งหมด / ตัดเฉพาะช่วงยาวมาก / ให้ AI เสนอ
+B-roll: ใส่ / ไม่ใส่ / ให้ AI แนะนำจำนวน
+B-roll sourcing: พยายามโหลดใหม่ / ใช้ stock ก่อน / ผสมสองแบบ
+BGM: ใส่ 5% / ไม่ใส่ / ให้ AI เลือกหลังวิเคราะห์
+caption style: clean สั้น / ใกล้เสียงพูดจริง / ให้ AI balance
+final render: confirm decision summary ก่อน render full
+```
+
+ตัวอย่างคำถาม:
+
+```text
+Step 21 Start Gate:
+A. ใช้จุดที่คุณบอกคร่าว ๆ เป็น anchor (Recommended)
+B. ให้ AI หา true start จาก audio/transcript
+C. หยุดก่อน ส่ง preview/candidates ให้เลือก
+```
+
 ## Sequential Execution Gates
 
 ทุกงานต้องทำตามลำดับ step ห้ามข้าม ถ้า step หนึ่งยังไม่ผ่าน QA ให้แก้ step นั้นก่อนค่อยไปต่อ
@@ -158,6 +195,7 @@ delivery output: show only one user-facing MP4 output, the Final file; intermedi
 3. ถ้า check fail ให้หยุดแก้ ไม่ข้ามไป render หรือ final report
 4. ถ้า command/tool สำคัญ fail เช่น Whisper ให้ใช้ fallback ที่เทียบเท่า เช่น direct whisper-cli แต่ต้องยังมี transcript ก่อน context/caption
 5. ทุก timing decision ต้องอิง bottom master timeline และบันทึกใน context/manifest/report
+6. ก่อนข้าม editorial/creative gate ให้ถามเป็นตัวเลือก ถ้าผู้ใช้ยังไม่ได้ให้ direction
 ```
 
 ## Sync Lock Rule
@@ -296,6 +334,7 @@ Whisper จำเป็นทุกงาน ถ้า HyperFrames transcribe fa
 ตัดต่อ production ต้องใช้ edit-first master: ตัด top/bottom/audio ให้เสร็จและ QA sync ก่อนเข้า HyperFrames layout
 HyperFrames final render ใน workflow นี้ควรเป็น visual-only แล้ว mux speech audio master กลับทีหลัง
 เวลาส่งงานให้ผู้ใช้ แสดง Output เดียวเท่านั้นคือ Final MP4; intermediate ใช้ภายใน QA ไม่ต้อง list เป็น output
+ก่อน decision สำคัญ เช่น start/end, cut aggressiveness, B-roll, BGM, caption style และ final render ให้ถามผู้ใช้เป็นตัวเลือกง่าย ๆ ถ้ายังไม่มี direction
 caption timing ต้อง map หลัง trim/dead-air/context cut แล้ว ไม่ใช้ timestamp raw โดยตรง
 B-roll ต้องไม่มี text/logo/watermark/other brand/distracting graphic
 B-roll ต้องพยายามโหลด fresh candidate ก่อนเพื่อสะสม stock/index จนมี QA-passed stock อย่างน้อย 200 clips
@@ -467,6 +506,7 @@ v72 เปลี่ยน architecture เป็น edit-first master: สร้
 v73 เพิ่ม completion marker rule: ทุกครั้งที่ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องแสดง `✅✅✅` แบบชัดเจน
 v74 ทดสอบตัดต่อ full render ด้วย edit-first master pipeline: render visual-only, mux speech audio master, mix BGM 5%, สร้าง timestamp QA, frame report, keyterm QA และ final report ผ่าน
 v75 เพิ่ม single final output rule: เวลาส่งงานให้ผู้ใช้แสดง Output เดียวคือ Final MP4 เท่านั้น ส่วน visual-only/no-BGM/intermediate เป็น internal QA artifact
+v76 เพิ่ม choice-based user decision gate: ก่อนข้าม decision สำคัญให้ถามเป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย ถ้าผู้ใช้ให้ direction ตั้งแต่แรกให้ใช้เป็น anchor
 
 ## How To Continue Development
 

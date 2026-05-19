@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v75 - single final output + completion marker + edit-first master + 1-second timestamped clip QA
+สถานะล่าสุด: v76 - choice-based user gates + single final output + edit-first master
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -16,6 +16,7 @@
 5.3 ระบุ hard gates จาก `MISTAKES.md` ที่ต้องพิสูจน์ในงานนี้
 5.4 ระบุ lip-sync proof ที่ต้องมีตาม `LIPSYNC_QA.md`
 5.5 ถ้างานเป็น production/full render ให้ประกาศว่าจะใช้ edit-first master: ตัดต่อและล็อก sync ก่อนเข้า HyperFrames layout
+5.6 ถ้าโจทย์ยังขาด creative/editorial direction ให้ถามผู้ใช้เป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย ไม่บังคับพิมพ์ยาว
 
 ## Phase 2 — Input And Sync
 
@@ -43,8 +44,10 @@
 18. ตัด cough, throat clear, false start, pause/reset ก่อนเริ่มจริง
 19. true start คือจุดที่เริ่มพูดจริงและพูดต่อเนื่องประมาณ 30s+
 19.1 ถ้าช่วงแรกมีเสียง/คำสั้นแล้วตามด้วย silence/reset ก่อนพูดยาว ให้ถือเป็น false start แม้ Whisper จะจับคำได้
+19.2 ก่อน lock true start ให้ถามเป็นตัวเลือกถ้ายังไม่มี user hint: ใช้ hint ผู้ใช้ / ให้ AI หาเอง / ส่ง candidates ให้เลือก
 20. หา end ที่เนื้อหาจบจริงหรือเข้าสู่ trailing silence
-21. บันทึก trimStart, trimEnd และเหตุผล
+20.1 ก่อน lock end ให้ถามเป็นตัวเลือกถ้ายังไม่รู้ direction: จบหลัง CTA / ให้ AI หา end / ส่ง candidates ให้เลือก
+21. บันทึก trimStart, trimEnd, user choice, rejected candidates และเหตุผล
 
 ## Phase 5 — Parallel Trim And Dead Air
 
@@ -54,7 +57,7 @@
 25. re-encode top/bottom เป็น 30fps / GOP 30 / faststart
 26. ตรวจ duration หลัง trim ของ top/bottom
 27. ใช้ bottom audio ตรวจ silence
-28. ตัด silence > 0.5s ตาม threshold ใน `CONFIG.md`
+28. ก่อนตัด dead air ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ตัด silence >0.5s ทั้งหมด / ตัดเฉพาะ silence ยาวมาก / ให้ AI เสนอ cut list
 29. ใช้ dead-air cut list เดียวกันกับ top และ bottom
 30. สร้าง `top_deadair_cut.mp4` และ `bottom_deadair_cut.mp4`
 31. ตรวจว่าไม่เหลือ silence ยาวเกิน policy
@@ -93,6 +96,7 @@
 48. ใส่ importanceScore, redundancyScore, fillerScore, cutRisk
 49. ใส่ captionKeywords, brollKeyword, brollQuery, keep/drop reason
 50. เลือก keep/drop segments จากสาระ ไม่ตัดแบบหารเวลาเท่า ๆ กัน
+50.1 ก่อนเลือก keep/drop final ให้ถาม cut aggressiveness เป็นตัวเลือก: Conservative / Medium / Aggressive
 51. ตรวจว่า key terms สำคัญยังอยู่ใน keep segments
 52. ใช้ soft cut ทุก content cut แต่ต้องเป็น lip-sync-safe: หลีกเลี่ยงตัดกลางคำ/key term และเลือกจุด silence/closed-mouth/speech boundary เมื่อ bottom ยัง visible
 53. render context cut โดย top/B-roll ใช้ xfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ถ้า jump cut ของ bottom ดูแรง ให้ใช้ B-roll/bridge ปิดช่วง jump หรือใช้ hard cut ที่จุดปลอดภัย
@@ -105,6 +109,8 @@
 ## Phase 9 — B-roll
 
 54. กำหนดจำนวน B-roll ตามโจทย์ แต่ต้องไม่เกิน 4 อันต่อ final video 1 นาที เว้นแต่ผู้ใช้ override ชัดเจน
+54.1 ก่อนทำ B-roll ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ใส่ B-roll / ไม่ใส่ / ให้ AI แนะนำจำนวน
+54.2 ก่อน sourcing ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: โหลดใหม่ก่อน / ใช้ stock ก่อน / ผสมสองแบบ
 55. เลือก slot จาก context ไม่ใช่คำเดี่ยว
 56. ใช้ speech ก่อนและหลัง slot เพื่อเลือก broad keyword
 57. ตรวจ stock index เพื่อรู้ว่ามีอะไรแล้ว แต่ default ให้พยายามโหลด Pexels candidate ใหม่ก่อนเพื่อสะสม stock จนมี QA-passed footage อย่างน้อย 200 clips
@@ -120,16 +126,20 @@
 ## Phase 10 — Captions, Composition, QA
 
 61. สร้าง captions จาก cleaned transcript หลัง trim/dead-air/context cut แล้วเท่านั้น, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
+61.0 ก่อนสร้าง caption ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: clean สั้น / ใกล้เสียงพูดจริง / ให้ AI balance
 61.1 ตรวจ caption timing เทียบกับ bottom audio และ edited frame timeline ห้ามใช้ raw timestamp โดยไม่ map
 61.2 HyperFrames composition ต้องใช้ visual masters เป็น source และ render แบบ visual-only/audio disabled เมื่อใช้ edit-first architecture
 61.3 หลัง render visual-only ให้ mux `speech_audio_master.wav` กลับเข้า MP4 แล้วค่อยทำ BGM mix/QA
+61.4 ก่อน BGM ให้ถามเป็นตัวเลือกถ้ายังไม่มี direction: ใส่ BGM 5% / ไม่ใส่ BGM / ให้ AI เลือกหลังวิเคราะห์
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
+62.0 ก่อน full render ให้สรุป decision choices ทั้งหมดแล้วถาม confirm เป็นตัวเลือก: Render final / แก้ decision / หยุดรอ
 62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
 62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
 62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
 62.4 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ
 62.5 เมื่อ task เสร็จสมบูรณ์และ verify แล้ว final response ต้องมีบรรทัด `✅✅✅` ให้เห็นชัดเจน ถ้า task ยัง blocked หรือยังไม่ verify ห้ามใช้ marker นี้
 62.6 ตอนส่งผลลัพธ์ให้ผู้ใช้ ให้แสดง Output MP4 เพียงไฟล์เดียวคือ Final เท่านั้น; visual-only, no-BGM, preview, master และ report เป็น QA/internal artifact ไม่ต้อง list เป็น output หลัก ยกเว้นผู้ใช้ขอ
+62.7 ทุกคำถามกับผู้ใช้ควรเป็น choice-based ก่อน: 2-3 ตัวเลือก, recommended option อยู่ก่อน, ถ้า UI รองรับให้ใช้ปุ่ม/choice prompt; ถ้าไม่รองรับให้ใช้ A/B/C และให้ตอบสั้นที่สุด
 
 ## Modular Subprojects
 
