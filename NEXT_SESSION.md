@@ -23,7 +23,7 @@ v64 commit: 4773216 Add v64 production guardrails
 v65 commit: 1bc100c Add v65 full edit test
 v66 commit: ea280c4 Add v66 noise and sync fix
 v67 commit: 5284118 Add v67 mistake prevention gates
-v68 commit: pending until saved
+v68 commit: bd330bc Add v68 lip sync zero tolerance
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
