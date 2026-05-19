@@ -5,6 +5,7 @@ function parseArgs(argv) {
   const args = {
     context: "assets/context/test2-v35-full-context-index.json",
     brollManifest: "assets/broll/optimized/test2-v35/manifest.json",
+    html: "index.html",
     fps: 30,
   };
 
@@ -13,6 +14,7 @@ function parseArgs(argv) {
     if (arg === "--context") args.context = argv[++i];
     else if (arg === "--broll-manifest") args.brollManifest = argv[++i];
     else if (arg === "--final") args.final = argv[++i];
+    else if (arg === "--html") args.html = argv[++i];
     else if (arg === "--fps") args.fps = Number(argv[++i]);
     else if (arg === "--json") args.json = argv[++i];
   }
@@ -53,6 +55,48 @@ function ffprobeDuration(path) {
   ).trim();
   const duration = Number(output);
   return Number.isFinite(duration) ? duration : null;
+}
+
+function attr(tag, name) {
+  const match = tag.match(new RegExp(`${name}="([^"]*)"`));
+  return match ? match[1] : null;
+}
+
+function motionSummary(htmlPath, finalDuration, fps) {
+  if (!htmlPath || !fs.existsSync(htmlPath)) {
+    return {
+      html: htmlPath || null,
+      visibleMotion: { seconds: 0, frames: 0 },
+      topInnerMotion: { seconds: 0, frames: 0 },
+      brollInnerMotion: { seconds: 0, frames: 0 },
+      note: "No HTML supplied or file missing.",
+    };
+  }
+  const html = fs.readFileSync(htmlPath, "utf8");
+  const tags = [...html.matchAll(/<video\b[^>]*data-motion-kind="[^"]+"[^>]*>/g)].map((match) => match[0]);
+  const topSeconds = tags
+    .filter((tag) => attr(tag, "data-motion-kind") === "slow-top-inner-zoom")
+    .reduce((sum, tag) => sum + Number(attr(tag, "data-motion-duration") || attr(tag, "data-duration") || 0), 0);
+  const brollSeconds = tags
+    .filter((tag) => attr(tag, "data-motion-kind") === "slow-broll-inner-zoom")
+    .reduce((sum, tag) => sum + Number(attr(tag, "data-motion-duration") || attr(tag, "data-duration") || 0), 0);
+  const visibleSeconds = Math.min(Number(finalDuration || 0), Math.max(topSeconds, brollSeconds));
+  return {
+    html: htmlPath,
+    visibleMotion: {
+      seconds: Number(visibleSeconds.toFixed(3)),
+      frames: secondsToFrames(visibleSeconds, fps),
+      note: "Visible top-frame area has slow inner-media movement; frame/border remains fixed.",
+    },
+    topInnerMotion: {
+      seconds: Number(topSeconds.toFixed(3)),
+      frames: secondsToFrames(topSeconds, fps),
+    },
+    brollInnerMotion: {
+      seconds: Number(brollSeconds.toFixed(3)),
+      frames: secondsToFrames(brollSeconds, fps),
+    },
+  };
 }
 
 function buildReport(args) {
@@ -120,6 +164,7 @@ function buildReport(args) {
         bridgeSlots: bridgeSlots.length,
         note: "Entry/exit transition frames inside B-roll slots.",
       },
+      motion: motionSummary(args.html, finalDuration, fps),
     },
   };
 }

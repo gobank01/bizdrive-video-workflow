@@ -1,5 +1,24 @@
 # Changelog
 
+## v62
+
+Added slow inner-media motion with frame safety checks.
+
+```text
+Separated the top gold frame into a fixed topFrameShell and inner top/B-roll media
+Added very slow top/B-roll inner zoom movement without moving top/bottom frame borders
+Created scripts/check-motion-safety.js
+Added npm script: check:motion
+Updated WORKFLOW.md, CONFIG.md, MOTION_BGM.md, QA.md, STEPS.md, and AGENTS.md
+Rendered a 20s video2 smoke test using Screen 1 as top and Screen 2 as bottom/audio
+```
+
+Reason:
+
+```text
+The user wants smoother, slower zoom in/out movement, but the most important rule is that neither the top nor bottom frame may move. The workflow now supports subtle motion only inside the fixed top frame, with an automated safety check to prevent transforms on the top frame shell, bottom frame, or bottom face video.
+```
+
 ## v61
 
 Added B-roll spacing guardrail.

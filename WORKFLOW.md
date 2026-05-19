@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: v61 VIDEO WORKFLOW - เพิ่ม B-roll spacing rule กันลายตา
+สถานะล่าสุด: v62 VIDEO WORKFLOW - เพิ่ม slow inner-media zoom โดย frame ห้ามขยับ
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 
@@ -52,7 +52,7 @@ Composition หลัก:
 ## Current Production Defaults
 
 ```text
-version: v61
+version: v62
 base output size: 1080x1920
 top frame: 1080x607.5, radius 30px, gold gradient border 4px
 bottom frame: 607.5x607.5 circle, gold gradient border 4px
@@ -75,7 +75,8 @@ notify on sync mismatch: true
 sync report: required when mismatch exists
 context index schema: schemas/context-index.schema.json
 key term checker: npm run check:keyterms
-zoom motion: optional, subtle, top/B-roll emphasis
+zoom motion: enabled as slow inner-media movement only, never frame/border movement
+motion safety QA command: npm run check:motion
 BGM loop: optional, speech-first, default 5%, licensed/royalty-free/generated-with-rights only
 BGM loudness intent: barely audible ambient bed, not a noticeable song
 BGM stock library: bgm-library/mixkit-stock-v50.json, 15 Mixkit tracks, check before generating
@@ -162,7 +163,8 @@ bottom audio เป็น master timeline และสำคัญกว่า t
 B-roll ต้องไม่มี text/logo/watermark/other brand/distracting graphic
 B-roll เข้า/ออกต้องใช้ transition mix เสมอ และถ้าปิด jump cut ให้ใช้ bridge mode
 transition mix ห้ามขยับกรอบ top/bottom หรือ caption
-zoom motion ต้อง subtle และใช้เพื่อ emphasis เท่านั้น
+zoom motion ต้อง subtle, ช้า, และใช้กับ inner media เท่านั้น
+ห้าม animate transform/scale/x/y กับ top frame shell หรือ bottom frame เด็ดขาด
 BGM ต้องอยู่ใต้เสียงพูดเสมอ default 5% และต้องมีสิทธิ์ใช้งาน
 BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่ช่วยไม่ให้คลิปแห้ง ถ้า melody ชัดจนคนสนใจเพลงถือว่าดังเกิน
 ห้ามบอกว่าเพลงไม่มีลิขสิทธิ์ถ้าไม่มี license/source ยืนยัน
@@ -174,6 +176,7 @@ BGM 5% ตั้งใจให้แทบไม่ได้ยิน แค่
 หลัง render full และมี context/B-roll/keyterm report แล้วใช้ `npm run finalize:video` เพื่อทำ BGM + final report ในคำสั่งเดียว
 หลังแก้ index.html ต้องรัน npm run check
 หลังแก้ B-roll timing/transition ต้องรัน npm run check:transition
+หลังแก้ zoom/motion ต้องรัน npm run check:motion
 เมื่อตัด context ให้รัน key term QA ถ้า key terms อาจถูกตัดหาย
 ทุกงาน B-roll ต้องมี manifest และ final report
 หลัง render/QA ให้สร้าง JSON + Markdown final report ด้วย `npm run report:final`
@@ -218,6 +221,7 @@ v58 เพิ่ม `scripts/finalize-video.js` และ `npm run finalize:vide
 v59 เพิ่ม B-roll Transition Mix Engine, metadata `transitionMix`, และ `npm run check:transition` เพื่อตรวจ B-roll entry/exit, bridge transition และ border-stable pan
 v60 เพิ่ม `scripts/frame-edit-report.js`, `npm run report:frames` และกติกาสรุป edited/removed frames ทุกงาน
 v61 เพิ่ม B-roll spacing rule: ห้าม B-roll ถี่จนใน 6 วินาทีมี 2 อัน และต้องเหลือ footage จริงของ top อย่างน้อย 3 วินาทีระหว่าง B-roll
+v62 เพิ่ม slow inner-media zoom: แยก top frame shell ออกจาก video media, zoom เฉพาะ top/B-roll inner media, ห้ามขยับ top/bottom frame และเพิ่ม `npm run check:motion`
 
 ## How To Continue Development
 

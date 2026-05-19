@@ -7,9 +7,10 @@
 หลักคิด:
 
 ```text
-zoom คือ emphasis ไม่ใช่ decoration
+zoom คือ movement เบา ๆ ไม่ใช่ decoration
 ใช้เพื่อเน้นประโยคสำคัญ, key term, B-roll, screen action, หรือช่วยปิด jump cut
-ต้อง subtle และ deterministic
+ต้อง subtle, ช้า และ deterministic
+ห้ามขยับ frame/border เด็ดขาด
 ```
 
 ตำแหน่งที่ควรใช้:
@@ -24,7 +25,7 @@ zoom คือ emphasis ไม่ใช่ decoration
 ตำแหน่งที่ควรเลี่ยง:
 
 ```text
-1. bottom face video เว้นแต่ผู้ใช้ขอ เพราะอาจทำให้หน้าคนกระตุก/เวียนหัว
+1. bottom face video เพราะ bottom เป็นหน้า/เสียงหลักและห้ามขยับ frame
 2. ช่วง caption ยาวหรือข้อมูลแน่น
 3. zoom แรงพร้อมกันหลาย layer
 4. zoom ที่ทำให้ border/layout ขยับ
@@ -33,22 +34,25 @@ zoom คือ emphasis ไม่ใช่ decoration
 ค่า default:
 
 ```text
-subtleZoom: scale 1.00 -> 1.035
-maxZoom: 1.06
-punchZoom: scale 1.00 -> 1.045 -> 1.00
-slowZoomDuration: 2.0s - 3.0s
-punchDuration: 0.45s - 0.80s
-ease: power2.out / sine.inOut
-applyTo: inner media layer, not frame wrapper
+topSlowZoom: scale 1.000 -> 1.018 -> 1.006 across the full clip
+brollSlowZoom: scale 1.006 -> 1.022 across each B-roll
+maxZoom: 1.025
+punchZoom: disabled by default
+slowZoomDuration: full visible segment / full B-roll duration
+ease: sine.inOut
+applyTo: inner media layer only, not frame wrapper
+frameShell: fixed topFrameShell and fixed bottom frame
 ```
 
 QA:
 
 ```text
 ไม่ทำให้กรอบ top/bottom ขยับ
+ห้าม animate transform/scale/x/y กับ top frame shell หรือ bottom frame
+รัน npm run check:motion ทุกครั้งหลังแก้ motion
 ไม่ทำให้ caption อ่านยาก
 ไม่ zoom เกินจน crop สิ่งสำคัญออก
-ไม่ใช้ motion ถี่เกิน 1 ครั้งทุก 2-3 วินาที
+movement ต้องช้าและต่อเนื่อง ไม่กระตุกหรือถี่
 ```
 
 ## Transition Mix v59

@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v61 - เพิ่ม B-roll spacing rule กันลายตา
+สถานะล่าสุด: v62 - เพิ่ม slow inner-media zoom โดย frame ห้ามขยับ
 
 วันที่บันทึก: 2026-05-19
 
@@ -16,6 +16,7 @@ v57 commit: 485facb Add auto final BGM wrapper
 v58 commit: dc3b0fa Add post-render finalize command
 v59 commit: f02d694 Add B-roll transition mix
 v60 commit: 216073c Add frame edit reporting
+v61 commit: 91d3f9b Add B-roll spacing rule
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -38,6 +39,8 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 13. ทุกงานต้องมี summary และ frame counts: edited frames, removed frames, output/report paths, QA result
 14. มี frame edit report command สำหรับนับเฟรมจาก context index + B-roll manifest + final MP4
 15. B-roll spacing rule: ห้าม B-roll ติดกันจนลายตา ต้องห่างกันอย่างน้อย 6s ระหว่าง start และมี footage จริงของ top อย่างน้อย 3s ระหว่าง insert
+16. Slow inner-media motion: top/B-roll ขยับได้ช้า ๆ เฉพาะ media ข้างใน frame; top frame shell และ bottom frame ห้ามขยับเด็ดขาด
+17. Motion safety command ตรวจไม่ให้ animate frame/border หรือ bottom face
 ```
 
 ## Commands Now Available
@@ -93,6 +96,12 @@ npm run check:transition
 minBrollStartGap: 6s
 minRealTopFootageGap: 3s
 ถ้าเจอ B-roll -> top footage สั้น ๆ -> B-roll ในช่วงประมาณ 6s ให้ fail
+```
+
+ตรวจ motion safety:
+
+```bash
+npm run check:motion
 ```
 
 สร้าง frame edit report:
@@ -209,6 +218,25 @@ B-roll top replacement: 900 frames
 transition mix: 139 frames
 ```
 
+v62 video2 smoke test:
+
+```text
+source folder: ../video2
+top: ../video2/Ai ตัดต่อ Screen 1.mp4
+bottom/audio: ../video2/Ai ตัดต่อ Screen 2.mp4
+test output: ../stacked-output-v62-video2-smoke-20s.mp4
+duration: 20.021s
+size: 14.2 MB
+video: h264 1080x1920
+audio: aac 48000 Hz
+render: completed
+motion safety: pass
+contact sheet: render-checks/video2-smoke-v62/contact-sheet.jpg
+edited frames: 600 visible slow inner-media motion frames
+removed frames: 0 editorial removed frames in smoke test
+not rendered: remaining source after first 20s was intentionally outside smoke-test window, not counted as an edit removal
+```
+
 Input final:
 
 ```text
@@ -321,4 +349,6 @@ Run npm run check:transition after B-roll timing or transition edits.
 Every task must end with a summary and frame counts: edited frames and removed frames.
 Use npm run report:frames when context index, B-roll manifest, and final MP4 are available.
 B-roll starts must be at least 6s apart, with at least 3s of real top footage between inserts.
+Never animate topFrameShell, bottomVideo, or .bottom-frame transform/scale/x/y.
+Run npm run check:motion after any zoom/motion change.
 ```

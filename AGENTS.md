@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v61
+## Bizdrive Workflow Docs — v62
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -60,6 +60,8 @@ Sync rule: treat bottom audio as the master timeline. If top/bottom duration, st
 When context cuts may remove important spoken terms, run `npm run check:keyterms` or explicitly report why it was not run.
 
 Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, not the frame wrapper. BGM is optional, must be licensed/royalty-free/generated-with-rights, loop smoothly, fade out, and stay clearly under the bottom voice.
+
+Motion safety rule: never animate transform/scale/x/y on the top frame shell, bottom frame, or bottom face video. Slow zoom may only target inner top/B-roll media. Run `npm run check:motion` after any motion/zoom change.
 
 B-roll transition rule: every B-roll insert must have transition mix metadata and smooth entry/exit. Use `soft` transition for normal B-roll and `bridge` transition when the B-roll covers a jump cut. Keep transitions border-stable: do not scale or move the top/bottom frame wrapper, bottom face/audio, or captions. Do not place B-roll too densely: keep at least 6s between B-roll starts and at least 3s of real top footage between inserts. If jumps are close together, choose one stronger bridge B-roll or move the weaker insert later. Run `npm run check:transition` after B-roll timing or composition changes.
 

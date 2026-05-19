@@ -30,6 +30,8 @@
 [ ] captions obey max length policy
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
+[ ] npm run check:motion passes after zoom/motion changes
+[ ] top frame shell and bottom frame have no transform/scale/x/y animation
 [ ] BGM stock index checked before generating new music if BGM is used
 [ ] npm run select:bgm report exists if BGM is used
 [ ] selected BGM style is based on title/transcript/context
@@ -95,6 +97,7 @@ optimized manifest.json
 [ ] key spoken terms are audible
 [ ] soft cuts do not sound abrupt
 [ ] zoom motion supports emphasis and is not distracting
+[ ] zoom/motion is slow inner-media movement only; top/bottom frames remain fixed
 [ ] BGM source/license is documented in final report if used
 [ ] BGM does not cover speech and fades out cleanly
 [ ] BGM mixed output is used as bottom source when BGM is enabled

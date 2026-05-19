@@ -77,6 +77,32 @@
         border-radius: 30px;
       }
 
+      .top-frame-shell {
+        position: absolute;
+        left: 0;
+        top: 198.9px;
+        width: 1080px;
+        height: 607.5px;
+        overflow: hidden;
+        border-radius: 30px;
+        z-index: 2;
+      }
+
+      .top-media {
+        position: absolute;
+        left: 4px;
+        top: 4px;
+        width: calc(100% - 8px);
+        height: calc(100% - 8px);
+        border-radius: 26px;
+        background: #000;
+        object-fit: contain;
+        object-position: 50% 50%;
+        transform-origin: center center;
+        will-change: transform, object-position, opacity, filter;
+        z-index: 1;
+      }
+
       .bottom-frame {
         left: 50%;
         top: 846.4px;
@@ -195,197 +221,232 @@
         data-track-index="0"
       />
 
-      <video
-        id="topVideo"
-        class="clip video-frame top-frame"
-        src="assets/top_test2_context60_v35_softcut.mp4"
-        data-start="0"
-        data-duration="59.33"
-        data-track-index="1"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+      <div id="topFrameShell" class="video-frame top-frame-shell">
+        <video
+          id="topVideo"
+          class="clip top-media"
+          data-layout-allow-overflow="true"
+          src="assets/top_test2_context60_v35_softcut.mp4"
+          data-start="0"
+          data-duration="59.33"
+          data-track-index="1"
+          data-motion-kind="slow-top-inner-zoom"
+          data-motion-duration="59.33"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll01"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-01.mp4"
-        data-start="1.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="49% 50%"
-        data-pan-to="51% 50%"
-        data-track-index="4"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll01"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-01.mp4"
+          data-start="1.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="49% 50%"
+          data-pan-to="51% 50%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="4"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll02"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-02.mp4"
-        data-start="7.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="50% 49%"
-        data-pan-to="50% 51%"
-        data-track-index="5"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll02"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-02.mp4"
+          data-start="7.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="50% 49%"
+          data-pan-to="50% 51%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="5"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll03"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-03.mp4"
-        data-start="13.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="bridge"
-        data-transition-in="0.26"
-        data-transition-out="0.26"
-        data-pan-from="51% 50%"
-        data-pan-to="49% 50%"
-        data-track-index="6"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll03"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-03.mp4"
+          data-start="13.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="bridge"
+          data-transition-in="0.26"
+          data-transition-out="0.26"
+          data-pan-from="51% 50%"
+          data-pan-to="49% 50%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="6"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll04"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-04.mp4"
-        data-start="19.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="bridge"
-        data-transition-in="0.26"
-        data-transition-out="0.26"
-        data-pan-from="50% 51%"
-        data-pan-to="50% 49%"
-        data-track-index="7"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll04"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-04.mp4"
+          data-start="19.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="bridge"
+          data-transition-in="0.26"
+          data-transition-out="0.26"
+          data-pan-from="50% 51%"
+          data-pan-to="50% 49%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="7"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll05"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-05.mp4"
-        data-start="25.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="49% 50%"
-        data-pan-to="51% 50%"
-        data-track-index="8"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll05"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-05.mp4"
+          data-start="25.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="49% 50%"
+          data-pan-to="51% 50%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="8"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll06"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-06.mp4"
-        data-start="31.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="50% 49%"
-        data-pan-to="50% 51%"
-        data-track-index="9"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll06"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-06.mp4"
+          data-start="31.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="50% 49%"
+          data-pan-to="50% 51%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="9"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll07"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-07.mp4"
-        data-start="37.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="51% 50%"
-        data-pan-to="49% 50%"
-        data-track-index="10"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll07"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-07.mp4"
+          data-start="37.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="51% 50%"
+          data-pan-to="49% 50%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="10"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll08"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-08.mp4"
-        data-start="43.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="bridge"
-        data-transition-in="0.26"
-        data-transition-out="0.26"
-        data-pan-from="50% 51%"
-        data-pan-to="50% 49%"
-        data-track-index="11"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll08"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-08.mp4"
+          data-start="43.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="bridge"
+          data-transition-in="0.26"
+          data-transition-out="0.26"
+          data-pan-from="50% 51%"
+          data-pan-to="50% 49%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="11"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll09"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-09.mp4"
-        data-start="49.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="49% 50%"
-        data-pan-to="51% 50%"
-        data-track-index="12"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll09"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-09.mp4"
+          data-start="49.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="49% 50%"
+          data-pan-to="51% 50%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="12"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
 
-      <video
-        id="broll10"
-        class="clip video-frame top-frame broll-frame"
-        src="assets/broll/optimized/test2-v35/broll-10.mp4"
-        data-start="55.000"
-        data-duration="3"
-        data-media-start="1"
-        data-transition-mode="soft"
-        data-transition-in="0.22"
-        data-transition-out="0.22"
-        data-pan-from="50% 49%"
-        data-pan-to="50% 51%"
-        data-track-index="13"
-        data-volume="0"
-        muted
-        playsinline
-      ></video>
+        <video
+          id="broll10"
+          class="clip top-media broll-frame"
+          data-layout-allow-overflow="true"
+          src="assets/broll/optimized/test2-v35/broll-10.mp4"
+          data-start="55.000"
+          data-duration="3"
+          data-media-start="1"
+          data-transition-mode="soft"
+          data-transition-in="0.22"
+          data-transition-out="0.22"
+          data-pan-from="50% 49%"
+          data-pan-to="50% 51%"
+          data-motion-kind="slow-broll-inner-zoom"
+          data-motion-duration="3"
+          data-track-index="13"
+          data-volume="0"
+          muted
+          playsinline
+        ></video>
+      </div>
 
       <video
         id="bottomVideo"
@@ -433,8 +494,11 @@
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      tl.from("#topVideo", { opacity: 0, y: -28, duration: 0.35, ease: "power2.out" }, 0);
-      tl.from("#bottomVideo", { opacity: 0, y: 28, duration: 0.35, ease: "power2.out" }, 0);
+      const compositionDuration = 59.33;
+      tl.from("#topVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.set("#topVideo", { scale: 1, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
+      tl.to("#topVideo", { scale: 1.018, duration: compositionDuration / 2, ease: "sine.inOut" }, 0);
+      tl.to("#topVideo", { scale: 1.006, duration: compositionDuration / 2, ease: "sine.inOut" }, compositionDuration / 2);
 
       document.querySelectorAll(".broll-frame").forEach((clip) => {
         const start = Number(clip.dataset.start || 0);
@@ -448,7 +512,7 @@
         const panTo = clip.dataset.panTo || "50% 50%";
         const enterEase = mode === "bridge" ? "power3.out" : "power2.out";
         const exitEase = mode === "bridge" ? "power2.inOut" : "power2.out";
-        tl.set(clip, { autoAlpha: 0, objectPosition: panFrom, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
+        tl.set(clip, { autoAlpha: 0, scale: 1.006, objectPosition: panFrom, transformOrigin: "center center", filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
         tl.fromTo(
           clip,
           { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" },
@@ -456,6 +520,7 @@
           start,
         );
         tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { scale: 1.022, duration, ease: "sine.inOut" }, start);
         tl.to(
           clip,
           { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase },

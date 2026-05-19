@@ -146,14 +146,15 @@ preserveKeyTerms: true
 zoomEnabled: true
 zoomPurpose: emphasis, B-roll energy, soft cut cover
 applyZoomTo: top inner media, B-roll inner media, optional caption highlight
-avoidZoomOn: bottom face video unless explicitly requested
-subtleZoomScale: 1.00 -> 1.035
-maxZoomScale: 1.06
-punchZoomScale: 1.00 -> 1.045 -> 1.00
-slowZoomDuration: 2.0s-3.0s
-punchZoomDuration: 0.45s-0.80s
-minimumGapBetweenZooms: 2s
-zoomFrameRule: transform inner media only, not frame/border wrapper
+avoidZoomOn: bottom face video always, unless a future user explicitly changes the rule
+topSlowZoomScale: 1.000 -> 1.018 -> 1.006 across the full clip
+brollSlowZoomScale: 1.006 -> 1.022 across each 3s B-roll
+maxZoomScale: 1.025
+punchZoomScale: disabled by default
+slowZoomDuration: full visible segment / full B-roll duration
+minimumGapBetweenZooms: not applicable for continuous slow inner-media movement
+zoomFrameRule: transform inner media only, never frame/border wrapper
+motionSafetyQaCommand: npm run check:motion
 ```
 
 ## Transition Mix

@@ -391,7 +391,8 @@ function buildBrollTags() {
   return brollTiming
     .map((timing, index) => `      <video
         id="${timing.id}"
-        class="clip video-frame top-frame broll-frame"
+        class="clip top-media broll-frame"
+        data-layout-allow-overflow="true"
         src="assets/broll/optimized/test2-v35/broll-${String(index + 1).padStart(2, "0")}.mp4"
         data-start="${timing.start.toFixed(3)}"
         data-duration="3"
@@ -401,6 +402,8 @@ function buildBrollTags() {
         data-transition-out="${timing.transitionOut}"
         data-pan-from="${timing.panFrom}"
         data-pan-to="${timing.panTo}"
+        data-motion-kind="slow-broll-inner-zoom"
+        data-motion-duration="3"
         data-track-index="${4 + index}"
         data-volume="0"
         muted
@@ -419,7 +422,7 @@ function updateIndex() {
   );
   html = html.replace(
     /      <video\n        id="broll01"[\s\S]*?\n\n      <video\n        id="bottomVideo"/,
-    `${buildBrollTags()}\n\n      <video\n        id="bottomVideo"`,
+    `${buildBrollTags()}\n      </div>\n\n      <video\n        id="bottomVideo"`,
   );
   html = html.replace(
     /      <div id="subtitle-01"[\s\S]*?\n\n    <\/div>\n\n    <script>/,
