@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v63 - video2 full edit ประมาณ 1:30 พร้อม context cut, soft cut, transition mix และ B-roll QA
+สถานะล่าสุด: v64 - sync lock, Whisper required, sequential gates, fresh-stock B-roll และ B-roll density cap
 
 วันที่บันทึก: 2026-05-19
 
@@ -18,7 +18,8 @@ v59 commit: f02d694 Add B-roll transition mix
 v60 commit: 216073c Add frame edit reporting
 v61 commit: 91d3f9b Add B-roll spacing rule
 v62 commit: 9e1d85a Add safe inner-media motion
-v63 commit: pending in current session
+v63 commit: 1fc1cd7 Add video2 context edit
+v64 commit: 4773216 Add v64 production guardrails
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -46,6 +47,13 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 18. video2 v63 full edit render แล้วที่ `../stacked-output-v63-video2-context90-full.mp4`
 19. video2 v63 ใช้ B-roll 8 จุดจาก local Pexels stock, re-encode ใหม่ 8 derivatives, reject 3 candidate ที่เสี่ยง graphic/text
 20. video2 v63 frame report และ final report พร้อมใช้ต่อ: `reports/frame-edit-report-v63-video2.json`, `reports/final-report-v63-video2.md`
+21. v64 เพิ่ม sync lock: top + bottom audio/video + subtitles ต้องอยู่ edited timeline เดียวกัน ห้ามเลื่อนแยก
+22. v64 บังคับใช้ Whisper transcript ก่อน context cut/caption ทุกงาน ถ้า HyperFrames fail ให้ใช้ direct whisper-cli fallback
+23. v64 บังคับทำงานเรียง step และต้องเช็ค artifact/QA ก่อนข้าม step
+24. v64 B-roll ต้องพยายามโหลด fresh Pexels ก่อนเพื่อสะสม `assets/broll/index.json` จนมี QA-passed stock ประมาณ 200 clips
+25. v64 B-roll ใช้ไม่เกิน 4 inserts ต่อ final video 1 นาที เว้นแต่ผู้ใช้ override ชัดเจน
+26. v64 target duration เป็นเพดาน/meaning target ถ้าขอ 1:30 แต่ตัดได้ 1:20 และสาระครบ ให้ใช้ 1:20
+27. v64 ระหว่างทำงานให้รายงานเป็น Step/Phase ว่ากำลังทำอะไรและเช็คอะไร
 ```
 
 ## Commands Now Available

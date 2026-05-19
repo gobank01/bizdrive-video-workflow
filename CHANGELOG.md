@@ -1,5 +1,37 @@
 # Changelog
 
+## v64
+
+Added stricter production rules after video2 review.
+
+```text
+Updated WORKFLOW.md with sync lock, sequential execution gates, Whisper-required policy, B-roll fresh-stock policy, B-roll density cap, and meaning-first duration target
+Updated CONFIG.md with editable values for sync lock, target duration ceiling, transcription fallback, stock index target, and progress updates
+Updated STEPS.md so each phase has gates and cannot proceed without required artifacts
+Updated QA.md with checks for frame-accurate sync, Whisper transcript, caption timeline mapping, B-roll count limit, and stock/index reporting
+Updated AGENTS.md so future sessions announce steps, preserve sync, require Whisper, and prefer fresh B-roll until stock matures
+Updated local bizdrive-video skill with the same core rules
+```
+
+New rules:
+
+```text
+Bottom audio, bottom video, top video, and captions must stay locked on one edited timeline
+Whisper timestamped transcription is required before context cut or captions
+Every step must be executed in order with a check before moving on
+B-roll should try fresh download first until the stock index has about 200 QA-passed clips
+B-roll may be reused before 200 only when it clearly matches better or fresh sourcing is blocked
+B-roll density is capped at 4 inserts per 60 seconds of final video unless explicitly overridden
+Target duration is a ceiling/meaning target: if 1:30 is requested but 1:20 preserves the full message, 1:20 is acceptable and preferred
+Progress updates during work should name the current Step/Phase and what is being verified
+```
+
+Reason:
+
+```text
+The v63 output was good, but future edits need stronger guarantees: exact sync between sound/top/bottom/subtitles, mandatory Whisper context, predictable step-by-step execution, stock-building B-roll behavior, and less dense B-roll pacing.
+```
+
 ## v63
 
 Completed a full video2 re-edit to about 1:30.

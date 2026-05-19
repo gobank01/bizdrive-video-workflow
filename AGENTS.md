@@ -32,7 +32,7 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v62
+## Bizdrive Workflow Docs — v64
 
 For Bizdrive stacked-video work, read these files in order:
 
@@ -55,7 +55,15 @@ For Bizdrive stacked-video work, read these files in order:
 
 Every workflow rule change increments the version and must be recorded in `CHANGELOG.md`. If the change affects execution, update `STEPS.md` and/or `CONFIG.md` instead of burying it only in prose.
 
+Execution style rule: while working, report progress to the user as numbered steps. Say what Step/Phase is running, what is being checked, and what artifact proves it passed. Do not silently skip steps.
+
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
+
+Sync lock rule: bottom audio, bottom face video, top screen video, and subtitles must stay on one edited timeline. Do not manually shift, retime, offset, or speed-change top/bottom/caption independently. B-roll may replace only top visuals and must never change the timeline. If any sync risk appears, stop and fix/report sync before continuing.
+
+Duration rule: user-provided target duration is a ceiling/meaning target, not a requirement to pad. If the user asks for 1:30 and the meaning is complete at 1:20, deliver the tighter 1:20 rather than stretching.
+
+Whisper rule: every editing workflow requires a timestamped Whisper transcript from the polished bottom audio before context cutting or captions. If HyperFrames transcription fails, use direct `whisper-cli` or another timestamped Whisper fallback; do not proceed without transcript unless the user explicitly pauses that requirement.
 
 When context cuts may remove important spoken terms, run `npm run check:keyterms` or explicitly report why it was not run.
 
@@ -64,6 +72,10 @@ Motion/BGM rule: zoom should be subtle and applied to inner top/B-roll media, no
 Motion safety rule: never animate transform/scale/x/y on the top frame shell, bottom frame, or bottom face video. Slow zoom may only target inner top/B-roll media. Run `npm run check:motion` after any motion/zoom change.
 
 B-roll transition rule: every B-roll insert must have transition mix metadata and smooth entry/exit. Use `soft` transition for normal B-roll and `bridge` transition when the B-roll covers a jump cut. Keep transitions border-stable: do not scale or move the top/bottom frame wrapper, bottom face/audio, or captions. Do not place B-roll too densely: keep at least 6s between B-roll starts and at least 3s of real top footage between inserts. If jumps are close together, choose one stronger bridge B-roll or move the weaker insert later. Run `npm run check:transition` after B-roll timing or composition changes.
+
+B-roll density rule: do not use more than 4 B-roll inserts per 60 seconds of final video unless the user explicitly overrides it.
+
+B-roll stock growth rule: before reusing existing B-roll as the default, try fresh Pexels candidates so the project can grow `assets/broll/index.json` toward 200 QA-passed reusable clips. Reuse before 200 only when indexed stock is clearly more relevant or API/network access blocks fresh sourcing. Report newly downloaded, reused, optimized, rejected counts every time.
 
 When BGM is enabled, use `npm run mix:bgm` to create a mixed bottom source. Default BGM level is 5% (`--gain-percent 5`, about -26.02dB). Never claim a track is copyright-free unless its source/license is documented. Report the BGM source, license/usage-rights note, level percent, gain, ducking, output, and QA result.
 
@@ -115,9 +127,9 @@ Before downloading, generating, or selecting B-roll, read the spoken context aro
 1. Use at least one subtitle/transcript cue before and one cue after the insert point
 2. Choose a keyword that represents the meaning of that moment, not just one isolated spoken word
 3. Prefer broad intent/context keywords that can produce natural B-roll; avoid overly narrow literal transcript words
-4. Try to download fresh candidates for final-quality work when better context matching is possible
-5. Existing QA-passed stock may be used as fallback, but report reused source count clearly
-6. Record the before/after speech context, keyword, provider, and source path in the manifest
+4. Try to download fresh candidates first until the stock index has at least 200 QA-passed clips
+5. Existing QA-passed stock may be used as fallback before 200 only when it clearly matches better than fresh candidates, but report reused source count clearly
+6. Record the before/after speech context, keyword, provider, source path, QA status, and category in the manifest or stock index
 
 ## Context Index — Use Before Shortening
 

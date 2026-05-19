@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v54 - practical edit map 62 steps with auto final BGM QA
+สถานะล่าสุด: v64 - practical edit map with sequential gates, sync lock, Whisper required, and B-roll density cap
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -9,8 +9,10 @@
 1. อ่าน `WORKFLOW.md`, `CONFIG.md`, `QA.md`, `AGENTS.md`
 2. ระบุโจทย์จากผู้ใช้ เช่น full render, test render, shorten, B-roll, caption, QA
 3. ระบุ target duration ถ้ามี
-4. ถ้าไม่ fix duration ให้ใช้ meaning-first duration
+4. ถ้ามี target duration ให้ถือเป็นเพดาน/เป้าหมาย ไม่ต้องยืดให้ชนเวลา ถ้าสาระครบและสั้นกว่า เช่น 1:30 เหลือ 1:20 ให้ใช้ 1:20
 5. ระบุ output filename และ version ที่จะใช้
+5.1 ประกาศกับผู้ใช้ว่าอยู่ Step/Phase ไหนและกำลังทำอะไร
+5.2 ก่อนข้าม phase ให้เช็คว่า artifact/QA ของ phase ก่อนหน้าครบแล้ว
 
 ## Phase 2 — Input And Sync
 
@@ -20,6 +22,7 @@
 9. ยืนยัน top/bottom เป็นคลิปที่ sync กัน โดย bottom audio เป็น master timeline
 10. ตรวจว่าไฟล์อยู่ใน path ที่ composition ใช้ได้
 11. ตรวจว่าไม่มี API key ถูกเขียนลงไฟล์
+11.1 ตั้ง sync lock: top, bottom audio/video และ captions ต้องอยู่ timeline เดียวกัน ห้ามเลื่อนแยก
 
 ## Phase 3 — Media Inspection
 
@@ -28,6 +31,7 @@
 14. ตรวจ bottom มี audio stream
 15. ตรวจ top audio ไม่ถูกใช้
 16. ถ้า top/bottom duration หรือ start offset ต่างกัน ให้แจ้งผู้ใช้ก่อน และใช้ bottom เป็น master เพื่อวิเคราะห์ sync/align
+16.1 ถ้า sync ยังไม่ชัด ให้หยุดแก้ sync ก่อน ห้ามไป true start/context/caption
 
 ## Phase 4 — True Start / End
 
@@ -49,6 +53,7 @@
 29. ใช้ dead-air cut list เดียวกันกับ top และ bottom
 30. สร้าง `top_deadair_cut.mp4` และ `bottom_deadair_cut.mp4`
 31. ตรวจว่าไม่เหลือ silence ยาวเกิน policy
+31.1 ตรวจว่า top/bottom ยังมีจำนวนเฟรมและ duration ตรงกันหลังตัดคู่ขนาน
 
 ## Phase 6 — Audio Polish
 
@@ -61,13 +66,15 @@
 ## Phase 7 — Transcript And Key Terms
 
 37. ถอดเสียงจาก bottom polished
-38. ใช้ Whisper large-v3 ภาษาไทยเมื่อพร้อม
+38. ต้องใช้ Whisper large-v3 ภาษาไทยเป็น default ทุกงาน
+38.1 ถ้า HyperFrames transcribe fail ให้ใช้ direct `whisper-cli` หรือ fallback ที่ให้ timestamp ได้ ห้ามข้าม transcript
 39. เก็บ raw transcript และสร้าง cleaned transcript
 40. ตัด filler เช่น อืม, อะ, อ่ะ, เอ่อ
 41. แก้คำทับศัพท์ เช่น พร้อม -> prompt เมื่อบริบทถูกต้อง
 42. โหลด Editable Key Terms จาก `CONFIG.md`
 43. เพิ่ม key terms เฉพาะคลิปถ้าจำเป็น
 44. mark key terms และห้ามลบระหว่าง clean/cut
+44.1 ตรวจ transcript timestamp ก่อนสร้าง context/caption เพราะ caption ต้อง map กับ edited timeline
 
 ## Phase 8 — Context Index And Cut
 
@@ -80,13 +87,16 @@
 51. ตรวจว่า key terms สำคัญยังอยู่ใน keep segments
 52. ใช้ soft cut ทุก content cut และหลีกเลี่ยงตัดกลางคำ/key term
 53. render softcut top และ softcut bottom
+53.1 ตรวจว่า softcut top/bottom duration, fps และ frame count ตรงกัน ก่อนทำ B-roll/caption
 
 ## Phase 9 — B-roll
 
-54. กำหนดจำนวน B-roll ตามโจทย์
+54. กำหนดจำนวน B-roll ตามโจทย์ แต่ต้องไม่เกิน 4 อันต่อ final video 1 นาที เว้นแต่ผู้ใช้ override ชัดเจน
 55. เลือก slot จาก context ไม่ใช่คำเดี่ยว
 56. ใช้ speech ก่อนและหลัง slot เพื่อเลือก broad keyword
-57. ตรวจ stock index ก่อน แล้วค่อยโหลด Pexels candidate ใหม่ถ้าต้องการคุณภาพดีที่สุด
+57. ตรวจ stock index เพื่อรู้ว่ามีอะไรแล้ว แต่ default ให้พยายามโหลด Pexels candidate ใหม่ก่อนเพื่อสะสม stock จนมี QA-passed footage อย่างน้อย 200 clips
+57.1 ถ้า stock index ครบ 200 QA-passed clips แล้ว ให้ reuse เป็น default แต่ต้องโหลดใหม่เมื่อ context ไม่ match
+57.2 ทุก candidate ที่โหลด/เลือก/reject ต้องบันทึก keyword, category, source, QA status ลง manifest หรือ stock index
 58. fallback เป็น OpenRouter `google/veo-3.1-lite` และ premium fallback เป็น `kwaivgi/kling-v3.0-std`
 59. reject text, logo, watermark, other brand, distracting graphic
 60. re-encode selected B-roll และสร้าง manifest พร้อม downloaded/generated/reused/optimized/rejected counts
@@ -96,5 +106,7 @@
 
 ## Phase 10 — Captions, Composition, QA
 
-61. สร้าง captions จาก cleaned transcript, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
+61. สร้าง captions จาก cleaned transcript หลัง trim/dead-air/context cut แล้วเท่านั้น, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
+61.1 ตรวจ caption timing เทียบกับ bottom audio และ edited frame timeline ห้ามใช้ raw timestamp โดยไม่ map
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
+62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่

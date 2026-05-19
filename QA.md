@@ -7,19 +7,27 @@
 [ ] top is muted
 [ ] bottom is main audio
 [ ] bottom audio is treated as master timeline
+[ ] sync lock is active: top, bottom audio/video, and captions share one edited timeline
 [ ] user is notified if top/bottom duration, start offset, or drift mismatch is found
 [ ] top/bottom trim timestamps match
 [ ] top/bottom clean durations match
+[ ] top/bottom frame counts match after every parallel trim/dead-air/context cut, except container rounding
 [ ] no remaining dead air longer than policy
 [ ] audio polish completed
 [ ] loudness checked
 [ ] transcript generated from polished audio
+[ ] transcript was generated with Whisper or timestamped Whisper fallback
+[ ] work did not proceed to context/caption without transcript
 [ ] key terms marked
 [ ] context index created
 [ ] context index matches required schema fields
+[ ] target duration is treated as a ceiling/meaning goal; no padding was added just to reach the requested time
 [ ] key terms preserved in keep segments
 [ ] key term checker has been run when context cut changes speech
 [ ] B-roll slots selected from context
+[ ] B-roll count is not more than 4 inserts per 60s of final video unless user explicitly overrode it
+[ ] fresh B-roll candidates were attempted before reuse while QA-passed stock index is below 200 usable clips
+[ ] every downloaded/reused/rejected B-roll candidate is recorded in manifest or stock index
 [ ] B-roll candidates QA checked
 [ ] selected B-roll manifest exists
 [ ] selected B-roll re-encoded render-safe
@@ -28,6 +36,8 @@
 [ ] npm run check:transition passes after B-roll timing/composition changes
 [ ] captions do not split Thai words
 [ ] captions obey max length policy
+[ ] captions are mapped to edited timeline, not raw pre-cut timestamps
+[ ] caption timing spot check matches bottom speech
 [ ] caption gold baseline looks correct
 [ ] zoom motion is subtle and does not move frame borders
 [ ] npm run check:motion passes after zoom/motion changes
@@ -51,6 +61,7 @@
 [ ] original/BGM preview clips are created for listening comparison
 [ ] index.html durations updated
 [ ] npm run check passes
+[ ] current step/phase was reported to the user before long-running work
 ```
 
 ## B-roll QA
@@ -85,6 +96,8 @@ optimized manifest.json
 [ ] output duration matches expected plan
 [ ] output has one audio track
 [ ] audio is from bottom polished
+[ ] bottom audio and bottom face are still locked
+[ ] top screen is still aligned with bottom speech/action
 [ ] top video is muted
 [ ] B-roll replaces only top frame
 [ ] bottom circle remains visible during B-roll
@@ -94,6 +107,7 @@ optimized manifest.json
 [ ] transition mix does not move top/bottom frame borders
 [ ] captions do not fade/pan with B-roll transition
 [ ] captions remain visible and readable
+[ ] subtitles appear on the correct spoken words and do not drift
 [ ] key spoken terms are audible
 [ ] soft cuts do not sound abrupt
 [ ] zoom motion supports emphasis and is not distracting
@@ -103,6 +117,7 @@ optimized manifest.json
 [ ] BGM mixed output is used as bottom source when BGM is enabled
 [ ] no obvious frame freeze/seek issue
 [ ] no text/logo/brand in B-roll output
+[ ] B-roll density stays at or below 4 inserts per 60s unless explicitly approved
 ```
 
 ## Final Delivery
@@ -114,7 +129,9 @@ optimized manifest.json
 [ ] metadata reported
 [ ] npm run check result reported
 [ ] B-roll downloaded/generated/reused/optimized/rejected counts reported
+[ ] B-roll stock/index growth reported when B-roll was downloaded
 [ ] B-roll keyword/provider/source per slot reported
+[ ] sync status reported: top + bottom + audio + captions
 [ ] QA artifacts reported
 [ ] WORKFLOW/CONFIG/STEPS updated if rules changed
 [ ] CHANGELOG updated if version changed

@@ -47,11 +47,17 @@ masterTimeline: bottom audio
 bottomPriority: true
 topRole: visual screen layer only
 topAudioPolicy: ignore/mute
+syncLockRequired: true
+frameAccurateSync: true
+timelineUnit: edited bottom-master timeline
 notifyUserOnMismatch: true
 durationMismatchAction: inspect before trim
 startOffsetAction: find sync point and align top to bottom
 driftAction: split into sync segments if needed
 allowedTinyMismatch: frame/container rounding only
+manualOffsetPolicy: forbidden unless logged and user-approved
+independentRetimingPolicy: forbidden
+captionTimingPolicy: generate/map captions after all trim/dead-air/context cuts
 ```
 
 Rules:
@@ -61,6 +67,8 @@ Rules:
 ต้องแจ้งผู้ใช้เมื่อเจอ duration mismatch, start offset, หรือ drift ที่อาจกระทบ sync
 ห้ามแก้ด้วยการ time-stretch โดยไม่จำเป็น
 ถ้า offset ชัด ให้หา sync point จากคำพูดเทียบกับ action บน screen แล้ว align top ให้เข้ากับ bottom
+เสียง, top, bottom และ subtitles ต้องตรง timeline เดียวกันแบบ frame-accurate
+ถ้า sync ไม่ผ่าน ให้หยุดแก้ sync ก่อน ห้ามไป step ถัดไป
 ```
 
 ## Layout
@@ -131,6 +139,10 @@ goldSpacing: proportional, about 0.04em
 ```text
 defaultAggressiveness: Medium
 targetDuration: user-provided per job
+targetDurationPolicy: ceiling/meaning-first
+underTargetAllowed: true
+example: if target is 90s but meaning is complete at 80s, use 80s
+doNotPadToTarget: true
 contextIndex: Full
 screenSampling: every ~5s plus cut/B-roll neighborhoods
 softCutAlways: true
@@ -138,6 +150,19 @@ defaultCrossfade: 0.12s
 crossfadeIfHarsh: 0.15-0.18s
 crossfadeIfSlow: 0.08-0.10s
 preserveKeyTerms: true
+```
+
+## Transcription
+
+```text
+whisperRequired: true
+preferredModel: large-v3
+preferredLanguage: th
+preferredInput: bottom_audio_polished
+fallback: direct whisper-cli with timestamped JSON
+blockContextWithoutTranscript: true
+blockCaptionsWithoutTranscript: true
+rawTranscriptPathPolicy: keep under assets/context or assets/transcripts, not project root
 ```
 
 ## Motion Zoom
@@ -224,16 +249,35 @@ defaultBgmReport: reports/bgm-mix-vXX.json
 ```text
 defaultDuration: 3s
 minimumCount: 3
-usualCount: 5-10
-test2StyleCount: 10
+maxPerMinute: 4
+countFormula: min(user requested count, floor(finalDurationSeconds / 60 * 4))
+usualCount: 3-4 per minute
+test2StyleCount: deprecated; obey maxPerMinute unless user explicitly overrides
 replaceArea: top frame only
 audio: muted/no audio
 providerOrder: Pexels API -> OpenRouter google/veo-3.1-lite -> OpenRouter kwaivgi/kling-v3.0-std
+freshDownloadFirst: true
+stockIndexPath: assets/broll/index.json
+stockTargetQaPassedCount: 200
+reuseDefaultAfterStockTarget: true
+reuseBeforeTarget: only if indexed stock is clearly more relevant than new candidates or network/API fails
+indexEveryDownloadedCandidate: true
+indexEveryRejectedCandidate: true
 candidatePerSlotFinal: 3
 orientation: landscape
 minimumResolution: HD
 qaReject: text, logo, watermark, other brand, distracting graphic
 optimizedFormat: 1920x1080, 30fps, GOP 30, faststart, no audio
+```
+
+## Work Updates
+
+```text
+progressUpdatesRequired: true
+progressUpdateFormat: Step N - what is being checked or changed
+progressUpdateBeforeLongCommand: true
+progressUpdateAfterFailedCheck: true
+doNotSkipStepNarration: true
 ```
 
 ## Reporting
