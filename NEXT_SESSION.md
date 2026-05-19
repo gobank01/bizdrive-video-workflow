@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v71 - video2 lip-sync-safe final delivered
+สถานะล่าสุด: v72 - video2 edit-first final delivered, modular workflow recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -26,7 +26,8 @@ v67 commit: 5284118 Add v67 mistake prevention gates
 v68 commit: bd330bc Add v68 lip sync zero tolerance
 v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
 v70 commit: f3356ba Add v70 timestamped clip QA
-v71 commit: included in current commit (Add v71 lip-sync safe final edit)
+v71 commit: 34e6937 Add v71 lip-sync safe final edit
+v72 commit: included in current commit (Add v72 edit-first master workflow)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -77,21 +78,34 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 41. v71 ใช้ B-roll 5 จุด: fresh download 0 เพราะ shell env ไม่มี `PEXELS_API_KEY`, reused local stock 5, optimized 5, rejected 0
 42. v71 BGM QA pass: Mixkit stock `mixkit-726 Uplifting Bass`, gain 5%, LUFS delta -0.1, voice remains clear
 43. v71 QA pass: `npm run check`, `npm run check:transition`, `npm run check:motion`, final silencedetect >0.5s none, keyterm QA pass, final report pass
+44. v72 แก้ architecture ตาม user diagnosis: ตัดต่อให้เสร็จก่อนวางลง background/HyperFrames
+45. v72 สร้าง editorial masters ก่อน layout: `top_edit_master_v72.mp4`, `bottom_visual_master_v72.mp4`, `speech_audio_master_v72.wav`, `bottom_editorial_master_v72.mp4`
+46. v72 HyperFrames render เป็น visual-only แล้ว mux speech audio master กลับทีหลัง จากนั้นค่อย mix BGM 5%
+47. v72 final: `../stacked-output-v72-video2-edit-first-final-bgm.mp4`
+48. v72 ตัดจาก 115.946s เหลือ 85.200s, เอาออก 30.746s / 922 frames, output 2556 frames
+49. v72 ใช้ B-roll 5 จุด: fresh download 0 เพราะ shell env ไม่มี `PEXELS_API_KEY/OPENROUTER_API_KEY`, reused local stock 5, optimized 5, rejected 0
+50. v72 QA pass: edit-first master proof, `npm run check`, `npm run check:transition`, `npm run check:motion`, final silencedetect >0.5s none, keyterm QA pass, final report pass
+51. เพิ่ม `MODULES.md` เพื่อแยกงานเป็น transcript, sync-inspect, context-index, edl-build, editorial-master, broll-source, caption-build, layout-render, final-mux, final-qa
 ```
 
-## Latest v71 Delivery
+## Latest v72 Delivery
 
 ```text
-final output: ../stacked-output-v71-video2-lipsync-safe-final-bgm.mp4
-non-BGM render: ../stacked-output-v71-video2-lipsync-safe-final.mp4
-context: assets/context/video2-v71-lipsync-safe-final.json
-B-roll manifest: assets/broll/optimized/video2-v71/manifest.json
-frame report: reports/frame-report-v71-video2.json
-final report: reports/final-report-v71-video2.md
-BGM QA: reports/bgm-qa-v71-video2.json
-timestamp QA: render-checks/video2-v71-final-bgm-timestamps/v71-final-bgm-sheet.jpg
-cut QA: render-checks/video2-v71-final-cuts/contact-sheet.jpg
-B-roll QA: render-checks/video2-v71-final-broll/contact-sheet.jpg
+final output: ../stacked-output-v72-video2-edit-first-final-bgm.mp4
+non-BGM final: ../stacked-output-v72-video2-edit-first-final.mp4
+visual-only render: ../stacked-output-v72-video2-edit-first-visual.mp4
+editorial proof: assets/video2/bottom_editorial_master_v72.mp4
+top master: assets/video2/top_edit_master_v72.mp4
+bottom visual master: assets/video2/bottom_visual_master_v72.mp4
+speech audio master: assets/video2/speech_audio_master_v72.wav
+context: assets/context/video2-v72-edit-first-final.json
+B-roll manifest: assets/broll/optimized/video2-v72/manifest.json
+frame report: reports/frame-report-v72-video2.json
+final report: reports/final-report-v72-video2.md
+BGM QA: reports/bgm-qa-v72-video2.json
+timestamp QA: render-checks/video2-v72-final-bgm-timestamps/v72-final-bgm-sheet.jpg
+cut QA: render-checks/video2-v72-final-cuts/contact-sheet.jpg
+B-roll QA: render-checks/video2-v72-final-broll/contact-sheet.jpg
 ```
 
 ## Commands Now Available
@@ -447,19 +461,23 @@ reason: key term QA warn from existing v45 report missing "prompt"
 
 ## Tomorrow Recommended Next Work
 
-1. **Watch v71 Output**
+1. **Watch v72 Output**
    - Review the full final once by human eye/ear.
    - Focus on lip sync around 00:11, 00:27, 00:46, 00:55, 01:04 and B-roll timing at 00:05, 00:22, 00:39, 00:56, 01:13.
 
-2. **Full Pipeline Orchestrator**
-   - Combine inspect -> cut -> captions -> B-roll -> render -> BGM -> reports into one command.
+2. **Modular Commands**
+   - Convert `MODULES.md` into repeatable npm commands.
+   - Start with `bizdrive:transcript`, `bizdrive:sync`, `bizdrive:editorial`, and `bizdrive:qa`.
+
+3. **Full Pipeline Orchestrator**
+   - Combine transcript -> sync -> context -> EDL -> editorial master -> B-roll -> caption -> layout -> mux -> QA into one command.
    - Target command: `npm run bizdrive:render`.
 
-3. **Unified Context Decision**
+4. **Unified Context Decision**
    - Use the same context index to drive both B-roll and BGM.
    - Store `clipStyle`, `brollIntent`, `bgmStyle`, and `reason` in one report.
 
-4. **Run On A New Real Job Folder**
+5. **Run On A New Real Job Folder**
    - The current system is proven on Test 2.
    - Next important proof is running it on the next raw top/bottom pair.
 
@@ -472,6 +490,8 @@ If melody is clearly noticeable, it is too loud.
 Always test BGM on final MP4, not only bottom source.
 Never claim copyright-free without source/license.
 Bottom audio remains master.
+Production/full render must use edit-first editorial masters before HyperFrames layout.
+HyperFrames should render visual-only, then mux speech audio master back after render.
 Top/bottom trims and cuts remain parallel.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.

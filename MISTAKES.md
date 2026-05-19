@@ -151,6 +151,7 @@ spot check caption timing around first 10s and around each cut/B-roll point
 6. Report gate: final summary includes what failed before and how this run prevents it
 7. Lip-sync zero-tolerance gate: `LIPSYNC_QA.md` checks pass; if uncertain, final is blocked
 8. Bottom visible cut gate: bottom face must not be xfade blended while visible; cut contact sheet must show no ghost/double-mouth frames
+9. Edit-first master gate: production render must have locked top visual, bottom visual, and speech audio masters before HyperFrames layout
 ```
 
 ถ้า gate ใดไม่ผ่าน ห้ามเรียกงานว่าเสร็จ
@@ -222,4 +223,43 @@ Required proof:
 cut contact sheet รอบทุก content cut
 รายงานว่า bottomCutMode เป็น hard/covered ไม่ใช่ visible xfade
 lipSyncStatus ต้องเป็น pass เฉพาะเมื่อไม่มี ghost/double-mouth frame และ residualRisk=none
+```
+
+## v72 Edit-First Master Architecture
+
+User diagnosis:
+
+```text
+ปัญหา workflow เดิมคือควรตัดต่อให้เสร็จก่อน แล้วค่อยวางลง background
+ถ้าเสียงไม่ตรงกับปาก แปลว่าจังหวะการตัดและการรวมกลับมาที่เสียงผิดพลาด
+```
+
+What changed:
+
+```text
+v72 สร้าง editorial masters ก่อนเข้า HyperFrames layout
+top_edit_master, bottom_visual_master และ speech_audio_master ถูกตัดจาก EDL เดียวกัน
+HyperFrames render เป็น visual-only
+หลัง render จึง mux speech_audio_master กลับเข้า final MP4 แล้วค่อย mix BGM
+```
+
+Never again:
+
+```text
+ห้ามให้ layout/background/render stage เป็นที่ที่เสียงถูกตัดหรือเลื่อนเวลา
+ห้าม render production โดยอิง audio element ใน HyperFrames ถ้า edit-first master ยังทำได้
+ห้ามเรียก final ถ้ายังไม่มี proof ว่า editorial masters lock กันก่อนเข้า layout
+ถ้า master proof fail ต้องแก้ EDL/cut list ไม่ใช่ชดเชยแบบเดาสุ่มใน final
+```
+
+Required proof:
+
+```text
+ffprobe top_edit_master: start_time 0, duration, nb_frames
+ffprobe bottom_visual_master: start_time 0, duration, nb_frames
+ffprobe speech_audio_master: duration, sample_rate 48000
+top/bottom frame count เท่ากัน
+speech audio duration เท่ากับ frame count / fps
+final visual-only render ไม่มี audio
+final mux stream start_time video/audio = 0 หรือมี offset ที่วัดและ log แล้ว
 ```

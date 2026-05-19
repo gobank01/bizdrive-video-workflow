@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v70 - practical edit map with 1-second timestamped clip QA
+สถานะล่าสุด: v72 - practical edit map with edit-first master + 1-second timestamped clip QA
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -15,6 +15,7 @@
 5.2 ก่อนข้าม phase ให้เช็คว่า artifact/QA ของ phase ก่อนหน้าครบแล้ว
 5.3 ระบุ hard gates จาก `MISTAKES.md` ที่ต้องพิสูจน์ในงานนี้
 5.4 ระบุ lip-sync proof ที่ต้องมีตาม `LIPSYNC_QA.md`
+5.5 ถ้างานเป็น production/full render ให้ประกาศว่าจะใช้ edit-first master: ตัดต่อและล็อก sync ก่อนเข้า HyperFrames layout
 
 ## Phase 2 — Input And Sync
 
@@ -60,6 +61,7 @@
 31.1 ตรวจว่า top/bottom ยังมีจำนวนเฟรมและ duration ตรงกันหลังตัดคู่ขนาน
 31.2 ตรวจ final-prep gate จาก `MISTAKES.md`: opening sustained speech, audio source proof, noise proof, caption map proof
 31.3 ตรวจ lip-sync pre-render gate: ไม่มี independent retime/offset, top/bottom edited frame count ตรง, captions mapped to edited timeline
+31.4 ถ้าเป็น production ให้ยังไม่เข้า layout จนกว่าจะสร้าง editorial masters และ QA ผ่าน
 
 ## Phase 6 — Audio Polish
 
@@ -96,6 +98,9 @@
 53. render context cut โดย top/B-roll ใช้ xfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ถ้า jump cut ของ bottom ดูแรง ให้ใช้ B-roll/bridge ปิดช่วง jump หรือใช้ hard cut ที่จุดปลอดภัย
 53.1 ตรวจว่า softcut top/bottom duration, fps และ frame count ตรงกัน ก่อนทำ B-roll/caption
 53.2 สร้าง contact sheet รอบ content cut ทุกจุด และต้องไม่เห็น ghost/double-mouth frame ก่อน render final
+53.3 สร้าง edit-first masters ก่อนเข้า HyperFrames: `top_edit_master.mp4`, `bottom_visual_master.mp4`, `speech_audio_master.wav`, และ `bottom_editorial_master.mp4`
+53.4 ตรวจ master proof: top/bottom duration เท่ากัน, frame count เท่ากัน, start_time 0, speech audio duration/sample rate ถูกต้อง, และ `silencedetect` ไม่เจอ silence >0.5s
+53.5 ถ้า master proof fail ให้ย้อนกลับไปแก้ EDL/cut list ห้ามไป B-roll/layout/render
 
 ## Phase 9 — B-roll
 
@@ -116,8 +121,27 @@
 
 61. สร้าง captions จาก cleaned transcript หลัง trim/dead-air/context cut แล้วเท่านั้น, จำกัด cue ประมาณ 20 ตัวอักษร, ไม่ตัดคำไทยครึ่งคำ, ใช้ Bizdrive caption style
 61.1 ตรวจ caption timing เทียบกับ bottom audio และ edited frame timeline ห้ามใช้ raw timestamp โดยไม่ map
+61.2 HyperFrames composition ต้องใช้ visual masters เป็น source และ render แบบ visual-only/audio disabled เมื่อใช้ edit-first architecture
+61.3 หลัง render visual-only ให้ mux `speech_audio_master.wav` กลับเข้า MP4 แล้วค่อยทำ BGM mix/QA
 62. หลัง full render ให้รัน `npm run finalize:video` เมื่อมี context/B-roll/keyterm report พร้อมแล้ว เพื่อเลือก final MP4 ล่าสุด, ทำ Auto BGM, และสร้าง final report ในคำสั่งเดียว; ถ้าต้องทำเฉพาะ BGM ให้ใช้ `npm run auto:bgm`, หรือใช้ `npm run qa:bgm` เมื่อจะระบุไฟล์เอง, ใช้ title/transcript/context เพื่อเลือกจาก `bgm-library/mixkit-stock-v50.json`, ถ้าเลือกไม่ออกให้ใช้ `mixkit-480 Curiosity`, ยืนยัน source/license, รัน `npm run check:bgm`, mix ด้วย default `--gain-percent 5`, ตั้งใจให้ BGM แทบไม่ได้ยินและห้ามให้เพลงกลบหรือดึงความสนใจจากเสียงพูด, สร้าง preview/loudness report ก่อนหลัง, QA metadata/audio/B-roll/captions/key terms/motion/transition/BGM, รัน `npm run report:final` เพื่อสร้าง JSON + Markdown final report และเก็บ artifacts
 62.1 สรุปให้ผู้ใช้ทุกครั้งว่าแต่ละ Step ผ่านอะไร, B-roll โหลดใหม่/ใช้เก่าเท่าไร, ตัดต่อกี่เฟรม, เอาออกกี่เฟรม และมี sync/caption risk หรือไม่
 62.2 หลัง render ต้องตรวจ `LIPSYNC_QA.md`: final stream start_time delta, compensationMs, spot-check อย่างน้อย 5 จุด และ residualRisk ต้องเป็น none
 62.3 หลัง render ต้องตรวจ cut contact sheet รอบทุก content cut ว่าไม่มี ghost/double-mouth frame จาก bottom xfade
 62.4 ทุกครั้งที่ตรวจคลิป ให้สร้าง timestamped QA sheet ทุก 1 วินาทีด้วย `npm run qa:timestamps -- --input <mp4> --output-dir <dir>` และใช้ timestamp นั้นอ้างอิงปัญหา/จุดแก้เสมอ
+
+## Modular Subprojects
+
+ใช้เมื่ออยากแยกงานเป็นคำสั่งย่อย แทนการสั่ง full render ทุกครั้ง:
+
+1. `transcript` - ถอดเสียง bottom, ทำ word/segment timestamp, สร้าง transcript QA
+2. `sync-inspect` - ตรวจ top/bottom/audio metadata, start_time, duration, fps, frame count
+3. `context-index` - วิเคราะห์เสียง + screen context แล้วสร้าง keep/drop/B-roll/caption plan
+4. `edl-build` - สร้าง frame-snapped EDL จาก bottom master timeline
+5. `editorial-master` - ตัด top/bottom/speech audio เป็น master ที่ lock กันก่อน layout
+6. `broll-source` - หา/โหลด/เลือก/QA B-roll และ update stock index
+7. `caption-build` - clean transcript, key terms, caption cues ที่ map กับ edited timeline
+8. `layout-render` - render HyperFrames visual-only จาก visual masters
+9. `final-mux` - mux speech audio master, mix BGM 5%, ตรวจ loudness/silence
+10. `final-qa` - timestamp sheet, contact sheets, frame report, final report
+
+หลักคิด: module ไหนผลิต artifact ได้ ให้ module ถัดไปอ่าน artifact นั้น ไม่ใช้ความจำจาก chat เป็นแหล่งข้อมูลหลัก

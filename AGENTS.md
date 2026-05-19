@@ -32,12 +32,13 @@ npx hyperframes docs <topic> # reference docs in terminal
 - `meta.json` — project metadata (id, name)
 - `transcript.json` — whisper word-level transcript (if generated)
 
-## Bizdrive Workflow Docs — v65
+## Bizdrive Workflow Docs — v72
 
 For Bizdrive stacked-video work, read these files in order:
 
 1. `WORKFLOW.md` — current overview and latest production defaults
 2. `STEPS.md` — practical 62-step execution list for real editing
+2.1. `MODULES.md` — modular subprojects/commands for transcript, sync, B-roll, render, final QA
 3. `CONFIG.md` — editable settings such as key terms, layout, audio, captions, and B-roll provider order
 4. `QA.md` — required QA checklists
 5. `MISTAKES.md` — real incident log and hard gates that must not regress
@@ -66,6 +67,8 @@ Lip-sync zero-tolerance rule: read `LIPSYNC_QA.md` before every video edit. Lip 
 Lip-sync-safe soft cut rule: never xfade or blend the visible bottom face at content cuts. The bottom face/audio pair is the lip-sync master; use hard cuts at safe speech boundaries, closed-mouth/silence points, or cover jump cuts with B-roll/bridge transitions. Always create/review cut contact sheets before calling an output final.
 
 Timestamped clip QA rule: whenever checking a rendered clip, create a 1-second timestamped QA sheet with `npm run qa:timestamps`. Use those timestamps when reporting lip-sync, cut, caption, B-roll, BGM, or timeline issues.
+
+Edit-first master rule: for production/full renders, finish the editorial timeline before HyperFrames layout. Create and QA frame/sample-locked `top_edit_master`, `bottom_visual_master`, `speech_audio_master`, and a `bottom_editorial_master` proof clip first. HyperFrames should render visual-only from those masters, then speech audio is muxed back after render. Do not let the background/layout stage decide or alter speech timing.
 
 Sync rule: treat bottom audio as the master timeline. If top/bottom duration, start offset, or drift mismatch is found, notify the user before alignment/cutting decisions and align top to bottom unless the user says otherwise.
 
@@ -133,6 +136,8 @@ When BGM is enabled after a full render, prefer `npm run auto:bgm` if the latest
 When the final MP4, context index, B-roll manifest, and key term report are ready, prefer `npm run finalize:video` for post-render delivery. It runs Auto BGM first, then creates the final report.
 
 Every task summary must include what changed, output/report paths, QA commands and results, and frame counts. Report edited frames such as B-roll top replacement, transition mix, zoom/motion, or overlays, plus removed frames such as dropped content, soft-cut overlap, and total net removed. Use `npm run report:frames` when context index, B-roll manifest, and final MP4 are available.
+
+When the user wants to split the workflow into smaller projects, use the modules in `MODULES.md`: transcript, sync-inspect, context-index, edl-build, editorial-master, broll-source, caption-build, layout-render, final-mux, and final-qa. Each module must read/write files so the next session can continue without relying on chat memory.
 
 ## B-roll Keyword Selection
 

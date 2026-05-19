@@ -1,5 +1,44 @@
 # Changelog
 
+## v72
+
+Rebuilt video2 with an edit-first master architecture to remove the remaining lip-sync workflow risk.
+
+```text
+Built scripts/build-video2-v72-edit-first-final.js
+Created assets/video2/top_edit_master_v72.mp4
+Created assets/video2/bottom_visual_master_v72.mp4
+Created assets/video2/speech_audio_master_v72.wav
+Created assets/video2/bottom_editorial_master_v72.mp4 for lip-sync proof before layout
+Rendered HyperFrames visual-only output: ../stacked-output-v72-video2-edit-first-visual.mp4
+Muxed speech_audio_master back after render: ../stacked-output-v72-video2-edit-first-final.mp4
+Mixed final BGM at 5%: ../stacked-output-v72-video2-edit-first-final-bgm.mp4
+Updated WORKFLOW.md, STEPS.md, AGENTS.md, MISTAKES.md, NEXT_SESSION.md, local bizdrive-video skill, and added MODULES.md
+```
+
+Final metrics:
+
+```text
+source duration: 115.946s
+final duration: 85.200s
+final frames: 2556
+content removed: 30.746s / 922 frames
+B-roll replacement: 15s / 450 frames
+transition mix: 2.52s / 76 frames
+B-roll new downloads: 0
+B-roll reused local stock: 5
+B-roll optimized derivatives: 5
+B-roll rejected candidates: 0
+BGM: Mixkit stock mixkit-726 Uplifting Bass, 5%, QA pass
+QA: pass; only timeline_track_too_dense warning remains
+```
+
+Reason:
+
+```text
+The user correctly diagnosed that the workflow should finish the edit before placing the video into the background/layout composition. v72 makes the editorial masters the source of truth: top visual, bottom visual, and speech audio are frame/sample locked before HyperFrames. HyperFrames no longer owns speech timing; it renders visuals only, and the locked speech audio master is muxed back afterward.
+```
+
 ## v71
 
 Rendered the new video2 final with the full current workflow.
