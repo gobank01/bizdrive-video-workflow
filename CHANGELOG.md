@@ -1,5 +1,27 @@
 # Changelog
 
+## v79
+
+Added the raw bottom lip-sync human gate.
+
+```text
+Updated WORKFLOW.md
+Updated STEPS.md
+Updated AGENTS.md
+Updated CONFIG.md
+Updated QA.md
+Updated MISTAKES.md
+Updated LIPSYNC_QA.md
+Updated NEXT_SESSION.md
+Updated local bizdrive-video skill
+```
+
+Reason:
+
+```text
+During v78 phase-gated testing, Set A and Set B both passed metadata checks, but human review found Set A mouth/audio out of sync and Set B exact. This proves ffprobe duration, frame count, fps, and stream start_time are necessary but not sufficient. v79 requires a bottom-face + bottom-audio human/visual lip-sync gate before an input set can continue past Phase 5.
+```
+
 ## v78
 
 Added phase-gated testing.

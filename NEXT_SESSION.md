@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v78 - phase-gated testing recorded
+สถานะล่าสุด: v79 - raw bottom lip-sync human gate recorded
 
 วันที่บันทึก: 2026-05-19
 
@@ -34,6 +34,7 @@ v75 commit: 364be31 Add v75 single final output rule
 v76 commit: 1b46227 Add v76 choice-based decision gates
 v77 commit: 86ab0ab Add v77 rough direction trim gate
 v78 commit: current v78 workflow commit (Add v78 phase-gated testing rule)
+v79 commit: current v79 workflow commit (Add v79 raw bottom lip-sync human gate)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -100,6 +101,7 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 57. v76 เพิ่ม choice-based user decision gates: ก่อน decision สำคัญให้ถามเป็นตัวเลือก 2-3 ข้อแบบคลิก/เลือกง่าย เช่น start/end, dead air, cut aggressiveness, B-roll, BGM, caption style, final render confirm
 58. v77 เพิ่ม rough direction trim gate: Step 20.1-21 ต้องรับ user rough direction, สร้าง start/end candidates จาก hint+audio/transcript/silence evidence, รายงานถ้า evidence ขัดกับ hint และ lock trimStart/trimEnd พร้อม frame/sample/evidence
 59. v78 เพิ่ม phase-gated testing: ต่อจากนี้ให้ทดสอบทีละ Phase, จบ Phase ต้องแสดง artifact/QA/risk และรอ user เลือก ผ่าน / ย้อนแก้ / ขอหลักฐานเพิ่ม ก่อนข้าม Phase ถัดไป ยกเว้นสั่ง auto/full mode ชัดเจน
+60. v79 เพิ่ม raw bottom lip-sync human gate: Set A metadata ผ่านแต่ปากไม่ตรง ส่วน Set B ปากตรงเป๊ะ จึงห้ามรับ input set จาก metadata อย่างเดียว ต้อง preview bottom face + bottom audio และให้ human/reviewer ยืนยันก่อนข้าม Phase 5 ไป Phase 6
 ```
 
 ## Latest v75 Delivery
@@ -498,6 +500,7 @@ When a task is fully complete and verified, final response must include a standa
 When delivering a video edit, show only one MP4 output path: the Final file.
 Ask important editorial/creative decisions as simple choices; use clickable options if available, otherwise A/B/C.
 Test/edit one Phase at a time; after each Phase, stop with artifact/QA/risk and wait for user pass before going to the next Phase unless auto/full mode is explicitly requested.
+Metadata sync is not enough for lip sync. Bottom face + bottom audio must pass human/visual review before continuing; if a set fails human lip-sync review, block it and continue only with a passing set.
 Before locking trimStart/trimEnd, use user rough direction as anchor and require candidates plus evidence.
 B-roll transition replaces top frame only.
 Use soft transition for normal B-roll and bridge transition when covering jump cuts.

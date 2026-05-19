@@ -11,10 +11,13 @@
 [ ] MISTAKES.md was read and all hard gates are active for this job
 [ ] LIPSYNC_QA.md was read and lip-sync zero-tolerance gate is active
 [ ] user is notified if top/bottom duration, start offset, or drift mismatch is found
+[ ] raw bottom face + raw bottom audio preview was checked by human/visual review
+[ ] no input set proceeds if human review says the mouth is not aligned, even when metadata matches
 [ ] top/bottom trim timestamps match
 [ ] top/bottom clean durations match
 [ ] top/bottom frame counts match after every parallel trim/dead-air/context cut, except container rounding
 [ ] intermediate lip-sync evidence recorded: edited top/bottom duration and frame count match
+[ ] phase preview lip-sync evidence recorded: bottom face and bottom audio pass human/visual review before Phase 6
 [ ] opening false start/noise/reset was checked; true start begins at sustained speech
 [ ] no remaining dead air longer than policy
 [ ] audio polish completed from verified clean bottom source, preferably raw bottom audio when prior polish has noise/sync risk

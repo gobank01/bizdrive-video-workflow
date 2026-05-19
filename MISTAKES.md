@@ -225,6 +225,52 @@ cut contact sheet รอบทุก content cut
 lipSyncStatus ต้องเป็น pass เฉพาะเมื่อไม่มี ghost/double-mouth frame และ residualRisk=none
 ```
 
+## v79 Metadata Passed But Human Lip-Sync Failed
+
+User report:
+
+```text
+Set A: ปากไม่ตรง
+Set B: ปากตรงเป๊ะ
+```
+
+What happened:
+
+```text
+Set A and Set B both passed metadata checks: fps, frame count, duration, and stream start_time looked aligned.
+Phase 5 also cut top and bottom in parallel using the same cut lists.
+Despite that, Set A preview still had mouth/audio mismatch, while Set B preview was visually exact.
+```
+
+Root cause:
+
+```text
+metadata checks only prove container/timeline alignment
+they do not prove semantic lip sync between the mouth pixels and spoken audio
+because Set A used bottom audio only and the bottom face still looked off, the issue is upstream of layout/top/B-roll
+the likely cause is Set A bottom source has internal audio/video offset, or Set A was not the truly synced raw pair
+Set B passed because its bottom face and bottom audio are internally synced in the actual pixels/audio, not merely in metadata
+```
+
+Never again:
+
+```text
+never accept an input set from metadata alone
+before Phase 6, create or open a bottom-face preview with bottom audio and require human/visual lip-sync pass
+if a human says mouth is not aligned, mark the set blocked immediately
+when multiple sets exist, continue with the set that passes human lip-sync gate
+do not fix a failed set by guessing an offset; rebuild from synced source or measure/log compensation with proof
+```
+
+Required proof:
+
+```text
+raw/phase bottom preview path
+human lip-sync result: pass/fail
+if fail, report blocked set and chosen passing set
+if compensation is used, report measured milliseconds, method, and spot-check points
+```
+
 ## v72 Edit-First Master Architecture
 
 User diagnosis:

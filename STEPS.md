@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: v78 - phase-gated testing: ทดสอบทีละ Phase ผ่านแล้วค่อยไปต่อ
+สถานะล่าสุด: v79 - raw bottom lip-sync human gate: metadata ตรงไม่พอ ต้องดูปากกับเสียงจริง
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 
@@ -52,6 +52,8 @@ C. ขอหลักฐานเพิ่ม
 16. ถ้า top/bottom duration หรือ start offset ต่างกัน ให้แจ้งผู้ใช้ก่อน และใช้ bottom เป็น master เพื่อวิเคราะห์ sync/align
 16.1 ถ้า sync ยังไม่ชัด ให้หยุดแก้ sync ก่อน ห้ามไป true start/context/caption
 16.2 ตั้ง lip-sync zero tolerance: ถ้าไม่มั่นใจ 100% ห้ามส่ง final
+16.3 ทำ Raw Bottom Lip-Sync Gate: สร้าง/เปิด preview ที่เห็น bottom face และใช้ bottom audio ของ set นั้น แล้วให้ human/reviewer ยืนยันว่าปากกับเสียงตรงจริง; metadata ตรงอย่างเดียวไม่พอ
+16.4 ถ้ามีหลาย set และ set หนึ่งปากไม่ตรง แต่อีก set ปากตรง ให้ใช้ set ที่ผ่าน human lip-sync gate เป็นหลัก และ block set ที่ fail จนกว่าจะ rebuild/compensate พร้อมหลักฐาน
 
 ## Phase 4 — True Start / End
 
@@ -84,6 +86,7 @@ C. ขอหลักฐานเพิ่ม
 31.2 ตรวจ final-prep gate จาก `MISTAKES.md`: opening sustained speech, audio source proof, noise proof, caption map proof
 31.3 ตรวจ lip-sync pre-render gate: ไม่มี independent retime/offset, top/bottom edited frame count ตรง, captions mapped to edited timeline
 31.4 ถ้าเป็น production ให้ยังไม่เข้า layout จนกว่าจะสร้าง editorial masters และ QA ผ่าน
+31.5 หลังทำ Phase 5 preview ให้ human/reviewer ตรวจปากกับเสียงจริงอีกครั้ง ถ้า fail ให้ห้ามไป Phase 6 ถึงแม้ frame count/duration/start_time จะตรง
 
 ## Phase 6 — Audio Polish
 

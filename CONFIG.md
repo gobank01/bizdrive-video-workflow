@@ -74,6 +74,9 @@ lipSyncQaRequired: true
 lipSyncSpotCheckMinimum: 5
 lipSyncPassRequiresResidualRiskNone: true
 timelineUnit: edited bottom-master timeline
+rawBottomHumanLipSyncGate: required
+metadataSyncIsNotEnough: true
+blockSetOnHumanLipSyncFail: true
 notifyUserOnMismatch: true
 durationMismatchAction: inspect before trim
 startOffsetAction: find sync point and align top to bottom
@@ -97,6 +100,7 @@ Rules:
 ถ้า offset ชัด ให้หา sync point จากคำพูดเทียบกับ action บน screen แล้ว align top ให้เข้ากับ bottom
 เสียง, top, bottom และ subtitles ต้องตรง timeline เดียวกันแบบ frame-accurate
 ถ้า sync ไม่ผ่าน ให้หยุดแก้ sync ก่อน ห้ามไป step ถัดไป
+ถ้า metadata ตรงแต่ human review บอกว่าปากไม่ตรง ให้ถือว่า fail ทันที และ block set นั้น
 ```
 
 ## Layout
