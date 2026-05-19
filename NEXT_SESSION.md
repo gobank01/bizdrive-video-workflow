@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: v70 - timestamped clip QA gate
+สถานะล่าสุด: v71 - video2 lip-sync-safe final delivered
 
 วันที่บันทึก: 2026-05-19
 
@@ -26,6 +26,7 @@ v67 commit: 5284118 Add v67 mistake prevention gates
 v68 commit: bd330bc Add v68 lip sync zero tolerance
 v69 commit: 59ff1dd Add v69 lip-sync safe cut rules
 v70 commit: f3356ba Add v70 timestamped clip QA
+v71 commit: included in current commit (Add v71 lip-sync safe final edit)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```
@@ -70,6 +71,27 @@ repo: https://github.com/gobank01/bizdrive-video-workflow
 35. v69 พบ root cause lip-sync ของ v66: bottom face ถูก xfade ตอน visible จนเกิด ghost/double-mouth frames รอบ content cuts
 36. v69 กำหนดว่า soft cut ต้องเป็น lip-sync-safe: top/B-roll crossfade ได้ แต่ bottom face ห้าม xfade ตอน visible; ใช้ hard cut จุดปลอดภัยหรือ B-roll/bridge ปิด jump แทน
 37. v70 เพิ่ม `npm run qa:timestamps` สำหรับสร้าง QA contact sheet ทุก 1 วินาทีพร้อม timestamp label และต้องใช้ทุกครั้งที่ตรวจคลิป
+38. v71 render final video2 แล้ว: `../stacked-output-v71-video2-lipsync-safe-final-bgm.mp4`
+39. v71 ใช้ bottom audio เป็น master, hard-concat bottom face/audio, ไม่มี visible bottom xfade, B-roll แทน top เท่านั้น
+40. v71 ตัดจาก 115.946s เหลือ 85.200s, เอาออก 30.746s / 922 frames, output 2556 frames
+41. v71 ใช้ B-roll 5 จุด: fresh download 0 เพราะ shell env ไม่มี `PEXELS_API_KEY`, reused local stock 5, optimized 5, rejected 0
+42. v71 BGM QA pass: Mixkit stock `mixkit-726 Uplifting Bass`, gain 5%, LUFS delta -0.1, voice remains clear
+43. v71 QA pass: `npm run check`, `npm run check:transition`, `npm run check:motion`, final silencedetect >0.5s none, keyterm QA pass, final report pass
+```
+
+## Latest v71 Delivery
+
+```text
+final output: ../stacked-output-v71-video2-lipsync-safe-final-bgm.mp4
+non-BGM render: ../stacked-output-v71-video2-lipsync-safe-final.mp4
+context: assets/context/video2-v71-lipsync-safe-final.json
+B-roll manifest: assets/broll/optimized/video2-v71/manifest.json
+frame report: reports/frame-report-v71-video2.json
+final report: reports/final-report-v71-video2.md
+BGM QA: reports/bgm-qa-v71-video2.json
+timestamp QA: render-checks/video2-v71-final-bgm-timestamps/v71-final-bgm-sheet.jpg
+cut QA: render-checks/video2-v71-final-cuts/contact-sheet.jpg
+B-roll QA: render-checks/video2-v71-final-broll/contact-sheet.jpg
 ```
 
 ## Commands Now Available
@@ -425,23 +447,19 @@ reason: key term QA warn from existing v45 report missing "prompt"
 
 ## Tomorrow Recommended Next Work
 
-1. **Watch v59 Output**
-   - Review the transition mix by eye on the full output.
-   - Confirm B-roll entry/exit feels smoother and does not distract from speech.
+1. **Watch v71 Output**
+   - Review the full final once by human eye/ear.
+   - Focus on lip sync around 00:11, 00:27, 00:46, 00:55, 01:04 and B-roll timing at 00:05, 00:22, 00:39, 00:56, 01:13.
 
-2. **Finalize v59 With BGM**
-   - After visual approval, run `npm run finalize:video` using `../stacked-output-v59-transition-mix-full-test.mp4`.
-   - Keep BGM at 5% unless the user explicitly asks for a different level.
+2. **Full Pipeline Orchestrator**
+   - Combine inspect -> cut -> captions -> B-roll -> render -> BGM -> reports into one command.
+   - Target command: `npm run bizdrive:render`.
 
 3. **Unified Context Decision**
    - Use the same context index to drive both B-roll and BGM.
    - Store `clipStyle`, `brollIntent`, `bgmStyle`, and `reason` in one report.
 
-4. **Full Pipeline Orchestrator**
-   - Later combine: inspect -> cut -> captions -> B-roll -> render -> finalize.
-   - Target command: `npm run bizdrive:render`.
-
-5. **Run On A New Real Job Folder**
+4. **Run On A New Real Job Folder**
    - The current system is proven on Test 2.
    - Next important proof is running it on the next raw top/bottom pair.
 

@@ -1,5 +1,46 @@
 # Changelog
 
+## v71
+
+Rendered the new video2 final with the full current workflow.
+
+```text
+Built scripts/build-video2-v71-full-final.js
+Rendered ../stacked-output-v71-video2-lipsync-safe-final.mp4
+Mixed final BGM at 5% into ../stacked-output-v71-video2-lipsync-safe-final-bgm.mp4
+Used bottom audio as the master timeline and muted top audio
+Cut false start/dead air in parallel from top and bottom
+Used lip-sync-safe hard concat for bottom face/audio with no visible bottom xfade
+Used B-roll only to replace the top frame, with transition mix and stable borders
+Created every-second timestamp QA sheets for final and BGM final
+Created cut and B-roll contact sheets for visual QA
+Generated frame report, BGM QA report, keyterm QA report, and final report
+Updated WORKFLOW.md and NEXT_SESSION.md with v71 as the latest proven output
+```
+
+Final metrics:
+
+```text
+source duration: 115.946s
+final duration: 85.200s
+final frames: 2556
+content removed: 30.746s / 922 frames
+B-roll replacement: 15s / 450 frames
+transition mix: 2.52s / 76 frames
+B-roll new downloads: 0
+B-roll reused local stock: 5
+B-roll optimized derivatives: 5
+B-roll rejected candidates: 0
+BGM: Mixkit stock, 5%, QA pass
+QA: pass; only timeline_track_too_dense warning remains
+```
+
+Reason:
+
+```text
+The user asked for a new, more detailed final edit following all current rules. v71 proves the tightened lip-sync-safe workflow on the real video2 assets, keeps speech-first audio, verifies the rendered clip every second, and records exact frame counts for the edit.
+```
+
 ## v70
 
 Added every-second timestamped clip QA.
