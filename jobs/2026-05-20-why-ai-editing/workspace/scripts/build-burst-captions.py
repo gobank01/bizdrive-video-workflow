@@ -230,7 +230,7 @@ def emit_sub(cues, composition_duration):
 def ensure_mount(html: str, composition_duration: float) -> str:
     """Make sure index.html has exactly one captions sub-composition mount on track 3."""
     mount = (
-        '      <div id="captions-mount" class="clip" '
+        '      <div id="captions-mount" class="clip" style="z-index: 10;" '
         'data-composition-id="captions-burst" '
         'data-composition-src="compositions/captions-burst.html" '
         f'data-start="0" data-duration="{composition_duration:.6f}" '
