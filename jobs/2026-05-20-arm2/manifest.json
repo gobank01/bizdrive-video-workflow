@@ -9,5 +9,5 @@
     "bottom": "input/bottom.mp4",
     "bg": "input/bg.png"
   },
-  "notes": "Rendered with Template 03 (fullscreen-top-insert-burst). output/finals/final.mp4 = visual + speech_polished + BGM mixkit-480-curiosity 6% + 5 SFX. 9arm follow card in the last 4.5s. No B-roll top-insert (source already has a burned-in title)."
+  "notes": "Rendered with Template 03 (fullscreen-top-insert-burst). output/finals/final.mp4 = visual + speech_polished + BGM mixkit-480-curiosity 6% + 5 SFX. 9arm follow card in the last 4.5s. 4 AI B-roll clips (16:9, OpenRouter seedance-1-5-pro) in top-insert cards at 3/13/36/54s — social feed, korat noodles, snowy city, thailand map."
 }

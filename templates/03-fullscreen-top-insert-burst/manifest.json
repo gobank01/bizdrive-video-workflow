@@ -19,7 +19,7 @@
   "layout": {
     "background": "fallback bg.png (rarely visible — the face video covers it)",
     "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
-    "broll": "floating 16:9 insert card, 984x554 px, left 48 / top 312, rounded 30px + gold 4px border, pops in/out over the upper third while active",
+    "broll": "floating 16:9 insert card, 984x554 px, left 48 / top 24, rounded 30px + gold 4px border, pops in/out near the top of the frame while active",
     "captionPosition": "lower third, bottom: 360px (same as Template 01)"
   },
 
@@ -60,9 +60,9 @@
     "enabled": true,
     "fullScreen": false,
     "insert": {
-      "shape": "floating 16:9 rounded card over the upper third",
+      "shape": "floating 16:9 rounded card near the top of the frame",
       "x": 48,
-      "y": 312,
+      "y": 24,
       "width": 984,
       "height": 554,
       "borderRadius": 30,

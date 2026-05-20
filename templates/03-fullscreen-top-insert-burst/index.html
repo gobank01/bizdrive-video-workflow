@@ -29,9 +29,9 @@
       /* Full-screen media: the face (talking-head) video fills the whole frame. */
       .fullscreen-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform-origin: center center; will-change: transform, object-position, opacity, filter; }
       #bottomVideo { z-index: 1; }
-      /* Top insert: a floating 16:9 rounded card in the upper third. B-roll plays
-         inside it while the face video stays visible around the edges. */
-      .top-insert { position: absolute; left: 48px; top: 312px; width: 984px; height: 554px; object-fit: cover; object-position: 50% 50%; border-radius: 30px; border: 4px solid #f4c20f; box-shadow: 0 28px 64px rgba(0,0,0,.62), 0 0 0 1px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.1); transform-origin: center center; will-change: transform, object-position, opacity, filter; }
+      /* Top insert: a floating 16:9 rounded card near the top of the frame.
+         B-roll plays inside it while the face video stays visible around it. */
+      .top-insert { position: absolute; left: 48px; top: 24px; width: 984px; height: 554px; object-fit: cover; object-position: 50% 50%; border-radius: 30px; border: 4px solid #f4c20f; box-shadow: 0 28px 64px rgba(0,0,0,.62), 0 0 0 1px rgba(0,0,0,.35), inset 0 2px 0 rgba(255,255,255,.1); transform-origin: center center; will-change: transform, object-position, opacity, filter; }
       .broll-frame { opacity: 0; visibility: hidden; filter: brightness(.99) contrast(1.02) saturate(1.03); z-index: 5; }
       /* Lower-third scrim — keeps captions readable over any full-screen footage. */
       .caption-scrim { left: 0; right: 0; bottom: 0; width: 100%; height: 760px; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.58) 42%, rgba(0,0,0,.9) 100%); z-index: 9; pointer-events: none; }

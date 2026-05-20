@@ -5,9 +5,9 @@
 - Canvas: 1080 × 1920 (9:16 vertical)
 - Main video: full-screen — `inset: 0; width: 100%; height: 100%; object-fit: cover`
 - B-roll: a floating **16:9 insert card** — `984 × 554 px`, `left: 48px`,
-  `top: 312px`, `border-radius: 30px`, `border: 4px solid #f4c20f`
+  `top: 24px`, `border-radius: 30px`, `border: 4px solid #f4c20f`
 - No top frame, no circle crop — the face video IS the frame; the insert
-  floats over its upper third while active
+  floats near the top of the frame while active
 
 ## Colors
 
@@ -44,8 +44,8 @@ readable over the face video and never collide with the upper-third insert.
 ## The top-insert card
 
 - 16:9 rounded card, `984 × 554 px`, centred horizontally (48px side margins),
-  `top: 312px` — sits in the upper third, clear of the captions and clear of
-  the speaker's face below.
+  `top: 24px` — sits near the top of the frame, clear of the captions and
+  clear of the speaker's face below.
 - 4px gold border + soft drop shadow so it reads as a distinct overlay card.
 - B-roll fills it with `object-fit: cover`; clips are generated at **16:9** so
   there is no letterboxing inside the card.
@@ -74,7 +74,7 @@ readable over the face video and never collide with the upper-third insert.
 ```
 z-index 10  captions (topmost)
 z-index 9   caption scrim (lower-third gradient)
-z-index 5   B-roll top-insert card (upper third, over the face video)
+z-index 5   B-roll top-insert card (near the top, over the face video)
 z-index 1   bottomVideo (full-screen face)
 z-index 0   background (fallback)
 ```

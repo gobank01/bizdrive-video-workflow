@@ -42,7 +42,7 @@ def broll_tag(index: int, start: float) -> str:
     pan_from, pan_to = PAN_PRESETS[index % len(PAN_PRESETS)]
     nn = f"{index + 1:02d}"
     return (
-        f'      <video id="broll{nn}" class="clip fullscreen-media broll-frame" '
+        f'      <video id="broll{nn}" class="clip top-insert broll-frame" '
         f'src="assets/intermediates/broll/broll-{nn}.mp4" '
         f'data-start="{start:.3f}" data-duration="{BROLL_DURATION}" data-media-start="0" '
         f'data-transition-mode="soft" data-transition-in="0.26" data-transition-out="0.26" '

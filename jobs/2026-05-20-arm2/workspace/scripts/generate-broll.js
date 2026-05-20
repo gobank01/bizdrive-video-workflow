@@ -16,31 +16,31 @@ const models = ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "go
 const OUT_DIR = "../intermediates/broll";
 
 // --- EDIT THESE PER JOB ---
-// Template 02: B-roll is FULL-SCREEN — generate vertical 9:16 clips.
+// Template 03: B-roll plays in a 16:9 top-insert card — generate landscape clips.
 const brolls = [
   {
     output: `${OUT_DIR}/broll-01.mp4`,
     slot: "social feed",
     prompt:
-      "vertical 9:16 cinematic b-roll, close-up of a smartphone on a desk showing a fast-scrolling generic social media feed, glowing screen in a dim cozy room, photorealistic, shallow depth of field, no readable text, no logos, no people",
+      "horizontal 16:9 cinematic b-roll, close-up of a smartphone on a desk showing a fast-scrolling generic social media feed, glowing screen in a dim cozy room, photorealistic, shallow depth of field, no readable text, no logos, no people",
   },
   {
     output: `${OUT_DIR}/broll-02.mp4`,
     slot: "korat noodles",
     prompt:
-      "vertical 9:16 cinematic food b-roll, a steaming bowl of Thai khanom-jeen rice noodles with spicy curry sauce and fresh herbs, extreme close-up, warm Thai street-market lighting, photorealistic, appetizing, no text, no logos, no people",
+      "horizontal 16:9 cinematic food b-roll, a steaming bowl of Thai khanom-jeen rice noodles with spicy curry sauce and fresh herbs, extreme close-up, warm Thai street-market lighting, photorealistic, appetizing, no text, no logos, no people",
   },
   {
     output: `${OUT_DIR}/broll-03.mp4`,
     slot: "snowy us city",
     prompt:
-      "vertical 9:16 cinematic b-roll, a snowy North American city skyline at blue-hour dusk, cold winter light, quiet empty streets, photorealistic, cinematic depth, no text, no logos, no people",
+      "horizontal 16:9 cinematic b-roll, a snowy North American city skyline at blue-hour dusk, cold winter light, quiet empty streets, photorealistic, cinematic depth, no text, no logos, no people",
   },
   {
     output: `${OUT_DIR}/broll-04.mp4`,
     slot: "thailand map",
     prompt:
-      "vertical 9:16 cinematic b-roll, a printed paper map of Thailand lying on a wooden table, soft warm desk-lamp light, slow push-in toward the northeastern region, photorealistic, no readable text, no logos, no people",
+      "horizontal 16:9 cinematic b-roll, a printed paper map of Thailand lying on a wooden table, soft warm desk-lamp light, slow push-in toward the northeastern region, photorealistic, no readable text, no logos, no people",
   },
 ];
 
@@ -61,7 +61,7 @@ async function submit(model, prompt) {
     body: JSON.stringify({
       model,
       prompt,
-      aspect_ratio: "9:16",
+      aspect_ratio: "16:9",
       duration: 5,
       resolution: "720p",
       generate_audio: false,
