@@ -1,0 +1,67 @@
+{
+  "id": "2026-05-20-why-ai-editing",
+  "title": "ทำไมจึงควรใช้ AI ตัดต่อ",
+  "template": "01-stacked-vertical-burst",
+  "templateVersion": "v88",
+  "createdAt": "2026-05-20",
+  "completedAt": "2026-05-20",
+  "status": "complete-accepted",
+
+  "source": {
+    "rawSlug": "2026-05-20-why-ai-editing",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png",
+    "sourceDuration": 97.92,
+    "bgNote": "bg.png reused from BIZDRIVE brand (raw-media/2026-04-23-bizdrive-stock-promo)"
+  },
+
+  "trimAuto": {
+    "method": "editorial-subagent",
+    "trim_start_s": 1.679,
+    "trim_end_s": 97.8,
+    "reasoning": "Dropped lead silence, one repeated-phrase restart ('ใช้ AI ไปเลย' said twice ~55s), and trailing [เสียงคลิกเมาส์] tag"
+  },
+
+  "output": {
+    "final": "output/finals/final.mp4",
+    "visual": "output/finals/visual.mp4",
+    "noBgm": "output/finals/no-bgm.mp4",
+    "duration": 92.154,
+    "videoFrames": 2764,
+    "audioFrames": 4321,
+    "fileSizeMB": 41.4
+  },
+
+  "captions": {
+    "groupCount": 41,
+    "goldTokens": 15,
+    "whiteTokens": 60,
+    "subComposition": "workspace/compositions/captions-burst.html"
+  },
+
+  "broll": {
+    "inserts": 4,
+    "model": "bytedance/seedance-1-5-pro",
+    "positions": [15, 35, 55, 75],
+    "costUsd": 0.08,
+    "context": ["editing workflow timeline", "time pressure clock", "AI automation pipeline", "finished video on monitor"]
+  },
+
+  "bgm": {
+    "track": "Mixkit-1167 Close Up",
+    "gainPercent": 5,
+    "frameLockPreserved": true
+  },
+
+  "qa": {
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "wcagPass": 9,
+    "layoutIssues": 0,
+    "loudness": -17.9,
+    "lipSyncMasterProof": "top + bottom both 2753 frames @ 92.149s"
+  },
+
+  "notes": "Third successful end-to-end run of the v88 pipeline. User accepted: 'งานทำได้ดี Perfect'. B-roll generated with seedance-1-5-pro (the cheaper default)."
+}

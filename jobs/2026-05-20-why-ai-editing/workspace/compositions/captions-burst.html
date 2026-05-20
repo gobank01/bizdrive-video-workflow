@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>v88 Burst Captions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;900&family=Inter:wght@900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }
+      #burst-root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #bs-container { position: absolute; inset: 0; pointer-events: none; }
+      .bs-group {
+        position: absolute;
+        left: 0;
+        bottom: 360px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 18px;
+        row-gap: 8px;
+        padding: 0 60px;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .bs-word {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-weight: 900;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 0.45);
+        text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 28px rgba(0,0,0,.7);
+        letter-spacing: 0.01em;
+        line-height: 1.1;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .bs-particle {
+        position: absolute;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+        left: 540px; bottom: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="burst-root" data-composition-id="captions-burst" data-start="0" data-duration="92.148667" data-width="1080" data-height="1920">
+      <div id="bs-container"></div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+
+        function mulberry32(seed) {
+          return function () {
+            seed |= 0;
+            seed = (seed + 0x6d2b79f5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        var CUES = [{"start": 0.179, "end": 1.45, "duration": 1.271, "tokens": [{"text": "วันนี้เดี๋ยว", "gold": false, "start": 0.179, "end": 0.815}, {"text": "อธิบายให้ฟัง", "gold": false, "start": 0.815, "end": 1.45}]}, {"start": 1.45, "end": 3.59, "duration": 2.14, "tokens": [{"text": "ว่าทำไม", "gold": false, "start": 1.45, "end": 2.163}, {"text": "เราถึงควรใช้", "gold": false, "start": 2.163, "end": 3.386}, {"text": "AI", "gold": true, "start": 3.386, "end": 3.59}]}, {"start": 3.99, "end": 5.45, "duration": 1.46, "tokens": [{"text": "ในการตัดต่อ", "gold": false, "start": 3.99, "end": 5.45}]}, {"start": 5.519, "end": 8.139, "duration": 2.62, "tokens": [{"text": "อันนี้เป็นปัญหา", "gold": false, "start": 5.519, "end": 6.747}, {"text": "ที่พี่แบงค์เจอเอง", "gold": false, "start": 6.747, "end": 8.139}]}, {"start": 8.199, "end": 11.42, "duration": 3.221, "tokens": [{"text": "วันนึงสมมติว่า", "gold": false, "start": 8.199, "end": 9.702}, {"text": "เราอัดคลิปนะครับ", "gold": false, "start": 9.702, "end": 11.42}]}, {"start": 11.96, "end": 14.0, "duration": 2.04, "tokens": [{"text": "เราใช้เวลาอัด", "gold": false, "start": 11.96, "end": 14.0}]}, {"start": 14.0, "end": 15.799, "duration": 1.799, "tokens": [{"text": "แค่ 1-2 นาที", "gold": true, "start": 14.0, "end": 14.696}, {"text": "เพื่อให้ได้ footage", "gold": false, "start": 14.696, "end": 15.799}]}, {"start": 16.18, "end": 19.7, "duration": 3.52, "tokens": [{"text": "แต่ทุกคน", "gold": false, "start": 16.18, "end": 17.263}, {"text": "จะเจอปัญหา", "gold": false, "start": 17.263, "end": 18.617}, {"text": "คล้ายกัน", "gold": false, "start": 18.617, "end": 19.7}]}, {"start": 19.7, "end": 23.42, "duration": 3.72, "tokens": [{"text": "ก็คือเราต้อง", "gold": false, "start": 19.7, "end": 21.417}, {"text": "ไปตัดต่อนะครับ", "gold": false, "start": 21.417, "end": 23.42}]}, {"start": 23.479, "end": 23.959, "duration": 0.48, "tokens": [{"text": "CapCut", "gold": true, "start": 23.479, "end": 23.959}]}, {"start": 24.019, "end": 26.3, "duration": 2.281, "tokens": [{"text": "เราเสียเวลา", "gold": false, "start": 24.019, "end": 25.16}, {"text": "ในการตัดต่อ", "gold": false, "start": 25.16, "end": 26.3}]}, {"start": 26.3, "end": 28.439, "duration": 2.139, "tokens": [{"text": "ในการวางต่างๆ", "gold": false, "start": 26.3, "end": 28.439}]}, {"start": 28.479, "end": 31.539, "duration": 3.06, "tokens": [{"text": "ของพี่แบงค์เอง", "gold": false, "start": 28.479, "end": 29.818}, {"text": "ประมาณ 10 กว่านาที", "gold": true, "start": 29.818, "end": 31.539}]}, {"start": 31.599, "end": 34.0, "duration": 2.401, "tokens": [{"text": "ตีซะ 15 นาที", "gold": true, "start": 31.599, "end": 32.628}, {"text": "ทำอย่างนี้ทุกวัน", "gold": false, "start": 32.628, "end": 34.0}]}, {"start": 34.0, "end": 37.36, "duration": 3.36, "tokens": [{"text": "เอามาปุ๊บ", "gold": false, "start": 34.0, "end": 35.21}, {"text": "ตัดหัวตัดท้าย", "gold": false, "start": 35.21, "end": 36.957}, {"text": "ใส่", "gold": false, "start": 36.957, "end": 37.36}]}, {"start": 37.38, "end": 37.979, "duration": 0.599, "tokens": [{"text": "footage", "gold": false, "start": 37.38, "end": 37.979}]}, {"start": 38.099, "end": 39.04, "duration": 0.941, "tokens": [{"text": "ใส่ background", "gold": false, "start": 38.099, "end": 39.04}]}, {"start": 39.119, "end": 41.54, "duration": 2.421, "tokens": [{"text": "ใส่ตัว", "gold": false, "start": 39.119, "end": 41.54}]}, {"start": 41.599, "end": 42.559, "duration": 0.96, "tokens": [{"text": "Animation ต่างๆ", "gold": false, "start": 41.599, "end": 42.559}]}, {"start": 42.599, "end": 45.6, "duration": 3.001, "tokens": [{"text": "อะไรประมาณนี้นะครับ", "gold": false, "start": 42.599, "end": 44.565}, {"text": "จะเสียเวลา", "gold": false, "start": 44.565, "end": 45.6}]}, {"start": 45.6, "end": 48.799, "duration": 3.199, "tokens": [{"text": "ประมาณ 15 นาที", "gold": true, "start": 45.6, "end": 47.093}, {"text": "บางครั้งนานหน่อย", "gold": false, "start": 47.093, "end": 48.799}]}, {"start": 48.84, "end": 49.679, "duration": 0.839, "tokens": [{"text": "ก็ครึ่งชั่วโมง", "gold": true, "start": 48.84, "end": 49.679}]}, {"start": 49.719, "end": 52.319, "duration": 2.6, "tokens": [{"text": "แต่มันจะดีกว่าไหม", "gold": false, "start": 49.719, "end": 51.419}, {"text": "ถ้าเราใช้", "gold": false, "start": 51.419, "end": 52.319}]}, {"start": 52.419, "end": 52.619, "duration": 0.2, "tokens": [{"text": "AI", "gold": true, "start": 52.419, "end": 52.619}]}, {"start": 52.659, "end": 55.979, "duration": 3.32, "tokens": [{"text": "ไปเลย", "gold": false, "start": 52.659, "end": 53.12}, {"text": "เราประหยัดเวลาได้", "gold": true, "start": 53.12, "end": 54.688}, {"text": "วันนึง 15 นาที", "gold": true, "start": 54.688, "end": 55.979}]}, {"start": 56.02, "end": 57.779, "duration": 1.759, "tokens": [{"text": "30 นาที", "gold": true, "start": 56.02, "end": 56.533}, {"text": "พี่แบงค์ว่าเยอะนะ", "gold": false, "start": 56.533, "end": 57.779}]}, {"start": 57.819, "end": 60.619, "duration": 2.8, "tokens": [{"text": "แล้วก็เรียกว่า", "gold": false, "start": 57.819, "end": 59.044}, {"text": "มันทำซ้ำได้เรื่อยๆ", "gold": false, "start": 59.044, "end": 60.619}]}, {"start": 60.659, "end": 63.5, "duration": 2.841, "tokens": [{"text": "ตอนนี้พี่แบงค์", "gold": false, "start": 60.659, "end": 61.985}, {"text": "เปลี่ยนกระบวนการ", "gold": false, "start": 61.985, "end": 63.5}]}, {"start": 63.5, "end": 65.319, "duration": 1.819, "tokens": [{"text": "พอได้คลิปมานะครับ", "gold": false, "start": 63.5, "end": 64.737}, {"text": "ก็โยนให้", "gold": false, "start": 64.737, "end": 65.319}]}, {"start": 65.439, "end": 65.619, "duration": 0.18, "tokens": [{"text": "AI", "gold": true, "start": 65.439, "end": 65.619}]}, {"start": 65.659, "end": 67.139, "duration": 1.48, "tokens": [{"text": "เลย", "gold": false, "start": 65.659, "end": 65.92}, {"text": "มันก็ออกมาเป็น", "gold": false, "start": 65.92, "end": 67.139}]}, {"start": 67.22, "end": 67.499, "duration": 0.279, "tokens": [{"text": "output", "gold": true, "start": 67.22, "end": 67.499}]}, {"start": 67.54, "end": 70.519, "duration": 2.979, "tokens": [{"text": "เอาคลิปนี้", "gold": false, "start": 67.54, "end": 68.835}, {"text": "ไปโพสต์ได้เลย", "gold": false, "start": 68.835, "end": 70.519}]}, {"start": 70.559, "end": 71.999, "duration": 1.44, "tokens": [{"text": "คลิปนี้พี่แบงค์", "gold": false, "start": 70.559, "end": 71.639}, {"text": "ก็ใช้", "gold": false, "start": 71.639, "end": 71.999}]}, {"start": 72.18, "end": 72.799, "duration": 0.619, "tokens": [{"text": "AI", "gold": true, "start": 72.18, "end": 72.428}, {"text": "ตัด", "gold": false, "start": 72.428, "end": 72.799}]}, {"start": 72.819, "end": 76.0, "duration": 3.181, "tokens": [{"text": "ทุกคนลองดู", "gold": false, "start": 72.819, "end": 73.997}, {"text": "ว่ามันใช้งานได้ดี", "gold": false, "start": 73.997, "end": 76.0}]}, {"start": 76.0, "end": 79.299, "duration": 3.299, "tokens": [{"text": "แล้วก็ทำให้เรา", "gold": false, "start": 76.0, "end": 77.248}, {"text": "เอาเวลาไป", "gold": false, "start": 77.248, "end": 78.051}, {"text": "ทำอย่างอื่นได้", "gold": false, "start": 78.051, "end": 79.299}]}, {"start": 79.339, "end": 82.5, "duration": 3.161, "tokens": [{"text": "อยากให้ทุกคนได้ลองครับ", "gold": false, "start": 79.339, "end": 81.219}, {"text": "ถ้าคิดว่ามันยาก", "gold": false, "start": 81.219, "end": 82.5}]}, {"start": 82.5, "end": 85.979, "duration": 3.479, "tokens": [{"text": "พี่แบงค์สอนมาหลายท่าน", "gold": false, "start": 82.5, "end": 84.16}, {"text": "มันไม่ได้ยากอย่างที่คิด", "gold": false, "start": 84.16, "end": 85.979}]}, {"start": 86.04, "end": 89.2, "duration": 3.16, "tokens": [{"text": "มันเป็นกระบวนการ", "gold": false, "start": 86.04, "end": 87.725}, {"text": "ที่เรียนรู้ได้", "gold": true, "start": 87.725, "end": 89.2}]}, {"start": 89.2, "end": 92.148667, "duration": 2.949, "tokens": [{"text": "เดี๋ยวเราลองไป", "gold": false, "start": 89.2, "end": 90.532}, {"text": "เรียนรู้กันนะครับ", "gold": false, "start": 90.532, "end": 92.149}]}];
+        var YELLOW = "#FFD700";
+        var WHITE = "#ffffff";
+        var DIM = "rgba(255,255,255,0.45)";
+
+        var PARTICLE_COLORS = [
+          "#FFD700", "#FFC233", "#FFD86A", "#FFE48E", "#ffffff",
+          "#FFD700", "#FFC233", "#FFD86A"
+        ];
+        var NUM_PARTICLES = 10;
+
+        var container = document.getElementById("bs-container");
+        var tl = gsap.timeline({ paused: true });
+
+        CUES.forEach(function (cue, ci) {
+          var grp = document.createElement("div");
+          grp.className = "bs-group";
+          grp.id = "bs-grp-" + ci;
+          container.appendChild(grp);
+
+          cue.tokens.forEach(function (tok, ti) {
+            var span = document.createElement("span");
+            span.className = "bs-word";
+            span.id = "bs-w-" + ci + "-" + ti;
+            span.textContent = tok.text;
+            grp.appendChild(span);
+          });
+
+          // Group enter / hold / exit
+          tl.set(grp, { visibility: "visible" }, cue.start);
+          tl.fromTo(
+            grp,
+            { opacity: 0, scale: 0.92, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.22, ease: "back.out(1.6)" },
+            cue.start
+          );
+
+          cue.tokens.forEach(function (tok, ti) {
+            var wid = "#bs-w-" + ci + "-" + ti;
+            var isGold = !!tok.gold;
+            // Active reveal at token.start
+            tl.to(wid, { color: isGold ? YELLOW : WHITE, scale: isGold ? 1.10 : 1.03, duration: 0.10, ease: "power2.out" }, tok.start);
+            // After a brief held window, ease the scale back so multiple tokens read together
+            tl.to(wid, { scale: 1.0, duration: 0.20, ease: "power1.inOut" }, tok.start + Math.max(0.15, (tok.end - tok.start) * 0.35));
+
+            if (isGold) {
+              var rng = mulberry32((ci * 31 + ti * 7 + 11) | 0);
+              for (var p = 0; p < NUM_PARTICLES; p++) {
+                var angle = (p / NUM_PARTICLES) * Math.PI * 2 + rng() * 0.6;
+                var dist = 90 + rng() * 160;
+                var sz = 4 + rng() * 8;
+                var dx = Math.cos(angle) * dist;
+                var dy = -Math.sin(angle) * dist;
+                var dot = document.createElement("div");
+                dot.className = "bs-particle";
+                dot.id = "bs-p-" + ci + "-" + ti + "-" + p;
+                dot.style.backgroundColor = PARTICLE_COLORS[p % PARTICLE_COLORS.length];
+                dot.style.width = sz.toFixed(1) + "px";
+                dot.style.height = sz.toFixed(1) + "px";
+                container.appendChild(dot);
+                tl.set("#" + dot.id, { x: 0, y: 0, opacity: 0 }, tok.start);
+                tl.to("#" + dot.id, { x: dx, y: dy, opacity: 1, duration: 0.14, ease: "power3.out" }, tok.start + p * 0.018);
+                tl.to("#" + dot.id, { opacity: 0, duration: 0.5, ease: "power1.in" }, tok.start + 0.14 + p * 0.018);
+                tl.set("#" + dot.id, { opacity: 0, x: 0, y: 0 }, Math.min(tok.start + 0.85, cue.end));
+              }
+            }
+          });
+
+          // Exit
+          var exitStart = Math.max(cue.start + 0.1, cue.end - 0.22);
+          tl.to(grp, { opacity: 0, duration: 0.20, ease: "power2.in" }, exitStart);
+          tl.set(grp, { opacity: 0, visibility: "hidden" }, cue.end);
+        });
+
+        tl.seek(0);
+        window.__timelines["captions-burst"] = tl;
+      })();
+    </script>
+  </body>
+</html>
