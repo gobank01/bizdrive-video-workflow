@@ -2,7 +2,7 @@
 
 ไฟล์นี้บันทึกความผิดพลาดจริงที่เคยเกิดขึ้น เพื่อบังคับไม่ให้ workflow ทำซ้ำ
 
-## v88 Locked Lessons (ii23 integration)
+## v88 Locked Lessons (bizdrive pipeline integration)
 
 ### 1. Python on macOS missing SSL certificates by default
 

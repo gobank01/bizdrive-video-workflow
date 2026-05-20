@@ -316,7 +316,7 @@ def main():
                 words_data = {"error": "word_segment failed", "stderr": r.stderr[:200]}
 
         meta = {
-            "skill": "ii23-transcribe", "version": "v1",
+            "skill": "bizdrive-transcribe", "version": "v1",
             "source_file": file_path, "provider": result["provider"],
             "language": result.get("language"),
             "words_per_group": args.words_per_group,
@@ -338,7 +338,7 @@ def main():
             },
             "words_per_group": args.words_per_group,
             "words_status": words_data,
-            "note": "captions.json needs post-process #1 (text fix). words.json needs post-process #2 (boundary fix). See ii23-transcribe/references/post-process-protocol.md and ii23-capcut/references/post-process-protocol-v2.md.",
+            "note": "captions.json needs post-process #1 (text fix). words.json needs post-process #2 (boundary fix). See bizdrive-transcribe/references/post-process-protocol.md and bizdrive-capcut/references/post-process-protocol-v2.md.",
         }
         print(json.dumps(summary, ensure_ascii=False))
         return

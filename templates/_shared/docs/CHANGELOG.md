@@ -2,7 +2,7 @@
 
 ## v88 — PERFECT CHECKPOINT (locked 2026-05-19)
 
-Integrated ii23-edit-kit (ElevenLabs Scribe v2 + editorial subagent + Silero VAD + nlpo3) into the BIZDRIVE pipeline. AI now decides start/end and false-start cuts on its own — no user hint required. Particle-burst captions aligned to real ElevenLabs word boundaries with post-processed text (Latin loanwords, digits for spoken numbers, brand spelling).
+Integrated bizdrive-pipeline (ElevenLabs Scribe v2 + editorial subagent + Silero VAD + nlpo3) into the BIZDRIVE pipeline. AI now decides start/end and false-start cuts on its own — no user hint required. Particle-burst captions aligned to real ElevenLabs word boundaries with post-processed text (Latin loanwords, digits for spoken numbers, brand spelling).
 
 ```text
 HyperFrames upgraded 0.6.16 → 0.6.25
@@ -63,7 +63,7 @@ Reason:
 ```text
 v87 needed user to hint trim_start ("24s") and used Whisper transcript + ffmpeg silencedetect for cuts.
 Three pain points: AI didn't understand WHY content should be trimmed, Whisper transliterated brand names incorrectly, and silencedetect dropped Thai particles.
-v88 closes all three with the ii23 pipeline: ElevenLabs handles Thai+brand-Latin transcription, an editorial subagent reasons about false starts and last-take-wins from the transcript, Silero VAD detects speech by shape (not amplitude) so particles survive, and a post-process subagent fixes loanwords/numbers/particles in caption text aligned to real word boundaries.
+v88 closes all three with the bizdrive pipeline: ElevenLabs handles Thai+brand-Latin transcription, an editorial subagent reasons about false starts and last-take-wins from the transcript, Silero VAD detects speech by shape (not amplitude) so particles survive, and a post-process subagent fixes loanwords/numbers/particles in caption text aligned to real word boundaries.
 The pipeline is now portable: any AI agent with the prompts in SUBAGENT_PROMPTS.md can reproduce it on any clip following V88_PLAYBOOK.md.
 ```
 

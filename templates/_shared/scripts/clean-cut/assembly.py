@@ -130,7 +130,7 @@ def write_manifest(clips: List[str], output: str, manifest_path: str, mode: str)
         })
         cumulative += dur or 0
     manifest = {
-        "skill": "ii23-clean-cut",
+        "skill": "bizdrive-clean-cut",
         "mode": "assembly",
         "concat_method": mode,
         "output": os.path.abspath(output),

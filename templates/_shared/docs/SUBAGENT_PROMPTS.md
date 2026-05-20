@@ -26,7 +26,7 @@ Tested AI agents: Claude Opus / Sonnet via Anthropic API and Claude Code Task to
 ### Prompt
 
 ```
-You are doing a rough cut on a raw recording for the BIZDRIVE stacked-video workflow (v88, ii23-edit-kit integration).
+You are doing a rough cut on a raw recording for the BIZDRIVE stacked-video workflow (v88, bizdrive-pipeline integration).
 
 ## Inputs
 

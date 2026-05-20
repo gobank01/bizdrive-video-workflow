@@ -1,6 +1,6 @@
 # Bizdrive Video Steps
 
-สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — ii23 pipeline integrated; AI auto rough cut + post-processed burst captions
+สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — bizdrive pipeline integrated; AI auto rough cut + post-processed burst captions
 
 ไฟล์นี้คือ step แบบใช้งานจริงสำหรับเริ่มแก้ workflow ต่อ มี 62 steps ตามฐานล่าสุดที่ต้องการใช้แก้ ส่วน reference ที่ละเอียดกว่าอยู่ใน `STEPS_PRACTICAL_99.md` และ `STEPS_DETAILED_425.md`
 

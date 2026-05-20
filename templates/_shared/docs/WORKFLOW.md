@@ -1,6 +1,6 @@
 # Bizdrive Video Workflow
 
-สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — ii23-edit-kit pipeline integrated; AI auto rough cut + post-processed burst captions; portable to any AI agent
+สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — bizdrive-pipeline pipeline integrated; AI auto rough cut + post-processed burst captions; portable to any AI agent
 
 ไฟล์นี้เป็น overview ของระบบตัดต่อ Bizdrive stacked video ด้วย HyperFrames ส่วนรายละเอียดให้ดูไฟล์แยกตามหัวข้อด้านล่าง
 

@@ -1,6 +1,6 @@
 # HyperFrames Composition Project
 
-**v88 status:** PERFECT CHECKPOINT (locked 2026-05-19) — ii23 pipeline integrated.
+**v88 status:** PERFECT CHECKPOINT (locked 2026-05-19) — bizdrive pipeline integrated.
 For new clips or porting to a different AI agent, start with [`V88_PLAYBOOK.md`](V88_PLAYBOOK.md) and the verbatim prompts in [`SUBAGENT_PROMPTS.md`](SUBAGENT_PROMPTS.md). Do NOT rewrite the subagent prompts — every clause is load-bearing (see [`MISTAKES.md`](MISTAKES.md) v88 lessons).
 
 ## v88 Hard Rules for AI Agents

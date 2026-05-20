@@ -1,6 +1,6 @@
 # Next Session Handoff
 
-สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — ii23 pipeline integrated, AI auto rough cut + post-processed burst captions
+สถานะล่าสุด: **v88 PERFECT CHECKPOINT (locked 2026-05-19)** — bizdrive pipeline integrated, AI auto rough cut + post-processed burst captions
 
 วันที่บันทึก: 2026-05-19 (v88 lock)
 
@@ -106,7 +106,7 @@ v84 commit: 6df7852 Add v84 caption gold spacing rule
 v85 commit: 5f100b5 Add v85 caption gold phase placement
 v86 commit: d17a95a Save v86 perfect workflow checkpoint
 v87 commit: 20b8e45 Add v87 video div final render
-v88 commit: this commit (Restructure to multi-template system; lock v88 ii23 pipeline as Template 01)
+v88 commit: this commit (Restructure to multi-template system; lock v88 bizdrive pipeline as Template 01)
 current branch: main
 repo: https://github.com/gobank01/bizdrive-video-workflow
 ```

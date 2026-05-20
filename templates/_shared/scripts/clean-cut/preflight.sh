@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check what's installed for ii23-clean-cut. Outputs JSON.
+# Check what's installed for bizdrive-clean-cut. Outputs JSON.
 # Used by the skill at trigger time before doing any work.
 # Portable across macOS / Linux / Windows (Git Bash, WSL).
 

@@ -1,4 +1,4 @@
-# V88 BIZDRIVE × ii23 — Portable Playbook
+# V88 BIZDRIVE — Portable Playbook
 
 **Status:** v88 perfect checkpoint (locked 2026-05-19). Use this playbook to reproduce the pipeline on any new clip with any AI agent (Claude Code, Claude API, Cursor, Codex CLI, ChatGPT, etc.). Every step is explicit — no chat-context assumed.
 
