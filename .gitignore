@@ -54,3 +54,5 @@ reports/
 !jobs/*/workspace/package.json
 !jobs/*/workspace/compositions/**
 !jobs/*/workspace/scripts/**
+sample-pack-v88.zip
+.sample-pack-stage/

@@ -4,6 +4,20 @@ Multi-template HyperFrames video production. Each template is a reusable pattern
 
 **Status:** Template 01 locked at v88 (PERFECT CHECKPOINT, 2026-05-19).
 
+> **New here / received this repo to develop further?** Read **[ONBOARDING.md](ONBOARDING.md)** first — it walks you from a fresh clone to your first rendered video.
+
+## 🚀 Fresh setup (clone → ready)
+
+```bash
+git clone https://github.com/<your-username>/bizdrive-video-workflow.git
+cd bizdrive-video-workflow
+bash tools/setup.sh                       # installs deps + Silero VAD + .env
+# then edit templates/_shared/env/.env — add your ElevenLabs + OpenRouter keys
+```
+
+Then follow [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer for
+`sample-pack-v88.zip` to run the golden test.
+
 ---
 
 ## 📁 Repo layout
