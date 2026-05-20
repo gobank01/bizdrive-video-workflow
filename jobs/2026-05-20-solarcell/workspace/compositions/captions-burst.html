@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <title>v88 Burst Captions</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;900&family=Inter:wght@900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }
+      #burst-root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; }
+      #bs-container { position: absolute; inset: 0; pointer-events: none; }
+      .bs-group {
+        position: absolute;
+        left: 0;
+        bottom: 360px;
+        width: 100%;
+        display: flex;
+        flex-wrap: wrap;
+        align-items: center;
+        justify-content: center;
+        column-gap: 18px;
+        row-gap: 8px;
+        padding: 0 60px;
+        opacity: 0;
+        visibility: hidden;
+      }
+      .bs-word {
+        font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
+        font-weight: 900;
+        font-size: 64px;
+        color: rgba(255, 255, 255, 0.45);
+        text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 28px rgba(0,0,0,.7);
+        letter-spacing: 0.01em;
+        line-height: 1.1;
+        display: inline-block;
+        white-space: nowrap;
+      }
+      .bs-particle {
+        position: absolute;
+        width: 10px; height: 10px;
+        border-radius: 50%;
+        opacity: 0;
+        pointer-events: none;
+        z-index: 20;
+        left: 540px; bottom: 420px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="burst-root" data-composition-id="captions-burst" data-start="0" data-duration="83.475260" data-width="1080" data-height="1920">
+      <div id="bs-container"></div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+
+        function mulberry32(seed) {
+          return function () {
+            seed |= 0;
+            seed = (seed + 0x6d2b79f5) | 0;
+            var t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+            t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+            return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+          };
+        }
+
+        var CUES = [{"start": 0.159, "end": 0.86, "duration": 0.701, "tokens": [{"text": "โซลาร์เซลล์", "gold": true, "start": 0.159, "end": 0.86}]}, {"start": 0.91, "end": 2.15, "duration": 1.24, "tokens": [{"text": "มีการติดตั้งทั้งหมด", "gold": false, "start": 0.91, "end": 2.15}]}, {"start": 2.207, "end": 3.299, "duration": 1.092, "tokens": [{"text": "อยู่", "gold": false, "start": 2.207, "end": 2.519}, {"text": "3", "gold": true, "start": 2.519, "end": 2.597}, {"text": "แบบนะครับ", "gold": false, "start": 2.597, "end": 3.299}]}, {"start": 3.439, "end": 4.86, "duration": 1.421, "tokens": [{"text": "ก็คือ", "gold": false, "start": 3.439, "end": 4.031}, {"text": "On Grid", "gold": true, "start": 4.031, "end": 4.86}]}, {"start": 4.92, "end": 5.41, "duration": 0.49, "tokens": [{"text": "Off Grid", "gold": true, "start": 4.92, "end": 5.41}]}, {"start": 5.46, "end": 6.119, "duration": 0.659, "tokens": [{"text": "แล้วก็", "gold": false, "start": 5.46, "end": 5.79}, {"text": "Hybrid", "gold": true, "start": 5.79, "end": 6.119}]}, {"start": 6.519, "end": 7.63, "duration": 1.111, "tokens": [{"text": "เรามาดูกันว่า", "gold": false, "start": 6.519, "end": 7.63}]}, {"start": 7.699, "end": 8.92, "duration": 1.221, "tokens": [{"text": "On Grid", "gold": true, "start": 7.699, "end": 8.055}, {"text": "Off Grid", "gold": true, "start": 8.055, "end": 8.462}, {"text": "และ", "gold": false, "start": 8.462, "end": 8.615}, {"text": "Hybrid", "gold": true, "start": 8.615, "end": 8.92}]}, {"start": 9.0, "end": 9.939, "duration": 0.939, "tokens": [{"text": "แตกต่างกันอย่างไร", "gold": false, "start": 9.0, "end": 9.939}]}, {"start": 10.26, "end": 12.7, "duration": 2.44, "tokens": [{"text": "On Grid", "gold": true, "start": 10.26, "end": 11.036}, {"text": "ก็คือเป็นการที่", "gold": false, "start": 11.036, "end": 12.7}]}, {"start": 12.779, "end": 14.55, "duration": 1.771, "tokens": [{"text": "เชื่อมต่อ", "gold": false, "start": 12.779, "end": 13.576}, {"text": "โซลาร์เซลล์", "gold": true, "start": 13.576, "end": 14.55}]}, {"start": 14.606, "end": 16.1, "duration": 1.494, "tokens": [{"text": "กับ", "gold": false, "start": 14.606, "end": 14.87}, {"text": "การไฟฟ้า", "gold": false, "start": 14.87, "end": 15.573}, {"text": "นะครับ", "gold": false, "start": 15.573, "end": 16.1}]}, {"start": 16.158, "end": 17.619, "duration": 1.461, "tokens": [{"text": "หรือไฟหลวงของเรา", "gold": false, "start": 16.158, "end": 17.619}]}, {"start": 17.68, "end": 18.44, "duration": 0.76, "tokens": [{"text": "เช่น", "gold": false, "start": 17.68, "end": 18.44}]}, {"start": 18.52, "end": 20.07, "duration": 1.55, "tokens": [{"text": "ถ้าสมมติวันนี้", "gold": false, "start": 18.52, "end": 20.07}]}, {"start": 20.124, "end": 22.76, "duration": 2.636, "tokens": [{"text": "เราติด", "gold": false, "start": 20.124, "end": 20.812}, {"text": "โซลาร์เซลล์", "gold": true, "start": 20.812, "end": 22.072}, {"text": "ไปแล้ว", "gold": false, "start": 22.072, "end": 22.76}]}, {"start": 23.299, "end": 25.03, "duration": 1.731, "tokens": [{"text": "แล้ว", "gold": false, "start": 23.299, "end": 23.761}, {"text": "โซลาร์เซลล์", "gold": false, "start": 23.761, "end": 25.03}]}, {"start": 25.084, "end": 27.41, "duration": 2.326, "tokens": [{"text": "ปรากฏว่าโหลดใช้ไม่พอ", "gold": false, "start": 25.084, "end": 27.41}]}, {"start": 27.465, "end": 28.179, "duration": 0.714, "tokens": [{"text": "นะครับ", "gold": false, "start": 27.465, "end": 28.179}]}, {"start": 28.219, "end": 30.02, "duration": 1.801, "tokens": [{"text": "มันจะดึงไฟจาก", "gold": false, "start": 28.219, "end": 29.334}, {"text": "การไฟฟ้า", "gold": false, "start": 29.334, "end": 30.02}]}, {"start": 30.078, "end": 31.88, "duration": 1.802, "tokens": [{"text": "เข้ามาเชื่อมอัตโนมัติ", "gold": false, "start": 30.078, "end": 31.88}]}, {"start": 31.938, "end": 33.74, "duration": 1.802, "tokens": [{"text": "ทำให้เราใช้ไฟไม่สะดุด", "gold": false, "start": 31.938, "end": 33.74}]}, {"start": 33.797, "end": 35.42, "duration": 1.623, "tokens": [{"text": "และอย่างที่สองก็คือ", "gold": false, "start": 33.797, "end": 35.42}]}, {"start": 35.479, "end": 36.899, "duration": 1.42, "tokens": [{"text": "ระบบแบบ", "gold": false, "start": 35.479, "end": 36.142}, {"text": "Off Grid", "gold": true, "start": 36.142, "end": 36.899}]}, {"start": 37.0, "end": 38.83, "duration": 1.83, "tokens": [{"text": "Off Grid", "gold": true, "start": 37.0, "end": 38.126}, {"text": "ก็คือ", "gold": false, "start": 38.126, "end": 38.83}]}, {"start": 38.882, "end": 41.319, "duration": 2.437, "tokens": [{"text": "ไม่พึ่งไฟจาก", "gold": false, "start": 38.882, "end": 40.153}, {"text": "การไฟฟ้า", "gold": false, "start": 40.153, "end": 41.001}, {"text": "เลย", "gold": false, "start": 41.001, "end": 41.319}]}, {"start": 41.399, "end": 42.7, "duration": 1.301, "tokens": [{"text": "ยกตัวอย่างเช่น", "gold": false, "start": 41.399, "end": 42.7}]}, {"start": 42.779, "end": 43.719, "duration": 0.94, "tokens": [{"text": "การติดตั้งแบบ", "gold": false, "start": 42.779, "end": 43.361}, {"text": "Off Grid", "gold": true, "start": 43.361, "end": 43.719}]}, {"start": 43.739, "end": 45.63, "duration": 1.891, "tokens": [{"text": "จะอยู่ในถิ่นทุรกันดาร", "gold": false, "start": 43.739, "end": 45.63}]}, {"start": 45.681, "end": 47.439, "duration": 1.758, "tokens": [{"text": "ที่ไฟหลวงเข้าไม่ถึง", "gold": false, "start": 45.681, "end": 47.439}]}, {"start": 47.479, "end": 50.279, "duration": 2.8, "tokens": [{"text": "อาจต้องมี", "gold": false, "start": 47.479, "end": 48.348}, {"text": "แบตเตอรี่", "gold": true, "start": 48.348, "end": 49.217}, {"text": "เข้ามาเสริม", "gold": false, "start": 49.217, "end": 50.279}]}, {"start": 50.319, "end": 52.18, "duration": 1.861, "tokens": [{"text": "แต่ถ้าไฟจาก", "gold": false, "start": 50.319, "end": 51.343}, {"text": "แบตเตอรี่", "gold": true, "start": 51.343, "end": 52.18}]}, {"start": 52.233, "end": 53.9, "duration": 1.667, "tokens": [{"text": "ที่หล่อเลี้ยงไปหมด", "gold": false, "start": 52.233, "end": 53.9}]}, {"start": 53.955, "end": 55.91, "duration": 1.955, "tokens": [{"text": "ไฟก็จะถูกตัดอัตโนมัติ", "gold": false, "start": 53.955, "end": 55.91}]}, {"start": 55.964, "end": 57.73, "duration": 1.766, "tokens": [{"text": "และอย่างที่สามก็คือ", "gold": false, "start": 55.964, "end": 57.73}]}, {"start": 57.783, "end": 60.079, "duration": 2.296, "tokens": [{"text": "การติดตั้ง", "gold": false, "start": 57.783, "end": 58.74}, {"text": "โซลาร์เซลล์", "gold": false, "start": 58.74, "end": 59.792}, {"text": "แบบ", "gold": false, "start": 59.792, "end": 60.079}]}, {"start": 60.159, "end": 61.739, "duration": 1.58, "tokens": [{"text": "Hybrid", "gold": true, "start": 60.159, "end": 60.486}, {"text": "ก็เป็นการผสมผสานระหว่าง", "gold": false, "start": 60.486, "end": 61.739}]}, {"start": 61.819, "end": 63.459, "duration": 1.64, "tokens": [{"text": "On Grid", "gold": true, "start": 61.819, "end": 62.457}, {"text": "กับ", "gold": false, "start": 62.457, "end": 62.73}, {"text": "Off Grid", "gold": true, "start": 62.73, "end": 63.459}]}, {"start": 63.479, "end": 64.319, "duration": 0.84, "tokens": [{"text": "ก็คือมี", "gold": false, "start": 63.479, "end": 63.806}, {"text": "โซลาร์เซลล์", "gold": true, "start": 63.806, "end": 64.319}]}, {"start": 64.36, "end": 65.199, "duration": 0.839, "tokens": [{"text": "มี", "gold": false, "start": 64.36, "end": 64.513}, {"text": "แบตเตอรี่", "gold": false, "start": 64.513, "end": 65.199}]}, {"start": 65.239, "end": 67.699, "duration": 2.46, "tokens": [{"text": "แล้วก็มีไฟจาก", "gold": false, "start": 65.239, "end": 66.271}, {"text": "การไฟฟ้า", "gold": false, "start": 66.271, "end": 66.905}, {"text": "เข้ามาช่วย", "gold": false, "start": 66.905, "end": 67.699}]}, {"start": 67.779, "end": 70.27, "duration": 2.491, "tokens": [{"text": "ถ้าไฟจาก", "gold": false, "start": 67.779, "end": 68.466}, {"text": "โซลาร์เซลล์", "gold": false, "start": 68.466, "end": 69.411}, {"text": "ไม่เพียงพอ", "gold": false, "start": 69.411, "end": 70.27}]}, {"start": 70.32, "end": 72.819, "duration": 2.499, "tokens": [{"text": "ก็จะดึงไฟจาก", "gold": false, "start": 70.32, "end": 71.431}, {"text": "แบตเตอรี่", "gold": false, "start": 71.431, "end": 72.264}, {"text": "เข้ามา", "gold": false, "start": 72.264, "end": 72.819}]}, {"start": 73.339, "end": 75.04, "duration": 1.701, "tokens": [{"text": "และถ้าไฟจาก", "gold": false, "start": 73.339, "end": 74.275}, {"text": "แบตเตอรี่", "gold": false, "start": 74.275, "end": 75.04}]}, {"start": 75.097, "end": 76.36, "duration": 1.263, "tokens": [{"text": "หมดอีกก็จะดึงไฟ", "gold": false, "start": 75.097, "end": 76.36}]}, {"start": 76.415, "end": 78.2, "duration": 1.785, "tokens": [{"text": "จาก", "gold": false, "start": 76.415, "end": 76.67}, {"text": "การไฟฟ้า", "gold": false, "start": 76.67, "end": 77.35}, {"text": "เข้ามาช่วย", "gold": false, "start": 77.35, "end": 78.2}]}, {"start": 78.261, "end": 79.88, "duration": 1.619, "tokens": [{"text": "ทำให้การใช้ไฟในบ้าน", "gold": false, "start": 78.261, "end": 79.88}]}, {"start": 79.93, "end": 80.58, "duration": 0.65, "tokens": [{"text": "ไม่สะดุด", "gold": false, "start": 79.93, "end": 80.58}]}, {"start": 80.633, "end": 82.479, "duration": 1.846, "tokens": [{"text": "และใช้งานได้ต่อเนื่อง", "gold": false, "start": 80.633, "end": 82.479}]}, {"start": 83.0, "end": 83.47526, "duration": 0.475, "tokens": [{"text": "ขอบคุณครับ", "gold": false, "start": 83.0, "end": 83.475}]}];
+        var YELLOW = "#FFD700";
+        var WHITE = "#ffffff";
+        var DIM = "rgba(255,255,255,0.45)";
+
+        var PARTICLE_COLORS = [
+          "#FFD700", "#FFC233", "#FFD86A", "#FFE48E", "#ffffff",
+          "#FFD700", "#FFC233", "#FFD86A"
+        ];
+        var NUM_PARTICLES = 10;
+
+        var container = document.getElementById("bs-container");
+        var tl = gsap.timeline({ paused: true });
+
+        CUES.forEach(function (cue, ci) {
+          var grp = document.createElement("div");
+          grp.className = "bs-group";
+          grp.id = "bs-grp-" + ci;
+          container.appendChild(grp);
+
+          cue.tokens.forEach(function (tok, ti) {
+            var span = document.createElement("span");
+            span.className = "bs-word";
+            span.id = "bs-w-" + ci + "-" + ti;
+            span.textContent = tok.text;
+            grp.appendChild(span);
+          });
+
+          // Group enter / hold / exit
+          tl.set(grp, { visibility: "visible" }, cue.start);
+          tl.fromTo(
+            grp,
+            { opacity: 0, scale: 0.92, y: 20 },
+            { opacity: 1, scale: 1, y: 0, duration: 0.22, ease: "back.out(1.6)" },
+            cue.start
+          );
+
+          cue.tokens.forEach(function (tok, ti) {
+            var wid = "#bs-w-" + ci + "-" + ti;
+            var isGold = !!tok.gold;
+            // Active reveal at token.start
+            tl.to(wid, { color: isGold ? YELLOW : WHITE, scale: isGold ? 1.10 : 1.03, duration: 0.10, ease: "power2.out" }, tok.start);
+            // After a brief held window, ease the scale back so multiple tokens read together
+            tl.to(wid, { scale: 1.0, duration: 0.20, ease: "power1.inOut" }, tok.start + Math.max(0.15, (tok.end - tok.start) * 0.35));
+
+            if (isGold) {
+              var rng = mulberry32((ci * 31 + ti * 7 + 11) | 0);
+              for (var p = 0; p < NUM_PARTICLES; p++) {
+                var angle = (p / NUM_PARTICLES) * Math.PI * 2 + rng() * 0.6;
+                var dist = 90 + rng() * 160;
+                var sz = 4 + rng() * 8;
+                var dx = Math.cos(angle) * dist;
+                var dy = -Math.sin(angle) * dist;
+                var dot = document.createElement("div");
+                dot.className = "bs-particle";
+                dot.id = "bs-p-" + ci + "-" + ti + "-" + p;
+                dot.style.backgroundColor = PARTICLE_COLORS[p % PARTICLE_COLORS.length];
+                dot.style.width = sz.toFixed(1) + "px";
+                dot.style.height = sz.toFixed(1) + "px";
+                container.appendChild(dot);
+                tl.set("#" + dot.id, { x: 0, y: 0, opacity: 0 }, tok.start);
+                tl.to("#" + dot.id, { x: dx, y: dy, opacity: 1, duration: 0.14, ease: "power3.out" }, tok.start + p * 0.018);
+                tl.to("#" + dot.id, { opacity: 0, duration: 0.5, ease: "power1.in" }, tok.start + 0.14 + p * 0.018);
+                tl.set("#" + dot.id, { opacity: 0, x: 0, y: 0 }, Math.min(tok.start + 0.85, cue.end));
+              }
+            }
+          });
+
+          // Exit
+          var exitStart = Math.max(cue.start + 0.1, cue.end - 0.22);
+          tl.to(grp, { opacity: 0, duration: 0.20, ease: "power2.in" }, exitStart);
+          tl.set(grp, { opacity: 0, visibility: "hidden" }, cue.end);
+        });
+
+        tl.seek(0);
+        window.__timelines["captions-burst"] = tl;
+      })();
+    </script>
+  </body>
+</html>

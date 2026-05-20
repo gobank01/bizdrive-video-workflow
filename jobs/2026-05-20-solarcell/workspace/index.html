@@ -42,24 +42,34 @@
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
-      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="103.561333" data-track-index="0" />
+    <div id="root" data-composition-id="main" data-start="0" data-duration="83.475260" data-width="1080" data-height="1920">
+      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="83.475260" data-track-index="0" />
       <div id="topFrameShell" class="video-frame top-frame-shell">
-        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-motion-kind="slow-top-inner-zoom" data-motion-duration="103.561333" data-volume="0" muted playsinline></video>
+        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="83.475260" data-track-index="1" data-motion-kind="slow-top-inner-zoom" data-motion-duration="83.475260" data-volume="0" muted playsinline></video>
+
+        <video id="broll01" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll/broll-01.mp4" data-start="12.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="50% 51%" data-pan-to="50% 49%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="4" data-volume="0" muted playsinline></video>
+
+        <video id="broll02" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll/broll-02.mp4" data-start="32.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="51% 50%" data-pan-to="49% 50%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="5" data-volume="0" muted playsinline></video>
+
+        <video id="broll03" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll/broll-03.mp4" data-start="52.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="49% 50%" data-pan-to="51% 50%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="6" data-volume="0" muted playsinline></video>
+
+        <video id="broll04" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll/broll-04.mp4" data-start="70.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="50% 49%" data-pan-to="50% 51%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="7" data-volume="0" muted playsinline></video>
+
+
 
         <!-- B-roll clips are inserted here per job by scripts/add-broll.py
              (each becomes a timed clip on tracks 4+). -->
 
       </div>
-      <video id="bottomVideo" class="clip video-frame bottom-frame" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="2" data-volume="0" muted playsinline></video>
+      <video id="bottomVideo" class="clip video-frame bottom-frame" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="83.475260" data-track-index="2" data-volume="0" muted playsinline></video>
 
-      <div id="captions-mount" class="clip" style="z-index: 10;" data-composition-id="captions-burst" data-composition-src="compositions/captions-burst.html" data-start="0" data-duration="103.561333" data-track-index="3" data-width="1080" data-height="1920"></div>
+      <div id="captions-mount" class="clip" style="z-index: 10;" data-composition-id="captions-burst" data-composition-src="compositions/captions-burst.html" data-start="0" data-duration="83.475260" data-track-index="3" data-width="1080" data-height="1920"></div>
     </div>
 
     <script>
       window.__timelines = window.__timelines || {};
       const tl = gsap.timeline({ paused: true });
-      const compositionDuration = 103.561333;
+      const compositionDuration = 83.475260;
       tl.from("#topVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
       tl.set("#topVideo", { scale: 1, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
       tl.to("#topVideo", { scale: 1.018, duration: compositionDuration / 2, ease: "sine.inOut" }, 0);
