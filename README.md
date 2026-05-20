@@ -1,5 +1,12 @@
 # Video V3 — BIZDRIVE Video Template System
 
+![checkpoint](https://img.shields.io/badge/checkpoint-v88-2ea44f)
+![HyperFrames](https://img.shields.io/badge/HyperFrames-0.6.25-blue)
+![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)
+![Node](https://img.shields.io/badge/Node-18%2B-339933)
+![STT](https://img.shields.io/badge/STT-ElevenLabs%20Scribe%20v2-orange)
+![templates](https://img.shields.io/badge/templates-1-lightgrey)
+
 Multi-template HyperFrames video production. Each template is a reusable pattern (aspect ratio, layout, caption style). Each job is one rendered video.
 
 **Status:** Template 01 locked at v88 (PERFECT CHECKPOINT, 2026-05-19).
@@ -17,6 +24,8 @@ bash tools/setup.sh                       # installs deps + Silero VAD + .env
 
 Then follow [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer for
 `sample-pack-v88.zip` to run the golden test.
+
+Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---
 

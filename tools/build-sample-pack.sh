@@ -4,19 +4,24 @@
 # they can run the golden test. NOT committed to git (too large).
 #
 # Usage:
-#   bash tools/build-sample-pack.sh
+#   bash tools/build-sample-pack.sh              # raw clip only (default, smaller)
+#   bash tools/build-sample-pack.sh --with-output # also include reference final.mp4
 #
 # Produces:  sample-pack-v88.zip  (in the repo root, gitignored)
 #
-# Contents:
-#   raw-media/2026-04-23-bizdrive-stock-promo/   (the v88 reference raw clip)
-#   reference-output/v88-final.mp4               (expected golden-test result)
-#   SAMPLE-PACK-README.md                        (how to use it)
+# The golden-test TOLERANCES (frame count, duration, caption-group count,
+# loudness) are documented in
+#   templates/01-stacked-vertical-burst/manifest.json -> reference.goldenTest
+# and are already in the repo — so the reference video is optional. A new dev
+# checks their output's ffprobe numbers against those documented values.
 
 set -e
 
 REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
+
+WITH_OUTPUT=0
+[ "$1" = "--with-output" ] && WITH_OUTPUT=1
 
 RAW_DIR="raw-media/2026-04-23-bizdrive-stock-promo"
 REF_FINAL="jobs/2026-05-19-bizdrive-video-div/output/finals/final.mp4"
@@ -31,22 +36,20 @@ for f in "$RAW_DIR/top.mp4" "$RAW_DIR/bottom.mp4" "$RAW_DIR/bg.png"; do
   fi
 done
 
-echo "→ Staging sample pack..."
+echo "→ Staging sample pack (mode: $([ $WITH_OUTPUT -eq 1 ] && echo 'raw + reference output' || echo 'raw only'))..."
 rm -rf "$STAGE" "$OUT"
 mkdir -p "$STAGE/raw-media/2026-04-23-bizdrive-stock-promo"
-mkdir -p "$STAGE/reference-output"
 
 # Copy raw clip (resolve symlinks with -L)
 cp -L "$RAW_DIR/top.mp4"    "$STAGE/raw-media/2026-04-23-bizdrive-stock-promo/top.mp4"
 cp -L "$RAW_DIR/bottom.mp4" "$STAGE/raw-media/2026-04-23-bizdrive-stock-promo/bottom.mp4"
 cp -L "$RAW_DIR/bg.png"     "$STAGE/raw-media/2026-04-23-bizdrive-stock-promo/bg.png"
 
-# Copy reference output if it exists
-if [ -e "$REF_FINAL" ]; then
+# Optionally include the reference output
+if [ $WITH_OUTPUT -eq 1 ] && [ -e "$REF_FINAL" ]; then
+  mkdir -p "$STAGE/reference-output"
   cp -L "$REF_FINAL" "$STAGE/reference-output/v88-final.mp4"
   echo "  ✓ included reference output"
-else
-  echo "  ⚠ reference output not found ($REF_FINAL) — pack will have raw only"
 fi
 
 # Sample-pack README
@@ -57,7 +60,7 @@ Companion to the bizdrive-video-workflow repo — lets you run the golden test.
 
 ## Use it
 
-1. Unzip into your cloned repo's `raw-media/`:
+1. Unzip and copy the raw clip into your cloned repo's `raw-media/`:
 
        unzip sample-pack-v88.zip
        cp -r raw-media/2026-04-23-bizdrive-stock-promo  <repo>/raw-media/
@@ -68,12 +71,19 @@ Companion to the bizdrive-video-workflow repo — lets you run the golden test.
        bash tools/new-job.sh 01 golden-test --raw 2026-04-23-bizdrive-stock-promo
        # then follow templates/_shared/docs/V88_PLAYBOOK.md
 
-3. Compare your final.mp4 against `reference-output/v88-final.mp4`.
-   Tolerances: templates/01-stacked-vertical-burst/manifest.json → reference.goldenTest
-   (duration ±50ms, ~3107 frames, 48±5 caption groups, loudness -14 to -18 LUFS).
+3. Golden-test check — compare YOUR output's ffprobe numbers to the documented
+   tolerances in:
+       templates/01-stacked-vertical-burst/manifest.json -> reference.goldenTest
+
+   Expected (v88 reference): ~103.5s, 3107 video frames, 48 ±5 caption groups,
+   loudness -14 to -18 LUFS. If your output lands in range, your environment
+   is correct.
 
 The reference clip is a Thai BIZDRIVE direct-response video about AI stock
 analysis — 130s of raw footage, ~103s final.
+
+(If this pack was built with --with-output, reference-output/v88-final.mp4 is
+the maintainer's rendered result for visual comparison.)
 EOF
 
 # --- Zip ---
