@@ -231,26 +231,39 @@ Output: `assets/<JOB>/transcript/caption-groups.json` with structure:
 
 ## 4. Composition build & render
 
-### Step 11 — Build v88 composition + burst captions
+### Step 11 — Build composition + burst captions
 
-The HyperFrames composition is `index.html`. For a new job, EITHER:
+The workspace `index.html` is copied from Template 01 and already uses
+**generic per-job paths** — no path-fixing needed:
 
-**A. Edit `index.html` directly** — swap video paths, set `data-duration` to the new clip's duration. Or:
+- `assets/input/bg.png`
+- `assets/intermediates/top_visual_master.mp4`
+- `assets/intermediates/bottom_visual_master.mp4`
+- `assets/intermediates/broll/broll-NN.mp4`
 
-**B. Use the v87 template builder + burst script** (the path used for the locked v88 reference clip):
+The job workspace's `assets/` symlinks resolve these automatically. The only
+per-job edits are duration, captions, and B-roll — handled by three scripts:
 
 ```bash
-# (Only if you're starting from a v87-style composition)
-# python3 scripts/build-v88-composition.py   # NOT generic — encodes v87→v88 shift; review before use
+# 1. Set the composition duration (rewrites all 7 duration spots in index.html)
+python3 scripts/set-duration.py <DURATION>      # e.g. 92.748632
 
-# Build burst captions from the post-processed JSON:
+# 2. Build the burst caption sub-composition from caption-groups.json
 python3 scripts/build-burst-captions.py
+#    reads assets/intermediates/transcript/caption-groups.json
+#    writes compositions/captions-burst.html + mounts it on track 3 (z-index 10)
+
+# 3. (optional) Insert B-roll — only after B-roll clips exist in
+#    assets/intermediates/broll/. Pass each clip's start time:
+python3 scripts/add-broll.py 15 35 55 75
 ```
 
-`build-burst-captions.py` reads `assets/v88-video-div/transcript/caption-groups.json` (path is hardcoded — edit `GROUPS_JSON` constant in the script for a new job) and writes:
+`set-duration.py` auto-detects the current duration from `#root` and replaces
+every occurrence (root, background, topVideo ×2, bottomVideo, captions mount,
+the JS `compositionDuration`) — preventing the duration-mismatch bug.
 
-- `compositions/captions-burst.html` — particle-burst sub-composition
-- `index.html` — replaces any inline subtitle lines with the sub-composition mount on track 3
+`add-broll.py` enforces the v88 B-roll rules (3s each, ≥6s spacing, must fit
+the composition) and is re-runnable (replaces any prior B-roll block).
 
 ### Step 12 — Lint + visual inspect
 

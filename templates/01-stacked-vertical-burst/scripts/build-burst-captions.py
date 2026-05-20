@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Build the v88 particle-burst captions sub-composition from caption-groups.json.
 
-Input:  assets/v88-video-div/transcript/caption-groups.json
+Input:  assets/intermediates/transcript/caption-groups.json
         (produced by the post-process subagent — text-fixed Thai groups with
          per-token gold annotations and timing taken from the real ElevenLabs
          word boundaries on the v88 edited timeline.)
@@ -30,7 +30,7 @@ ROOT = Path(__file__).resolve().parents[1]
 INDEX = ROOT / "index.html"
 SUB_DIR = ROOT / "compositions"
 SUB = SUB_DIR / "captions-burst.html"
-GROUPS_JSON = ROOT / "assets/v88-video-div/transcript/caption-groups.json"
+GROUPS_JSON = ROOT / "assets/intermediates/transcript/caption-groups.json"
 
 
 def distribute_token_times(tokens, group_start, group_end):

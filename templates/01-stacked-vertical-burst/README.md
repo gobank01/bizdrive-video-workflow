@@ -58,12 +58,16 @@ bash tools/new-job.sh 01 my-clip-slug
 8. Polish bottom audio (2-pass loudnorm chain)
 9. Re-transcribe polished audio on edited timeline
 10. Spawn post-process subagent → caption-groups.json  (SUBAGENT_PROMPTS.md Section B)
-11. Build burst sub-composition (python3 scripts/build-burst-captions.py)
+11. Build composition: set-duration.py <dur> → build-burst-captions.py → (optional) add-broll.py
 12. Lint + caption-gold check (npm run check, check:caption-gold)
 13. HyperFrames render → visual.mp4
 14. Mux speech + BGM 5% → final.mp4
 15. Final QA (frame lock, silence, loudness, timestamp sheet)
 ```
+
+The workspace `index.html` already uses generic per-job paths (`assets/input/`,
+`assets/intermediates/`), so no path-fixing is needed for a new job. Only
+duration / captions / B-roll are per-job — Step 11's three scripts handle them.
 
 ## Files in this template
 
@@ -71,7 +75,7 @@ bash tools/new-job.sh 01 my-clip-slug
 manifest.json                  machine-readable spec (output dims, caption rules, golden test)
 README.md                      this file
 DESIGN.md                      colors / fonts / position details
-index.html                     composition source-of-truth (with v88 reference paths)
+index.html                     composition source-of-truth (generic per-job paths, no inline B-roll)
 hyperframes.json               HyperFrames registry config
 meta.json                      project metadata
 package.json                   npm scripts (lint, render, build, mux, BGM)
@@ -80,11 +84,12 @@ compositions/
   components/
     caption-particle-burst.html  original block from `npx hyperframes add` (reference)
 scripts/
-  build-burst-captions.py      caption-groups.json → captions-burst.html
-  build-v88-composition.py     v87 → v88 timing/source swap (one-time migration)
-  build-v34-context-cut.js     legacy v34 builder (kept for reference)
-  build-v35-full-context-test.js  legacy v35 builder
-  (other v87-era js scripts)   BGM, QA, B-roll, finalize scripts
+  set-duration.py              set composition duration across index.html (run per job)
+  build-burst-captions.py      caption-groups.json → captions-burst.html + mount on track 3
+  add-broll.py                 insert B-roll <video> elements at given start times
+  generate-openrouter-broll.js AI B-roll generation (seedance-1-5-pro default)
+  build-v88-composition.py     v87 → v88 timing/source swap (one-time migration; legacy)
+  (other v87-era js scripts)   BGM, QA, finalize scripts
 assets/
   bg.png                       default background (symlink to V2 bg.png)
 backups/
