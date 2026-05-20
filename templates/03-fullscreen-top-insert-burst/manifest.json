@@ -1,0 +1,120 @@
+{
+  "id": "03-fullscreen-top-insert-burst",
+  "version": "v1",
+  "createdAt": "2026-05-20",
+  "name": "Full-screen Vertical with Top Insert + Particle-Burst Captions",
+  "description": "Single talking-head video filling the entire 1080x1920 vertical frame, with kinetic particle-burst Thai captions. B-roll plays inside a floating 16:9 rounded insert card over the upper third of the frame — the face video stays visible around the card, it does not cover the whole screen.",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "fallback bg.png (rarely visible — the face video covers it)",
+    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
+    "broll": "floating 16:9 insert card, 984x554 px, left 48 / top 312, rounded 30px + gold 4px border, pops in/out over the upper third while active",
+    "captionPosition": "lower third, bottom: 360px (same as Template 01)"
+  },
+
+  "captions": {
+    "system": "particle-burst",
+    "subComposition": "compositions/captions-burst.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 900,
+    "fontSize": 64,
+    "colors": {
+      "active": "#ffffff",
+      "highlight": "#FFD700",
+      "dim": "rgba(255,255,255,0.45)"
+    },
+    "particleCount": 10,
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 22,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": "n/a — no top video in this template",
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "fullScreen": false,
+    "insert": {
+      "shape": "floating 16:9 rounded card over the upper third",
+      "x": 48,
+      "y": 312,
+      "width": 984,
+      "height": 554,
+      "borderRadius": 30,
+      "border": "4px solid #f4c20f"
+    },
+    "aspectRatio": "16:9",
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "transitionMode": { "soft": 0.26, "bridge": 0.30 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "Template 03 B-roll plays inside a 16:9 insert card — generate clips at aspect_ratio 16:9, resolution 720p, generate_audio false."
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA/follow-card, punch on punchlines, riser before reveals). mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate01": "Only ONE source video (bottom = the talking head). There is no top.mp4 / screen recording. V88_PLAYBOOK Step 7 trims bottom only — skip the parallel top trim. Everything else is identical.",
+    "differenceFromTemplate02": "Same single full-screen face video, but B-roll does NOT cover the frame — it plays inside a floating 16:9 insert card over the upper third. B-roll is generated at 16:9 (not 9:16), and add-broll.py emits .top-insert cards instead of .fullscreen-media clips."
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "input": "(none yet — first job pending)",
+    "output": "(none yet)",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}
