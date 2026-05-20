@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)
 ![Node](https://img.shields.io/badge/Node-18%2B-339933)
 ![STT](https://img.shields.io/badge/STT-ElevenLabs%20Scribe%20v2-orange)
-![templates](https://img.shields.io/badge/templates-1-lightgrey)
+![templates](https://img.shields.io/badge/templates-2-lightgrey)
 
 Multi-template HyperFrames video production. Each template is a reusable pattern (aspect ratio, layout, caption style). Each job is one rendered video.
 

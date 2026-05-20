@@ -1,0 +1,97 @@
+{
+  "id": "02-fullscreen-vertical-burst",
+  "version": "v1",
+  "createdAt": "2026-05-20",
+  "name": "Full-screen Vertical with Particle-Burst Captions",
+  "description": "Single talking-head video filling the entire 1080x1920 vertical frame, with kinetic particle-burst Thai captions and full-screen B-roll inserts. No top frame, no circle crop — the face video and every B-roll clip cover the whole screen.",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "fallback bg.png (rarely visible — the face video covers it)",
+    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
+    "broll": "full-screen 1080x1920 inserts, object-fit cover, replace the whole frame while active",
+    "captionPosition": "lower third, bottom: 360px (same as Template 01)"
+  },
+
+  "captions": {
+    "system": "particle-burst",
+    "subComposition": "compositions/captions-burst.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 900,
+    "fontSize": 64,
+    "colors": {
+      "active": "#ffffff",
+      "highlight": "#FFD700",
+      "dim": "rgba(255,255,255,0.45)"
+    },
+    "particleCount": 10,
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 22,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": "n/a — no top video in this template",
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "fullScreen": true,
+    "aspectRatio": "9:16",
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "Template 02 B-roll fills the whole frame — generate clips at aspect_ratio 9:16, resolution 720p, generate_audio false."
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate01": "Only ONE source video (bottom = the talking head). There is no top.mp4 / screen recording. V88_PLAYBOOK Step 7 trims bottom only — skip the parallel top trim. Everything else is identical."
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "input": "(none yet — first job pending)",
+    "output": "(none yet)",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}

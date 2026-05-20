@@ -4,10 +4,18 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 
 ## Comparison
 
-| #  | Template                    | Aspect       | Use case                                   | Caption style       | Status        |
-| -- | --------------------------- | ------------ | ------------------------------------------ | ------------------- | ------------- |
-| 01 | stacked-vertical-burst      | 1080×1920    | BIZDRIVE talking-head + screen + B-roll    | particle burst + gold | ⭐ **locked v88** |
-| 02 | _starter_                   | -            | (skeleton for new templates)               | -                   | template       |
+| #  | Template                    | Aspect       | Use case                                          | Caption style         | Status            |
+| -- | --------------------------- | ------------ | ------------------------------------------------- | --------------------- | ----------------- |
+| 01 | stacked-vertical-burst      | 1080×1920    | talking-head + screen recording + B-roll (stacked) | particle burst + gold | ⭐ **locked v88** |
+| 02 | fullscreen-vertical-burst   | 1080×1920    | single talking-head full-screen + full-screen B-roll | particle burst + gold | ✅ ready (2026-05-20) |
+| _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
+
+### 01 vs 02 — which to pick
+
+- **Template 01** — you have TWO videos: a screen recording AND a face cam. Screen
+  goes in the top frame, face in the bottom circle.
+- **Template 02** — you have ONE video: just the talking head. It fills the whole
+  screen; B-roll cutaways also fill the whole screen.
 
 ## When to add a new template
 
