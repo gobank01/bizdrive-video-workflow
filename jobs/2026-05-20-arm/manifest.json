@@ -1,0 +1,13 @@
+{
+  "id": "2026-05-20-arm",
+  "template": "02-fullscreen-vertical-burst",
+  "createdAt": "2026-05-20",
+  "status": "scaffolded",
+  "source": {
+    "rawSlug": "2026-05-20-arm",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png"
+  },
+  "notes": "Follow templates/_shared/docs/V88_PLAYBOOK.md to run the pipeline."
+}

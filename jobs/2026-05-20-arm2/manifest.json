@@ -1,0 +1,13 @@
+{
+  "id": "2026-05-20-arm2",
+  "template": "03-fullscreen-top-insert-burst",
+  "createdAt": "2026-05-20",
+  "status": "rendered",
+  "source": {
+    "rawSlug": "2026-05-20-arm2",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png"
+  },
+  "notes": "Rendered with Template 03 (fullscreen-top-insert-burst). output/finals/final.mp4 = visual + speech_polished + BGM mixkit-480-curiosity 6% + 5 SFX. 9arm follow card in the last 4.5s. No B-roll top-insert (source already has a burned-in title)."
+}
