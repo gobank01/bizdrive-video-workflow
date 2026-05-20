@@ -1,0 +1,28 @@
+{
+  "name": "v88 SFX library",
+  "version": "v1",
+  "createdAt": "2026-05-20",
+  "note": "Curated sound-effect set shared by every template. The agent picks context-matched SFX per job and lists them in the job's sfx-plan.json. v88 rule: at most 5 SFX per clip, ~1 per 12s, context-matched. Mixed by scripts/mix-sfx.py.",
+  "rule": {
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5
+  },
+  "sfx": [
+    { "name": "whoosh-soft",    "file": "whoosh-soft.mp3",    "category": "transition", "durationSec": 0.74, "peakDb": -0.6, "use": "quick, light topic change or caption swipe" },
+    { "name": "whoosh-common",  "file": "whoosh-common.mp3",  "category": "transition", "durationSec": 1.99, "peakDb": 0.0,  "use": "general-purpose transition between segments" },
+    { "name": "whoosh-fast",    "file": "whoosh-fast.mp3",    "category": "transition", "durationSec": 3.17, "peakDb": -4.2, "use": "fast move with a longer tail" },
+    { "name": "whoosh-big",     "file": "whoosh-big.mp3",     "category": "transition", "durationSec": 5.65, "peakDb": 0.0,  "use": "big, dramatic scene change" },
+    { "name": "swoosh-bassy",   "file": "swoosh-bassy.mp3",   "category": "transition", "durationSec": 6.05, "peakDb": -0.4, "use": "bassy swoosh that rides under a topic turn" },
+    { "name": "punch",          "file": "punch.mp3",          "category": "impact",     "durationSec": 0.91, "peakDb": -1.4, "use": "punchline, single hard emphasis hit" },
+    { "name": "boom",           "file": "boom.wav",           "category": "impact",     "durationSec": 6.50, "peakDb": 0.0,  "use": "heavy, dramatic reveal or statement" },
+    { "name": "ding",           "file": "ding.mp3",           "category": "notification", "durationSec": 2.14, "peakDb": -7.2, "use": "CTA, follow-card slide-in, key reveal" },
+    { "name": "camera-shutter", "file": "camera-shutter.mp3", "category": "notification", "durationSec": 1.01, "peakDb": -5.2, "use": "screenshot / snapshot / photo moment" },
+    { "name": "riser",          "file": "riser.wav",          "category": "build-up",   "durationSec": 2.31, "peakDb": -3.3, "use": "tension build right before a reveal or punchline" },
+    { "name": "cash-register",  "file": "cash-register.mp3",  "category": "special",    "durationSec": 2.48, "peakDb": -4.9, "use": "money / profit / sales / pricing moment" },
+    { "name": "dramatic-sting", "file": "dramatic-sting.mp3", "category": "special",    "durationSec": 5.12, "peakDb": 0.0,  "use": "comedic dun-dun-dunnn tension beat" },
+    { "name": "glitch",         "file": "glitch.mp3",         "category": "special",    "durationSec": 1.40, "peakDb": -1.4, "use": "tech / glitch / digital accent" }
+  ]
+}

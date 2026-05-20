@@ -69,6 +69,19 @@
     "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
   },
 
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA/follow-card, punch on punchlines, riser before reveals). mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+  },
+
   "pipeline": {
     "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
     "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",

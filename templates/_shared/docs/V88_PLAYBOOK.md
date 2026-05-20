@@ -285,29 +285,48 @@ npx --yes hyperframes@0.6.25 render \
 
 Watch for the `sparse keyframes` warning — apply_edits.py re-encodes segments but uses `-c copy` at the concat step, so the final masters inherit segment GOP. The warning is cosmetic for our pipeline; if you see frame freezing at scrub time, re-encode masters with `-g 30 -keyint_min 30`.
 
-### Step 14 — Mux polished speech + BGM 5%
+### Step 14 — Final audio: polished speech + BGM + context SFX
+
+The final audio mux is **one script** — `scripts/mix-sfx.py` — driven by a
+per-job `assets/intermediates/sfx-plan.json`.
+
+**SFX rule (v88) — every clip gets sound effects, kept sparse:**
+
+- **At most 5 SFX per clip.** Hard cap.
+- Roughly **1 SFX per 12s** of final video — fewer for clips under 60s.
+- SFX starts **≥ 4s apart** and inside `[0, duration]`.
+- **Every SFX is context-matched** to the beat it lands on — a whoosh on a
+  topic turn, a `ding` on a CTA / follow-card, a `punch` on a punchline, a
+  `riser` before a reveal, `cash-register` on a money beat, etc.
+- Pick from the shared library: `templates/_shared/sfx/sfx-library.json`
+  (13 SFX, categorised). In a job workspace it is symlinked at `assets/sfx/`.
 
 ```bash
-# Mux speech
-ffmpeg -y \
-  -i ../preview-<JOB>/<JOB>-visual.mp4 \
-  -i assets/<JOB>/speech_polished.wav \
-  -map 0:v:0 -map 1:a:0 \
-  -c:v copy -c:a aac -b:a 192k -ar 48000 \
-  -t <DURATION> \
-  -movflags +faststart \
-  ../preview-<JOB>/<JOB>-no-bgm.mp4
-
-# Select BGM (or pick manually from bgm-library/mixkit-stock-v50.json)
+# 1. Pick BGM (unchanged — or pick manually from bgm-library/mixkit-stock-v50.json)
 npm run select:bgm -- --title "..." --transcript assets/<JOB>/transcript/raw-elevenlabs.json
 
-# Mix BGM at 5%
-npm run mix:bgm -- \
-  --voice ../preview-<JOB>/<JOB>-no-bgm.mp4 \
-  --bgm assets/bgm/stock/mixkit/<PICKED-FILE>.mp3 \
-  --output ../preview-<JOB>/<JOB>-final.mp4 \
-  --gain-percent 5
+# 2. Write assets/intermediates/sfx-plan.json — context-matched, <= 5 SFX:
+#    {
+#      "duration": <DURATION>,
+#      "visual": "../output/finals/visual.mp4",
+#      "speech": "assets/intermediates/speech_polished.wav",
+#      "bgm": "assets/bgm/stock/mixkit/<PICKED-FILE>.mp3",
+#      "bgmGainPercent": 6,
+#      "sfx": [
+#        { "file": "whoosh-soft", "at": 0.1,  "note": "opening hook" },
+#        { "file": "ding",        "at": 60.9, "note": "follow-card slide-in" }
+#      ]
+#    }
+
+# 3. Mix the final audio (enforces the SFX rule, auto-levels each SFX, limits the sum)
+python3 scripts/mix-sfx.py
+#    -> ../output/finals/no-bgm.mp4   speech only (frame-lock QA reference)
+#    -> ../output/finals/final.mp4    speech + BGM + SFX  (the deliverable)
 ```
+
+`mix-sfx.py` rejects a plan that breaks the SFX rule (>5, clumped, out of
+range), auto-normalises each SFX to a consistent accent level (target -5 dBFS
+peak), sums the mix (`amix normalize=0`) and runs `alimiter` so it never clips.
 
 ### Step 15 — Final QA
 
@@ -344,9 +363,10 @@ Frame count after BGM mix MUST equal frame count before. Audio duration metadata
 | 9 — Transcript | Edited-timeline transcript | `assets/<JOB>/transcript/raw-elevenlabs.json` |
 | 10 — Captions | Post-processed groups | `assets/<JOB>/transcript/caption-groups.json` |
 | 11 — Composition | Burst captions | `compositions/captions-burst.html` |
-| 13 — MP4 | Visual-only render | `../preview-<JOB>/<JOB>-visual.mp4` |
-| 14 — MP4 | No-BGM mux | `../preview-<JOB>/<JOB>-no-bgm.mp4` |
-| 14 — MP4 | **Final** | `../preview-<JOB>/<JOB>-final.mp4` ⭐ |
+| 13 — MP4 | Visual-only render | `output/finals/visual.mp4` |
+| 14 — Plan | SFX plan (≤5, context-matched) | `assets/intermediates/sfx-plan.json` |
+| 14 — MP4 | No-BGM mux | `output/finals/no-bgm.mp4` |
+| 14 — MP4 | **Final** (speech + BGM + SFX) | `output/finals/final.mp4` ⭐ |
 | 15 — QA | Timestamp sheet | `reports/<JOB>/timestamps/timestamp-qa-sheet.jpg` |
 
 ---

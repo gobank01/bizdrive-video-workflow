@@ -169,6 +169,7 @@ mkdir -p "$WS/assets"
 ln -sf "../../intermediates" "$WS/assets/intermediates"
 ln -sf "../../../../templates/_shared/broll" "$WS/assets/broll"
 ln -sf "../../../../templates/_shared/bgm" "$WS/assets/bgm"
+ln -sf "../../../../templates/_shared/sfx" "$WS/assets/sfx"
 ln -sf "../../input" "$WS/assets/input"
 
 echo ""
