@@ -22,8 +22,9 @@ bash tools/setup.sh                       # installs deps + Silero VAD + .env
 # then edit templates/_shared/env/.env — add your ElevenLabs + OpenRouter keys
 ```
 
-Then follow [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer for
-`sample-pack-v88.zip` to run the golden test.
+In a hurry? **[QUICKSTART.md](QUICKSTART.md)** is the one-page version.
+Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
+for `sample-pack-v88.zip` to run the golden test.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
