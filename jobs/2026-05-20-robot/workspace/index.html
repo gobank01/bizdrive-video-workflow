@@ -1,0 +1,95 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@800;900&family=Inter:wght@800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      .clip { position: absolute; }
+      .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+      .video-frame { overflow: hidden; background: #000; border: 4px solid transparent; background: linear-gradient(#02040d, #02040d) padding-box, linear-gradient(135deg, #ffec7a 0%, #ffd93d 28%, rgba(244,194,15,.95) 56%, rgba(184,134,11,.9) 78%, #ffec7a 100%) border-box; box-shadow: 0 10px 26px rgba(0,0,0,.38), 0 0 22px rgba(244,194,15,.28), inset 0 0 14px rgba(255,217,61,.12); z-index: 2; }
+      .top-frame-shell { position: absolute; left: 0; top: 198.9px; width: 1080px; height: 607.5px; border-radius: 30px; }
+      .top-media { position: absolute; left: 4px; top: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 26px; background: #000; object-fit: contain; object-position: 50% 50%; transform-origin: center center; will-change: transform, object-position, opacity, filter; z-index: 1; }
+      .bottom-frame { left: 50%; top: 846.4px; width: 607.5px; height: 607.5px; border-radius: 50%; transform: translateX(-50%); object-fit: cover; }
+      .broll-frame { object-fit: cover; object-position: 50% 50%; opacity: 0; visibility: hidden; filter: brightness(.98) contrast(1.02) saturate(1.02); z-index: 4; }
+      .subtitle-cue { left: 60px; right: 60px; top: 1490px; height: 160px; color: #fff; display: flex; align-items: center; justify-content: center; font-family: "IBM Plex Sans Thai", "Inter", sans-serif; font-weight: 800; line-height: 1; letter-spacing: -0.01em; text-align: center; z-index: 7; }
+      .caption-box { display: inline-flex; align-items: center; justify-content: center; max-width: 92%; padding: 18px 36px; border: 1px solid rgba(244,194,15,.35); border-radius: 20px; background: linear-gradient(180deg, rgba(10,22,64,.78), rgba(8,16,50,.88)); backdrop-filter: blur(8px); box-shadow: 0 10px 28px rgba(0,0,0,.55), inset 0 0 18px rgba(244,194,15,.05); text-shadow: 0 4px 20px rgba(0,0,0,.85), 0 0 30px rgba(0,0,0,.7); white-space: nowrap; }
+      .cap-xl .caption-box { font-size: 100px; }
+      .cap-lg .caption-box { font-size: 84px; }
+      .cap-md .caption-box { font-size: 60px; }
+      .cap-sm .caption-box { font-size: 50px; }
+      .gold { display: inline-block; margin: 0 .08em; padding: 0 .02em; font-family: "Inter", "IBM Plex Sans Thai", sans-serif; font-weight: 900; line-height: 1.25; vertical-align: baseline; transform-origin: center center; background: linear-gradient(180deg, #ffd93d 0%, #f4c20f 50%, #b8860b 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; color: transparent; text-shadow: 0 4px 20px rgba(244,194,15,.35); }
+      .caption-box > .gold:first-child { margin-left: 0; }
+      .caption-box > .gold:last-child { margin-right: 0; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="65.212667" data-width="1080" data-height="1920">
+      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="65.212667" data-track-index="0" />
+      <div id="topFrameShell" class="video-frame top-frame-shell">
+        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="65.212667" data-track-index="1" data-motion-kind="slow-top-inner-zoom" data-motion-duration="65.212667" data-volume="0" muted playsinline></video>
+
+        <video id="broll01" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll-seedance15/robot-broll-01.mp4" data-start="10.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="50% 51%" data-pan-to="50% 49%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="4" data-volume="0" muted playsinline></video>
+
+        <video id="broll02" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll-seedance15/robot-broll-02.mp4" data-start="25.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="51% 50%" data-pan-to="49% 50%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="5" data-volume="0" muted playsinline></video>
+
+        <video id="broll03" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll-seedance15/robot-broll-03.mp4" data-start="42.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="49% 50%" data-pan-to="51% 50%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="6" data-volume="0" muted playsinline></video>
+
+        <video id="broll04" class="clip top-media broll-frame" data-layout-allow-overflow="true" src="assets/intermediates/broll-seedance15/robot-broll-04.mp4" data-start="55.000" data-duration="3" data-media-start="0" data-transition-mode="soft" data-transition-in="0.22" data-transition-out="0.22" data-pan-from="50% 49%" data-pan-to="50% 51%" data-motion-kind="slow-broll-inner-zoom" data-motion-duration="3" data-track-index="7" data-volume="0" muted playsinline></video>
+
+      </div>
+      <video id="bottomVideo" class="clip video-frame bottom-frame" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="65.212667" data-track-index="2" data-volume="0" muted playsinline></video>
+
+      <div id="captions-mount" class="clip" data-composition-id="captions-burst" data-composition-src="compositions/captions-burst.html" data-start="0" data-duration="65.212667" data-track-index="3" data-width="1080" data-height="1920"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const compositionDuration = 65.212667;
+      tl.from("#topVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.set("#topVideo", { scale: 1, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
+      tl.to("#topVideo", { scale: 1.018, duration: compositionDuration / 2, ease: "sine.inOut" }, 0);
+      tl.to("#topVideo", { scale: 1.006, duration: compositionDuration / 2, ease: "sine.inOut" }, compositionDuration / 2);
+
+      document.querySelectorAll(".broll-frame").forEach((clip) => {
+        const start = Number(clip.dataset.start || 0);
+        const duration = Number(clip.dataset.duration || 0);
+        const mode = clip.dataset.transitionMode || "soft";
+        const fallbackDuration = mode === "bridge" ? 0.26 : 0.22;
+        const inDuration = Math.min(Number(clip.dataset.transitionIn || fallbackDuration), duration / 3);
+        const outDuration = Math.min(Number(clip.dataset.transitionOut || fallbackDuration), duration / 3);
+        const exitStart = Math.max(start + duration - outDuration, start + inDuration);
+        const panFrom = clip.dataset.panFrom || "50% 50%";
+        const panTo = clip.dataset.panTo || "50% 50%";
+        const enterEase = mode === "bridge" ? "power3.out" : "power2.out";
+        const exitEase = mode === "bridge" ? "power2.inOut" : "power2.out";
+        tl.set(clip, { autoAlpha: 0, scale: 1.006, objectPosition: panFrom, transformOrigin: "center center", filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
+        tl.fromTo(clip, { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, { autoAlpha: 1, filter: "brightness(1) contrast(1.03) saturate(1.04)", duration: inDuration, ease: enterEase, immediateRender: false }, start);
+        tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { scale: 1.022, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase }, exitStart);
+      });
+
+      document.querySelectorAll(".subtitle-cue").forEach((cue) => {
+        const start = Number(cue.dataset.start || 0);
+        const duration = Number(cue.dataset.duration || 0);
+        const enterDuration = Math.min(0.4, Math.max(0.2, duration * 0.3));
+        const exitStart = Math.max(start + duration - 0.3, start + enterDuration);
+        tl.fromTo(cue, { y: 30, scale: 0.92, opacity: 0 }, { y: 0, scale: 1, opacity: 1, duration: enterDuration, ease: "back.out(1.7)", immediateRender: false }, start);
+        const goldTargets = Array.from(cue.querySelectorAll(".gold"));
+        if (goldTargets.length > 0) {
+          tl.fromTo(goldTargets, { scale: 0.7, opacity: 0, transformOrigin: "center center" }, { scale: 1, opacity: 1, duration: 0.25, ease: "back.out(2)", transformOrigin: "center center", immediateRender: false }, start + 0.1);
+        }
+        tl.to(cue, { opacity: 0, duration: 0.3, ease: "power2.out" }, exitStart);
+      });
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

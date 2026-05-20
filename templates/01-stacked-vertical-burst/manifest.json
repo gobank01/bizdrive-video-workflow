@@ -64,7 +64,9 @@
     "minSpacingSeconds": 6,
     "minTopFootageBetweenInserts": 3,
     "transitionMode": { "soft": 0.22, "bridge": 0.26 },
-    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-veo-3.1-lite", "openrouter-kling-v3.0-std"]
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "seedance-1-5-pro chosen 2026-05-20: ~$0.02 per 3-5s clip at 720p, ~10x cheaper than seedance-2.0-fast at equivalent quality. Tested on the robot job. Use resolution 720p, 16:9, generate_audio false.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
   },
 
   "pipeline": {

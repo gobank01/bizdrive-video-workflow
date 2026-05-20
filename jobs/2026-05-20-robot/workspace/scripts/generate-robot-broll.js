@@ -1,40 +1,42 @@
-const API_KEY = process.env.OPENROUTER_API_KEY;
+#!/usr/bin/env node
+// Generate 4 B-roll clips for the robot job via OpenRouter (with model fallback).
+// Save to jobs/2026-05-20-robot/intermediates/broll/robot-broll-NN.mp4
 
-// Model order: cheapest viable first. seedance-1-5-pro is ~10x cheaper than
-// seedance-2.0-fast at equivalent 720p quality (tested 2026-05-20 on the robot job).
-// Fallbacks kick in only if the primary model is busy/unavailable.
-const models = ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"];
+const API_KEY = process.env.OPENROUTER_API_KEY;
+const models = ["bytedance/seedance-2.0-fast", "alibaba/wan-2.6", "alibaba/wan-2.7"];
+
+// Output directory must already exist (mkdir before running)
+const OUT_DIR = "../intermediates/broll";
 
 const brolls = [
   {
-    output: "assets/broll/v23-broll-01.mp4",
+    output: `${OUT_DIR}/robot-broll-01.mp4`,
+    slot: "10s — hook reveal",
     prompt:
-      "cinematic 16:9 b-roll of an AI stock analysis dashboard, glowing financial charts, modern blue and gold interface, no text, no people",
+      "cinematic close-up of an industrial humanoid robot working in a modern automated factory, photorealistic detail, blue and gold rim lighting, slow motion, no people, no text, no logos, 16:9",
   },
   {
-    output: "assets/broll/v23-broll-02.mp4",
+    output: `${OUT_DIR}/robot-broll-02.mp4`,
+    slot: "25s — Frank robot introduction",
     prompt:
-      "cinematic 16:9 b-roll of passive dividend income and long-term investing, premium finance visuals, blue and gold lighting, no text, no people",
+      "cinematic shot of a sleek humanoid robot assembling small parts on a conveyor belt, sparks flying, focused mechanical precision, modern industrial environment, cinematic 16:9, no humans, no text, no logos",
   },
   {
-    output: "assets/broll/v23-broll-03.mp4",
+    output: `${OUT_DIR}/robot-broll-03.mp4`,
+    slot: "42s — 24/7 stats",
     prompt:
-      "cinematic 16:9 b-roll of a single AI prompt transforming into a clean financial web app, elegant interface, blue and gold lighting, no text, no people",
+      "time-lapse of multiple humanoid robots working in a vast warehouse, synchronized motion, 24/7 operation feel, blue LED lighting, photorealistic, cinematic 16:9, no text, no people, no logos",
   },
   {
-    output: "assets/broll/v23-broll-04.mp4",
+    output: `${OUT_DIR}/robot-broll-04.mp4`,
+    slot: "55s — CTA learn AI",
     prompt:
-      "cinematic 16:9 b-roll of investing in United States stocks, Wall Street market screens, premium blue and gold finance look, no text, no people",
-  },
-  {
-    output: "assets/broll/v23-broll-05.mp4",
-    prompt:
-      "cinematic 16:9 b-roll of S&P 500 market chart and dividend investing concept, premium finance look, blue and gold lighting, no text, no people",
+      "cinematic shot of a glowing AI neural network hologram with a robotic arm in soft focus background, modern lab setting, blue and gold lighting, photorealistic, 16:9, no text, no humans, no logos",
   },
 ];
 
 if (!API_KEY) {
-  console.error("OPENROUTER_API_KEY is missing. Export it before running this script.");
+  console.error("OPENROUTER_API_KEY is missing. Add it to .env before running.");
   process.exit(1);
 }
 
@@ -45,7 +47,7 @@ async function submit(model, prompt) {
       Authorization: `Bearer ${API_KEY}`,
       "Content-Type": "application/json",
       "HTTP-Referer": "https://bizdrive.local",
-      "X-Title": "Bizdrive HyperFrames B-roll",
+      "X-Title": "Bizdrive HyperFrames B-roll (Robot)",
     },
     body: JSON.stringify({
       model,
@@ -56,7 +58,6 @@ async function submit(model, prompt) {
       generate_audio: false,
     }),
   });
-
   const body = await response.json().catch(() => ({}));
   if (!response.ok) {
     throw new Error(`${response.status} ${response.statusText}: ${JSON.stringify(body)}`);
@@ -66,13 +67,10 @@ async function submit(model, prompt) {
 
 async function poll(pollingUrl) {
   for (let attempt = 1; attempt <= 80; attempt += 1) {
-    await new Promise((resolve) => setTimeout(resolve, 15000));
-    const response = await fetch(pollingUrl, {
-      headers: { Authorization: `Bearer ${API_KEY}` },
-    });
+    await new Promise((r) => setTimeout(r, 15000));
+    const response = await fetch(pollingUrl, { headers: { Authorization: `Bearer ${API_KEY}` } });
     const body = await response.json();
-    console.log(`poll ${attempt}: ${body.status}`);
-
+    console.log(`  poll ${attempt}: ${body.status}`);
     if (body.status === "completed") return body;
     if (["failed", "cancelled", "expired"].includes(body.status)) {
       throw new Error(`video job ${body.status}: ${JSON.stringify(body.error || body)}`);
@@ -100,24 +98,24 @@ async function exists(path) {
 }
 
 for (const [index, broll] of brolls.entries()) {
+  console.log(`\n=== Slot ${index + 1}: ${broll.slot} ===`);
   if (process.env.FORCE_BROLL !== "1" && (await exists(broll.output))) {
-    console.log(`slot ${index + 1}: exists, skipping ${broll.output}`);
+    console.log(`  exists, skipping ${broll.output}`);
     continue;
   }
-
   let done = false;
   for (const model of models) {
     try {
-      console.log(`slot ${index + 1}: submitting ${model}`);
+      console.log(`  submitting model: ${model}`);
       const submitted = await submit(model, broll.prompt);
       const completed = await poll(submitted.polling_url);
       const url = completed.unsigned_urls?.[0] || `https://openrouter.ai/api/v1/videos/${completed.id}/content?index=0`;
       await download(url, broll.output);
-      console.log(`slot ${index + 1}: saved ${broll.output}`);
+      console.log(`  ✓ saved ${broll.output}`);
       done = true;
       break;
     } catch (error) {
-      console.error(`slot ${index + 1}: ${model} failed: ${error.message}`);
+      console.error(`  ✗ ${model} failed: ${error.message}`);
     }
   }
   if (!done) process.exitCode = 1;

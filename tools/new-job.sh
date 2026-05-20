@@ -169,7 +169,7 @@ mkdir -p "$WS/assets"
 ln -sf "../../intermediates" "$WS/assets/intermediates"
 ln -sf "../../../../templates/_shared/broll" "$WS/assets/broll"
 ln -sf "../../../../templates/_shared/bgm" "$WS/assets/bgm"
-ln -sf "../input" "$WS/assets/input"
+ln -sf "../../input" "$WS/assets/input"
 
 echo ""
 echo "✓ Job scaffolded: $JOB_DIR"

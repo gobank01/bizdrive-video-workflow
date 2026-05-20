@@ -1,9 +1,6 @@
 const API_KEY = process.env.OPENROUTER_API_KEY;
 
-// Model order: cheapest viable first. seedance-1-5-pro is ~10x cheaper than
-// seedance-2.0-fast at equivalent 720p quality (tested 2026-05-20 on the robot job).
-// Fallbacks kick in only if the primary model is busy/unavailable.
-const models = ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"];
+const models = ["bytedance/seedance-2.0-fast", "alibaba/wan-2.6", "alibaba/wan-2.7"];
 
 const brolls = [
   {
