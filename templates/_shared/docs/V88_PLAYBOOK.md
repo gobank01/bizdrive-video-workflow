@@ -360,15 +360,16 @@ npm run qa:timestamps -- --input ../preview-<JOB>/<JOB>-final.mp4 --output-dir r
 
 Frame count after BGM mix MUST equal frame count before. Audio duration metadata may drift ±25ms — that's container overhead, not frame loss.
 
-### Step 16 — Thumbnail (BIZDRIVE default)
+### Step 16 — Thumbnail + cover embed (MANDATORY)
 
-Every job gets a default thumbnail — BG + a big 3-line headline (the BIZDRIVE
-logo and the "ให้ AI ทำงานแทนคุณ" bottom strip are already baked into `bg.png`).
-Template-agnostic — the same `scripts/build-thumbnail.py` ships in all
-templates (01-05).
+**Every clip ships a thumbnail — this step is NOT optional.** Whenever a clip is
+edited, it gets a default thumbnail (BG + a big 3-line headline; the BIZDRIVE
+logo and the "ให้ AI ทำงานแทนคุณ" bottom strip are already baked into `bg.png`),
+and that thumbnail is embedded into the clip as cover art. Template-agnostic —
+the same `scripts/build-thumbnail.py` ships in all templates (01-05).
 
 ```bash
-# Run from the job workspace. Args: <main> <hero> <sub>
+# Run from the job workspace, AFTER Step 14 (final mux). Args: <main> <hero> <sub>
 python3 scripts/build-thumbnail.py "<main line>" "<hero line>" "<sub line>"
 # e.g.
 python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใช้อยู่ระดับไหน?"
@@ -376,11 +377,15 @@ python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใ
 
 - **main** — white top line. **hero** — big gold-gradient line, keep it short
   (a number / brand / 2-3 words — it is the eye-catcher). **sub** — soft-blue
-  bottom line.
-- Each line auto-fits to width, so any length stays on one line.
-- Output: `output/finals/thumbnail.png` (1080×1920) ⭐ + a re-snapshottable
-  `thumbnail/` project and `thumbnail/thumbnail.json` (the 3 lines on record).
-- Rendered with `hyperframes snapshot` (one PNG frame) — no video render needed.
+  bottom line. Each line auto-fits to width.
+- The PNG is built with `hyperframes snapshot` (one frame — no video render).
+- **Output is named after the clip, NOT "final":**
+  - `output/finals/<clip>.png` — the thumbnail (1080×1920)
+  - `output/finals/<clip>.mp4` — the deliverable clip with the thumbnail
+    embedded as cover art (`attached_pic`); `final.mp4` is replaced by it.
+  - `<clip>` = the job id from `manifest.json` (e.g. `2026-05-21-ai-3-levels`).
+- A re-snapshottable `thumbnail/` project + `thumbnail/thumbnail.json` (the 3
+  lines on record) are left in the workspace (gitignored).
 
 ---
 
@@ -402,9 +407,10 @@ python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใ
 | 13 — MP4 | Visual-only render | `output/finals/visual.mp4` |
 | 14 — Plan | SFX plan (≤5, context-matched) | `assets/intermediates/sfx-plan.json` |
 | 14 — MP4 | No-BGM mux | `output/finals/no-bgm.mp4` |
-| 14 — MP4 | **Final** (speech + BGM + SFX) | `output/finals/final.mp4` ⭐ |
+| 14 — MP4 | Final mux (speech + BGM + SFX) — superseded by Step 16 | `output/finals/final.mp4` |
 | 15 — QA | Timestamp sheet | `reports/<JOB>/timestamps/timestamp-qa-sheet.jpg` |
-| 16 — Thumbnail | **Default thumbnail** (BG + headline) | `output/finals/thumbnail.png` ⭐ |
+| 16 — Thumbnail | Default thumbnail (BG + headline) | `output/finals/<clip>.png` ⭐ |
+| 16 — MP4 | **Deliverable clip** (final + embedded cover art) | `output/finals/<clip>.mp4` ⭐ |
 
 ---
 

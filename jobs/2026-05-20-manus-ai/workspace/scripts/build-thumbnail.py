@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
-"""V88 — BIZDRIVE default thumbnail (BG + 3-line headline).
+"""V88 Step 16 — BIZDRIVE thumbnail (BG + 3-line headline) + embed as cover.
 
-Shared across every template (01-05). Run from a job workspace:
+MANDATORY for every clip. Shared across all templates (01-05). Run from a job
+workspace, after the final render/mux:
 
     python3 scripts/build-thumbnail.py "<main>" "<hero>" "<sub>"
 
@@ -9,21 +10,15 @@ Example:
     python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใช้อยู่ระดับไหน?"
 
 What it does:
-  - Reads the job background  assets/input/bg.png  (BIZDRIVE logo top +
-    "ให้ AI ทำงานแทนคุณ" bottom are already baked into it).
-  - Composites a 1080x1920 headline in the empty blue band — white MAIN
-    line, gold-gradient HERO line, soft-blue SUB line, each auto-fitted to
-    width so any length stays on one line.
-  - Snapshots it to a PNG via `hyperframes snapshot`.
+  1. Reads the job background  assets/input/bg.png  and composites a
+     1080x1920 headline (white MAIN / gold-gradient HERO / soft SUB,
+     auto-fit to width), snapshotted via `hyperframes snapshot`.
+  2. Writes the thumbnail PNG to  output/finals/<clip>.png
+  3. If  output/finals/final.mp4  exists, embeds the PNG into it as cover
+     art (attached_pic) and writes  output/finals/<clip>.mp4 , then removes
+     final.mp4 — the clip-named file is the deliverable (NOT "final.mp4").
 
-Output:
-  thumbnail/                  small HyperFrames project (re-snapshottable)
-  thumbnail/thumbnail.json    the 3 lines on record
-  ../output/finals/thumbnail.png   ⭐ the deliverable
-
-Notes:
-  - "hero" is the big gold line — keep it short (a number, a brand, 2-3 words).
-  - To re-style, edit TEMPLATE below; the layout is template-agnostic.
+<clip> = the job id (from ../manifest.json) or the job folder name.
 """
 
 import argparse
@@ -34,9 +29,10 @@ import sys
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]            # job workspace
+JOB_DIR = ROOT.parent                                 # jobs/<clip>/
 THUMB_DIR = ROOT / "thumbnail"
 BG_DEFAULT = ROOT / "assets/input/bg.png"
-OUT_DEFAULT = ROOT / "../output/finals/thumbnail.png"
+FINALS = (ROOT / "../output/finals").resolve()
 
 HYPERFRAMES_JSON = {
     "$schema": "https://hyperframes.heygen.com/schema/hyperframes.json",
@@ -100,7 +96,6 @@ TEMPLATE = """<!doctype html>
     <script>
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = gsap.timeline({ paused: true });
-      // auto-fit each headline line to the 980px content width
       function fitThumb() {
         var maxW = 980;
         [["t-main", 132], ["t-hero", 232], ["t-sub", 78]].forEach(function (p) {
@@ -123,13 +118,24 @@ def esc(text: str) -> str:
     return text.replace("&", "&amp;").replace("<", "&lt;").replace(">", "&gt;")
 
 
+def clip_name() -> str:
+    mf = JOB_DIR / "manifest.json"
+    if mf.exists():
+        try:
+            cid = json.loads(mf.read_text(encoding="utf-8")).get("id")
+            if cid:
+                return str(cid).strip()
+        except Exception:
+            pass
+    return JOB_DIR.name
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("main", help="top line — white")
     ap.add_argument("hero", help="big gold line — keep short (number / brand / 2-3 words)")
     ap.add_argument("sub", help="bottom line — soft blue")
     ap.add_argument("--bg", default=str(BG_DEFAULT), help="background image (default: assets/input/bg.png)")
-    ap.add_argument("--out", default=str(OUT_DEFAULT), help="output PNG path")
     args = ap.parse_args()
 
     bg = Path(args.bg)
@@ -137,13 +143,19 @@ def main():
         print(f"✗ background not found: {bg}", file=sys.stderr)
         sys.exit(1)
 
+    clip = clip_name()
+    FINALS.mkdir(parents=True, exist_ok=True)
+    png_out = FINALS / f"{clip}.png"
+
+    # --- 1. build the thumbnail PNG via hyperframes snapshot ---
     THUMB_DIR.mkdir(parents=True, exist_ok=True)
     shutil.copy(bg, THUMB_DIR / "bg.png")
     (THUMB_DIR / "hyperframes.json").write_text(json.dumps(HYPERFRAMES_JSON, indent=2))
     (THUMB_DIR / "meta.json").write_text(json.dumps(
         {"id": "thumbnail", "name": "thumbnail", "createdAt": "2026-05-21T00:00:00.000Z"}, indent=2))
     (THUMB_DIR / "thumbnail.json").write_text(json.dumps(
-        {"main": args.main, "hero": args.hero, "sub": args.sub}, ensure_ascii=False, indent=2))
+        {"clip": clip, "main": args.main, "hero": args.hero, "sub": args.sub},
+        ensure_ascii=False, indent=2))
     (THUMB_DIR / "index.html").write_text(
         TEMPLATE.replace("__MAIN__", esc(args.main))
                 .replace("__HERO__", esc(args.hero))
@@ -151,18 +163,28 @@ def main():
         encoding="utf-8")
 
     print(f"  thumbnail headline: {args.main} / {args.hero} / {args.sub}")
-    subprocess.run(
-        ["npx", "--yes", "hyperframes@0.6.25", "snapshot", str(THUMB_DIR), "--at", "0"],
-        check=True)
-
+    subprocess.run(["npx", "--yes", "hyperframes@0.6.25", "snapshot", str(THUMB_DIR), "--at", "0"],
+                   check=True)
     snap = THUMB_DIR / "snapshots" / "frame-00-at-0.0s.png"
     if not snap.exists():
         print("✗ snapshot did not produce a PNG", file=sys.stderr)
         sys.exit(1)
-    out = Path(args.out)
-    out.parent.mkdir(parents=True, exist_ok=True)
-    shutil.copy(snap, out)
-    print(f"  ✓ thumbnail → {out}")
+    shutil.copy(snap, png_out)
+    print(f"  ✓ thumbnail PNG → {png_out.name}")
+
+    # --- 2. embed the thumbnail into the final clip as cover art ---
+    final_mp4 = FINALS / "final.mp4"
+    if final_mp4.exists():
+        clip_mp4 = FINALS / f"{clip}.mp4"
+        subprocess.run(
+            ["ffmpeg", "-y", "-v", "error", "-i", str(final_mp4), "-i", str(png_out),
+             "-map", "0:v", "-map", "0:a", "-map", "1", "-c", "copy", "-c:v:1", "mjpeg",
+             "-disposition:v:1", "attached_pic", "-movflags", "+faststart", str(clip_mp4)],
+            check=True)
+        final_mp4.unlink()
+        print(f"  ✓ cover embedded → {clip_mp4.name}  (final.mp4 replaced)")
+    else:
+        print(f"  ⚠ no output/finals/final.mp4 — PNG built, run after the final mux to embed it")
 
 
 if __name__ == "__main__":
