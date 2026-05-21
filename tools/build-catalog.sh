@@ -7,7 +7,9 @@
 #      file, otherwise the newest jobs/* built on that template that has a
 #      finals/final.mp4;
 #   2. extracts a thumbnail (40% through the clip) → templates/NN-*/thumbnail.jpg;
-#   3. writes a markdown gallery row from the template's manifest.json.
+#   3. builds templates/NN-*/mockup.svg — the thumbnail with labelled layout
+#      callouts (via tools/build-mockups.py);
+#   4. writes a markdown gallery row from the template's manifest.json.
 #
 # Run it any time you add or change a template:
 #   bash tools/build-catalog.sh
@@ -19,7 +21,8 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 CATALOG="templates/CATALOG.md"
-THUMB_W=340
+THUMB_W=340       # extracted thumbnail width (px)
+MOCKUP_W=480      # mockup.svg display width in the catalog (px)
 
 command -v ffmpeg  >/dev/null || { echo "✗ ffmpeg not found"  >&2; exit 1; }
 command -v ffprobe >/dev/null || { echo "✗ ffprobe not found" >&2; exit 1; }
@@ -37,8 +40,8 @@ hand.** Regenerate after adding or changing a template:
 bash tools/build-catalog.sh
 \`\`\`
 
-Each thumbnail is pulled from that template's reference render (or its newest
-job). Start a clip with \`bash tools/new-job.sh <NN> <slug> --raw <raw-slug>\`.
+Each preview is the template's reference render (or its newest job) with the
+layout zones labelled. Start a clip with \`bash tools/new-job.sh <NN> <slug> --raw <raw-slug>\`.
 
 _Last built: $(date '+%Y-%m-%d %H:%M')_
 
@@ -86,22 +89,28 @@ for jm in glob.glob('jobs/*/manifest.json'):
         if os.path.isfile(f): cands.append(f)
 print(sorted(cands)[-1] if cands else '')")
 
-  # Thumbnail
+  # Thumbnail + labelled mockup
   thumb_rel=""
+  mockup_rel=""
   if [ -n "$src" ] && [ -f "$src" ]; then
     dur=$(ffprobe -v error -show_entries format=duration -of csv=p=0 "$src" 2>/dev/null || echo 0)
     ts=$(python3 -c "print(round(max(float('$dur'),0.1)*0.4,2))")
     if ffmpeg -y -v error -ss "$ts" -i "$src" -vframes 1 -vf "scale=${THUMB_W}:-1" -q:v 3 "$tdir/thumbnail.jpg" 2>/dev/null; then
       thumb_rel="$tname/thumbnail.jpg"
+      if python3 tools/build-mockups.py "$tdir" >/dev/null 2>&1 && [ -f "$tdir/mockup.svg" ]; then
+        mockup_rel="$tname/mockup.svg"
+      fi
       echo "  ✓ $tname  ← $(basename "$(dirname "$(dirname "$(dirname "$src")")")")"
     fi
   fi
   if [ -z "$thumb_rel" ]; then
-    echo "  ⚠ $tname  (no render yet — no thumbnail)"
+    echo "  ⚠ $tname  (no render yet — no preview)"
   fi
 
-  # Markdown row
-  if [ -n "$thumb_rel" ]; then
+  # Markdown row — prefer the labelled mockup, fall back to the plain thumbnail
+  if [ -n "$mockup_rel" ]; then
+    cell_img="<img src=\"$mockup_rel\" width=\"$MOCKUP_W\" />"
+  elif [ -n "$thumb_rel" ]; then
     cell_img="<img src=\"$thumb_rel\" width=\"$THUMB_W\" />"
   else
     cell_img="_(no render yet)_"
