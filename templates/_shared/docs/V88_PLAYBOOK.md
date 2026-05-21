@@ -185,12 +185,26 @@ ffmpeg -y -i assets/<JOB>/bottom_visual_master.mp4 -vn -ac 1 -ar 48000 \
 # Read measured_I / measured_TP / measured_LRA / measured_thresh / target_offset from the JSON, then plug into pass 2:
 
 # Pass 2: apply with measured values + apad
+# NOTE: alimiter MUST have level=disabled — its default level=enabled
+# auto-normalises the peak back to 0 dBFS and clips the WAV. See MISTAKES.md #7.
 ffmpeg -y -i assets/<JOB>/bottom_visual_master.mp4 -vn -ac 1 -ar 48000 \
-  -af "highpass=f=80,lowpass=f=12000,afftdn=nf=-25,agate=threshold=-40dB:ratio=2:attack=20:release=200,acompressor=threshold=-18dB:ratio=3:attack=5:release=50,loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=<I>:measured_TP=<TP>:measured_LRA=<LRA>:measured_thresh=<THRESH>:offset=<OFFSET>:linear=true:print_format=summary,alimiter=limit=-1.5dB,apad=pad_dur=0.5" \
+  -af "highpass=f=80,lowpass=f=12000,afftdn=nf=-25,agate=threshold=-40dB:ratio=2:attack=20:release=200,acompressor=threshold=-18dB:ratio=3:attack=5:release=50,loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=<I>:measured_TP=<TP>:measured_LRA=<LRA>:measured_thresh=<THRESH>:offset=<OFFSET>:linear=true:print_format=summary,alimiter=limit=-1.5dB:level=disabled,apad=pad_dur=0.5" \
   -c:a pcm_s16le assets/<JOB>/speech_polished.wav
+
+# Verify the result: astats "Peak level dB" MUST be <= -1.0 (not 0.0).
+ffmpeg -nostats -i assets/<JOB>/speech_polished.wav -af "astats=metadata=1" -f null - 2>&1 | grep "Peak level dB" | head -1
+ffmpeg -nostats -i assets/<JOB>/speech_polished.wav -af "ebur128=peak=true" -f null - 2>&1 | grep -A 14 "Summary:" | grep -E "I:|Peak:"
+
+# With level=disabled the linear loudnorm is true-peak-limited and often lands
+# ~-19 LUFS (below the -18 floor). If so, run ONE corrective 2-pass dynamic
+# loudnorm on the WAV — analyze, then apply with the measured values:
+#   ffmpeg -nostats -i speech_polished.wav -af "loudnorm=I=-16:TP=-1.5:LRA=11:print_format=json" -f null -
+#   ffmpeg -y -i speech_polished.wav -af "loudnorm=I=-16:TP=-1.5:LRA=11:measured_I=<I>:measured_TP=<TP>:measured_LRA=<LRA>:measured_thresh=<THRESH>:offset=<OFFSET>:print_format=summary,alimiter=limit=-1.5dB:level=disabled" -ar 48000 -c:a pcm_s16le speech_polished.wav
+# It lands ~-17.5 LUFS / TP -1.5. loudnorm cannot reach -16 — the TP -1.5
+# ceiling caps it, and -17.x is the genuine ceiling for this content.
 ```
 
-Verify: `-16 ± 2 LUFS`, true peak ≤ -1.5 dBTP. Polished WAV will be slightly longer than the video master (apad pads ~500ms) — mux step trims to video duration.
+Verify: `-16 ± 2 LUFS` (expect ~-17.5; the TP ceiling caps it there), true peak ≤ -1.5 dBTP, **sample peak ≤ -1.0 dBFS (no clipping)**. Polished WAV will be slightly longer than the video master (apad pads ~500ms) — mux step trims to video duration.
 
 ### Step 9 — Re-transcribe polished audio on edited timeline
 
@@ -346,6 +360,28 @@ npm run qa:timestamps -- --input ../preview-<JOB>/<JOB>-final.mp4 --output-dir r
 
 Frame count after BGM mix MUST equal frame count before. Audio duration metadata may drift ±25ms — that's container overhead, not frame loss.
 
+### Step 16 — Thumbnail (BIZDRIVE default)
+
+Every job gets a default thumbnail — BG + a big 3-line headline (the BIZDRIVE
+logo and the "ให้ AI ทำงานแทนคุณ" bottom strip are already baked into `bg.png`).
+Template-agnostic — the same `scripts/build-thumbnail.py` ships in all
+templates (01-05).
+
+```bash
+# Run from the job workspace. Args: <main> <hero> <sub>
+python3 scripts/build-thumbnail.py "<main line>" "<hero line>" "<sub line>"
+# e.g.
+python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใช้อยู่ระดับไหน?"
+```
+
+- **main** — white top line. **hero** — big gold-gradient line, keep it short
+  (a number / brand / 2-3 words — it is the eye-catcher). **sub** — soft-blue
+  bottom line.
+- Each line auto-fits to width, so any length stays on one line.
+- Output: `output/finals/thumbnail.png` (1080×1920) ⭐ + a re-snapshottable
+  `thumbnail/` project and `thumbnail/thumbnail.json` (the 3 lines on record).
+- Rendered with `hyperframes snapshot` (one PNG frame) — no video render needed.
+
 ---
 
 ## 5. File map (every artifact, by Phase)
@@ -368,6 +404,7 @@ Frame count after BGM mix MUST equal frame count before. Audio duration metadata
 | 14 — MP4 | No-BGM mux | `output/finals/no-bgm.mp4` |
 | 14 — MP4 | **Final** (speech + BGM + SFX) | `output/finals/final.mp4` ⭐ |
 | 15 — QA | Timestamp sheet | `reports/<JOB>/timestamps/timestamp-qa-sheet.jpg` |
+| 16 — Thumbnail | **Default thumbnail** (BG + headline) | `output/finals/thumbnail.png` ⭐ |
 
 ---
 
@@ -405,7 +442,7 @@ The Python and Node scripts have zero AI dependencies — they're deterministic 
 ## 8. Known v88 imperfections (document, don't pretend they're fixed)
 
 1. **Sparse keyframes warning on visual masters** — `apply_edits.py` concat uses `-c copy`, so per-segment GOP (≥8s) carries through. Cosmetic in our render but should re-encode with `-g 30 -keyint_min 30` if a downstream tool needs scrubbing.
-2. **Loudness lands at -17.5 LUFS** (not -16) — 2-pass loudnorm has small drift with our chain. Acceptable for social media.
+2. **Loudness lands at -17.5 LUFS** (not -16) — the `TP=-1.5` true-peak ceiling caps how loud the polished WAV can get; -17.x is the genuine ceiling, not drift. Acceptable for social media. (Step 8 now uses `alimiter=...:level=disabled` + a corrective loudnorm pass — see MISTAKES.md #7.)
 3. **BGM mix duration +21 ms** — audio container metadata adjusts, video frames unchanged.
 4. **3-5 silences >0.5s in the polished WAV** — from Silero VAD's `pad_ms=200`. Reduce to `100` for tighter cuts at cost of clipping particle endings.
 5. **Caption boundary on Thai sub-word splits** — when ElevenLabs returns a long word entry (e.g. `ยี่สิบปีสามสิบปี`), the post-process subagent splits it with char-proportional interpolation; expect ~300 ms timing drift on those tokens.

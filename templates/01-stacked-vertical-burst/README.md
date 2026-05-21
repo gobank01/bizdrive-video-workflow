@@ -63,6 +63,7 @@ bash tools/new-job.sh 01 my-clip-slug
 13. HyperFrames render → visual.mp4
 14. Mux speech + BGM 5% → final.mp4
 15. Final QA (frame lock, silence, loudness, timestamp sheet)
+16. Build thumbnail: build-thumbnail.py "<main>" "<hero>" "<sub>" → output/finals/thumbnail.png
 ```
 
 The workspace `index.html` already uses generic per-job paths (`assets/input/`,

@@ -128,7 +128,7 @@ Raw clip: ${RAW_SLUG:-"(not linked — drop files manually into input/)"}
 
 1. ${RAW_SLUG:+input/ already symlinked to raw-media/${RAW_SLUG}/.}${RAW_SLUG:-Drop input files into input/{top.mp4, bottom.mp4, bg.png}.}
 
-2. Follow the 15-step playbook:
+2. Follow the 16-step playbook:
    - Open \`templates/_shared/docs/V88_PLAYBOOK.md\`
    - Replace \`<JOB>\` with \`${JOB_NAME}\`
    - Replace \`<INPUT_DIR>\` with \`jobs/${JOB_NAME}/input\`
@@ -139,6 +139,9 @@ Raw clip: ${RAW_SLUG:-"(not linked — drop files manually into input/)"}
    - Slot defaults for ${TEMPLATE_NAME}: \`${TEMPLATE_DIR#$REPO_ROOT/}/prompts/\`
 
 4. Render in \`workspace/\` (already set up with symlinks).
+
+5. Thumbnail (Step 16): \`python3 scripts/build-thumbnail.py "<main>" "<hero>" "<sub>"\`
+   → \`output/finals/thumbnail.png\` (BG + big headline; logo/bottom baked into bg.png)
 EOF
 
 # --- Build workspace ---

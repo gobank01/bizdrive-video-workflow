@@ -33,6 +33,7 @@ jobs/*/intermediates/
 jobs/*/output/
 jobs/*/workspace/.tmp/
 jobs/*/workspace/node_modules/
+jobs/*/workspace/thumbnail/
 
 # Per-template asset folders (large media)
 templates/_shared/bgm/

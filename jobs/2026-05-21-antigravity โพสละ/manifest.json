@@ -1,0 +1,79 @@
+{
+  "id": "2026-05-21-antigravity",
+  "template": "01-stacked-vertical-burst",
+  "templateVersion": "v88",
+  "createdAt": "2026-05-21",
+  "completedAt": "2026-05-21",
+  "status": "rendered",
+
+  "source": {
+    "rawSlug": "2026-05-21-antigravity",
+    "origin": "/Users/gobank01/Desktop/BizDrive/Class เรียน/VDO/ออกจาก Studio/Antigravity",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png (Template 01 default BIZDRIVE bg)",
+    "sourceDuration": 95.296
+  },
+
+  "trimAuto": {
+    "method": "editorial-pass",
+    "segments": [[0.92, 23.759], [24.88, 95.296]],
+    "reasoning": "Clean single-take demo, no retakes/false starts. Dropped only the [เสียงคลิกคีย์บอร์ด] non-speech region; VAD jump-cut removed internal typing/breath silences."
+  },
+
+  "output": {
+    "final": "output/finals/final.mp4",
+    "visual": "output/finals/visual.mp4",
+    "noBgm": "output/finals/no-bgm.mp4",
+    "duration": 89.833,
+    "videoFrames": 2695,
+    "fileSizeMB": 55.7,
+    "resolution": "1080x1920"
+  },
+
+  "rerun": {
+    "date": "2026-05-21",
+    "reason": "User replaced bottom.mp4 with a higher-bitrate re-export (174MB -> 193MB) of the same Antigravity demo.",
+    "changed": "Full pipeline re-run from transcription; B-roll clips (4) reused.",
+    "captionFix": "STT misheard 'Claude' as 'Cod' on the new export — corrected in caption-groups."
+  },
+
+  "captions": {
+    "groupCount": 52,
+    "goldTokens": 23,
+    "whiteTokens": 82,
+    "subComposition": "workspace/compositions/captions-burst.html"
+  },
+
+  "broll": {
+    "inserts": 4,
+    "source": "OpenRouter bytedance/seedance-1-5-pro (720p, themed)",
+    "positions": [8, 29, 47, 83],
+    "themes": ["AI neural network", "developer workspace", "speed tunnel", "floating web-design cards"]
+  },
+
+  "bgm": {
+    "track": "Mixkit-480 Curiosity",
+    "gainPercent": 5
+  },
+
+  "sfx": {
+    "count": 5,
+    "plan": "intermediates/sfx-plan.json",
+    "picks": ["whoosh-soft@0.1", "whoosh-common@22.7", "riser@45.0", "ding@62.8", "punch@79.6"]
+  },
+
+  "qa": {
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "wcagPass": 9,
+    "layoutIssues": 0,
+    "loudness": -16.4,
+    "truePeak": -0.6,
+    "silenceOverHalfSecond": 1,
+    "frameLockPreserved": true,
+    "lipSyncMasterProof": "top/bottom masters frame-identical (2677 frames each)"
+  },
+
+  "notes": "Antigravity tech-demo clip — พี่แบงค์ ทดลอง Google Antigravity (AI IDE) + Gemini 3.5 Flash สั่งสร้างเว็บไซต์ร้านคาเฟ่. Rendered with the full v88 Template 01 pipeline. True peak -0.6 dBTP is the standard output of mix-sfx.py (alimiter limit=0.95) — below 0, no clipping."
+}

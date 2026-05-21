@@ -102,6 +102,35 @@ SUBAGENT_PROMPTS.md Section A includes the hard rule:
 Do NOT remove this clause when porting.
 ```
 
+### 7. Step 8 audio-polish alimiter clipped the polished WAV at 0 dBFS
+
+What happened (2026-05-21, antigravity job):
+```text
+The V88_PLAYBOOK Step 8 pass-2 chain ended with `alimiter=limit=-1.5dB`.
+The polished WAV came out with ~25 samples clipped at full scale —
+astats "Peak level dB: 0.000000", ebur128 true peak 0.0 dBFS.
+```
+
+Why:
+```text
+ffmpeg's alimiter has `level` ENABLED by default — it auto-normalises the
+output peak back to 0 dBFS, undoing the -1.5 dB limit. The playbook chain
+as originally written produces a clipping master on every job.
+```
+
+Fix (locked 2026-05-21):
+```text
+Pass 2 must end with `alimiter=limit=-1.5dB:level=disabled`.
+With level disabled the linear loudnorm is true-peak-limited and often lands
+~-19 LUFS (below the -18 floor) — that is expected. Then run ONE corrective
+2-pass dynamic loudnorm on the WAV (analyze → apply measured values +
+alimiter=limit=-1.5dB:level=disabled). It lands ~-17.5 LUFS / TP -1.5.
+loudnorm cannot reach -16: the TP -1.5 ceiling caps it, and -17.x is the
+genuine ceiling for talking-head content.
+ALWAYS verify the polished WAV: astats "Peak level dB" must be <= -1.0, not 0.0.
+V88_PLAYBOOK.md Step 8 is updated with the corrected chain + verify commands.
+```
+
 ## v67 Locked Lessons
 
 ### 1. v65 เปิดคลิปด้วยเสียงที่ไม่ใช่เสียงพูดจริง

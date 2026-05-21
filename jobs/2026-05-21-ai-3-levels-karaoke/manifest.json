@@ -1,0 +1,60 @@
+{
+  "id": "2026-05-21-ai-3-levels-karaoke",
+  "template": "05-stacked-vertical-karaoke",
+  "templateVersion": "v88",
+  "createdAt": "2026-05-21",
+  "completedAt": "2026-05-21",
+  "status": "rendered",
+
+  "source": {
+    "rawSlug": "2026-05-21-ai-3-levels",
+    "origin": "/Users/gobank01/Desktop/BizDrive/Class เรียน/VDO/ออกจาก Studio/AI 3 ระดับ",
+    "sourceDuration": 119.104
+  },
+
+  "reusedFrom": {
+    "job": "2026-05-21-ai-3-levels",
+    "reused": "top/bottom visual masters, polished audio, caption-groups.json, 4 B-roll clips, sfx-plan.json — caption-groups.json is renderer-agnostic and shared between T01 burst and T05 karaoke",
+    "note": "Karaoke re-cut of the Template 01 ai-3-levels job. No editorial / transcription / B-roll re-run — only the Step 11 caption build differs (build-highlight-captions.py instead of build-burst-captions.py)."
+  },
+
+  "output": {
+    "final": "output/finals/final.mp4",
+    "visual": "output/finals/visual.mp4",
+    "noBgm": "output/finals/no-bgm.mp4",
+    "duration": 116.821,
+    "videoFrames": 3504,
+    "fileSizeMB": 70.8,
+    "resolution": "1080x1920"
+  },
+
+  "captions": {
+    "system": "caption-highlight (BIZDRIVE Karaoke — red/gold word-sweep box)",
+    "groupCount": 59,
+    "wordCount": 126,
+    "goldTokens": 28,
+    "subComposition": "workspace/compositions/captions-highlight.html"
+  },
+
+  "broll": {
+    "inserts": 4,
+    "source": "reused from 2026-05-21-ai-3-levels (OpenRouter seedance-1-5-pro, themed)",
+    "positions": [9, 40, 76, 104]
+  },
+
+  "bgm": { "track": "Mixkit-1167 Close Up", "gainPercent": 5 },
+  "sfx": { "count": 5, "picks": ["whoosh-soft@0.1", "whoosh-common@35.5", "riser@64.0", "ding@79.5", "punch@103.7"] },
+
+  "qa": {
+    "lintErrors": 0,
+    "lintWarnings": 0,
+    "wcagPass": 11,
+    "layoutIssues": 0,
+    "loudness": -16.1,
+    "truePeak": -0.4,
+    "silenceOverHalfSecond": 0,
+    "frameLockPreserved": true
+  },
+
+  "notes": "Template 05 karaoke version of the '3 ระดับของ AI' explainer — same stacked layout as the T01 job, captions swapped to CapCut-style red/gold word-sweep."
+}
