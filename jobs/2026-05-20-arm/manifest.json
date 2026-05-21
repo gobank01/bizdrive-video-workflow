@@ -1,13 +1,13 @@
 {
   "id": "2026-05-20-arm",
-  "template": "02-fullscreen-vertical-burst",
+  "template": "04-fullscreen-vertical-karaoke",
   "createdAt": "2026-05-20",
-  "status": "scaffolded",
+  "status": "rendered",
   "source": {
     "rawSlug": "2026-05-20-arm",
-    "top": "input/top.mp4",
     "bottom": "input/bottom.mp4",
-    "bg": "input/bg.png"
+    "bg": "input/bg.png (Template 02/04 default fallback)"
   },
-  "notes": "Follow templates/_shared/docs/V88_PLAYBOOK.md to run the pipeline."
+  "output": "output/finals/final.mp4 — 1080x1920, 105.55s, 3166 frames, -17.5 LUFS",
+  "notes": "Reference job for Template 04 (fullscreen-vertical-karaoke). First full v88 run with the BIZDRIVE Karaoke caption system. Scaffolded from Template 02 then captions swapped to caption-highlight; Template 04 was extracted from this job. No B-roll."
 }

@@ -1,0 +1,14 @@
+{
+  "id": "2026-05-21-claude-package",
+  "template": "05-stacked-vertical-karaoke",
+  "createdAt": "2026-05-21",
+  "status": "rendered",
+  "source": {
+    "rawSlug": "2026-05-21-claude-package",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png"
+  },
+  "notes": "Follow templates/_shared/docs/V88_PLAYBOOK.md to run the pipeline.",
+  "final": "output/finals/final.mp4"
+}

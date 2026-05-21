@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }
+      #highlight { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; pointer-events: none; }
+      #hl-container { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+      .hl-group {
+        position: absolute; bottom: 330px; left: 0; width: 100%;
+        display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;
+        gap: 16px 10px; padding: 0 56px; opacity: 0; visibility: hidden;
+      }
+      .hl-word {
+        font-family: "IBM Plex Sans Thai", sans-serif; font-weight: 800;
+        font-size: 70px; color: #ffffff; display: inline-block;
+        letter-spacing: 0; line-height: 1.12; position: relative;
+        padding: 10px 20px 16px;
+        text-shadow: 0 4px 16px rgba(0,0,0,.55), 0 2px 5px rgba(0,0,0,.6);
+        transform-origin: 50% 60%; will-change: transform;
+      }
+      .hl-word-bg {
+        position: absolute; inset: 0; border-radius: 14px;
+        background: linear-gradient(135deg, #ff2d55 0%, #d11138 100%);
+        box-shadow: 0 10px 26px rgba(209,17,56,.40), inset 0 1px 0 rgba(255,255,255,.28);
+        opacity: 0; transform: scaleX(0); transform-origin: 0% 50%; z-index: -1;
+      }
+      .hl-word-bg.gold {
+        background: linear-gradient(135deg, #ffd93d 0%, #f4c20f 55%, #d99a06 100%);
+        box-shadow: 0 10px 26px rgba(244,194,15,.42), inset 0 1px 0 rgba(255,255,255,.4);
+      }
+      .hl-word-text { position: relative; z-index: 1; }
+    </style>
+  </head>
+  <body>
+    <div id="highlight" data-composition-id="captions-burst" data-timeline-locked
+         data-start="0" data-duration="105.527551" data-fps="30" data-width="1080" data-height="1920">
+      <div id="hl-container"></div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        var _fitCanvas = document.createElement("canvas");
+        var _fitCtx = _fitCanvas.getContext("2d");
+        function fitFontSize(text, baseFontSize, fontWeight, fontFamily, maxWidth) {
+          var size = baseFontSize;
+          var minSize = Math.floor(baseFontSize * 0.6);
+          while (size > minSize) {
+            _fitCtx.font = fontWeight + " " + size + "px " + fontFamily;
+            if (_fitCtx.measureText(text).width <= maxWidth) return size;
+            size -= 2;
+          }
+          return minSize;
+        }
+
+        var WORDS = [{"text": "โอเคทุกคน", "start": 0.28, "end": 0.881, "gold": false}, {"text": "วันนี้มีข่าว", "start": 0.881, "end": 1.682, "gold": false}, {"text": "น่าสนใจจาก", "start": 1.682, "end": 2.349, "gold": false}, {"text": "วงการ", "start": 2.349, "end": 2.745, "gold": false}, {"text": "AI", "start": 2.745, "end": 2.903, "gold": true}, {"text": "ก็คือ", "start": 2.903, "end": 3.299, "gold": false}, {"text": "Anthropic", "start": 3.339, "end": 4.019, "gold": true}, {"text": "เจ้าของ", "start": 4.019, "end": 4.548, "gold": false}, {"text": "AI", "start": 4.548, "end": 4.699, "gold": true}, {"text": "ชื่อดัง", "start": 4.779, "end": 5.133, "gold": false}, {"text": "Claude", "start": 5.133, "end": 5.437, "gold": true}, {"text": "Code", "start": 5.437, "end": 5.639, "gold": true}, {"text": "เนี่ย", "start": 5.659, "end": 6.059, "gold": false}, {"text": "เขาเพิ่งตีพิมพ์", "start": 6.059, "end": 7.26, "gold": false}, {"text": "รายงานของ", "start": 7.26, "end": 7.98, "gold": false}, {"text": "AI", "start": 8.119, "end": 8.207, "gold": true}, {"text": "ตัวใหม่ของ", "start": 8.207, "end": 8.647, "gold": false}, {"text": "เขาที่ชื่อว่า", "start": 8.647, "end": 9.22, "gold": false}, {"text": "Mythos", "start": 9.239, "end": 9.69, "gold": true}, {"text": "ซึ่งหลุดมา", "start": 9.69, "end": 10.443, "gold": false}, {"text": "ในข่าวบ้าง", "start": 10.443, "end": 11.195, "gold": false}, {"text": "แล้วสองสาม", "start": 11.195, "end": 11.868, "gold": false}, {"text": "วันก่อน", "start": 11.868, "end": 12.339, "gold": false}, {"text": "ที่เขาบอก", "start": 12.339, "end": 12.944, "gold": false}, {"text": "ว่าตัวเนี้ย", "start": 12.944, "end": 13.561, "gold": false}, {"text": "ตัวทีเด็ด", "start": 13.561, "end": 14.065, "gold": false}, {"text": "เลยมันเก่ง", "start": 14.065, "end": 14.626, "gold": false}, {"text": "กว่าตัว", "start": 14.626, "end": 15.063, "gold": false}, {"text": "Opus", "start": 15.063, "end": 15.313, "gold": true}, {"text": "ปัจจุบันมาก", "start": 15.313, "end": 16.0, "gold": false}, {"text": "เก่งจนขนาดที่", "start": 16.039, "end": 17.153, "gold": false}, {"text": "ว่าเราจะต้อง", "start": 17.153, "end": 18.182, "gold": false}, {"text": "ไม่เผยแพร่", "start": 18.182, "end": 19.039, "gold": false}, {"text": "ต่อสาธารณะ", "start": 19.039, "end": 19.896, "gold": false}, {"text": "เพราะว่ามัน", "start": 19.896, "end": 20.839, "gold": false}, {"text": "โหดเกิน", "start": 20.839, "end": 21.288, "gold": false}, {"text": "ในรายงานเนี่ย", "start": 21.288, "end": 22.123, "gold": false}, {"text": "เขียนความสามารถ", "start": 22.123, "end": 22.866, "gold": false}, {"text": "ไว้หลายด้านมาก", "start": 22.866, "end": 23.559, "gold": false}, {"text": "แต่ว่าด้าน", "start": 23.6, "end": 24.211, "gold": false}, {"text": "ที่ทุกคนสนใจ", "start": 24.211, "end": 24.944, "gold": false}, {"text": "กันมากที่สุด", "start": 24.944, "end": 25.677, "gold": false}, {"text": "ก็คือด้าน", "start": 25.677, "end": 26.226, "gold": false}, {"text": "ความสามารถ", "start": 26.226, "end": 26.837, "gold": false}, {"text": "ในการแฮ็ก", "start": 26.837, "end": 27.387, "gold": false}, {"text": "คอมพิวเตอร์", "start": 27.387, "end": 28.059, "gold": false}, {"text": "การเจาะระบบอ่ะ", "start": 28.279, "end": 29.277, "gold": false}, {"text": "เพราะว่ามัน", "start": 29.277, "end": 30.061, "gold": false}, {"text": "เจอช่องโหว่", "start": 30.061, "end": 30.764, "gold": false}, {"text": "ของซอฟต์แวร์", "start": 30.764, "end": 31.53, "gold": false}, {"text": "หลายตัวรวมไปถึง", "start": 31.53, "end": 32.488, "gold": false}, {"text": "ระบบปฏิบัติการ", "start": 32.488, "end": 33.382, "gold": false}, {"text": "ด้วยนะครับ", "start": 33.382, "end": 34.199, "gold": false}, {"text": "โดยการใช้", "start": 34.199, "end": 34.935, "gold": false}, {"text": "bug", "start": 34.935, "end": 35.18, "gold": false}, {"text": "ตัวเล็กๆ", "start": 35.2, "end": 35.493, "gold": false}, {"text": "ของอันนั้น", "start": 35.493, "end": 35.859, "gold": false}, {"text": "อันนี้", "start": 35.859, "end": 36.079, "gold": false}, {"text": "มาเชน", "start": 36.119, "end": 36.47, "gold": false}, {"text": "กันจนสุดท้าย", "start": 36.47, "end": 37.312, "gold": false}, {"text": "สามารถควบคุม", "start": 37.312, "end": 38.154, "gold": false}, {"text": "เครื่องได้", "start": 38.154, "end": 38.882, "gold": false}, {"text": "มันเก่งขนาดที่", "start": 38.882, "end": 39.902, "gold": false}, {"text": "ว่าเขาไม่", "start": 39.902, "end": 40.533, "gold": false}, {"text": "สามารถที่จะ", "start": 40.533, "end": 41.305, "gold": false}, {"text": "ปลดปล่อยให้", "start": 41.305, "end": 42.077, "gold": false}, {"text": "ทุกคนเอาไป", "start": 42.077, "end": 42.759, "gold": false}, {"text": "ใช้ได้", "start": 42.759, "end": 43.169, "gold": false}, {"text": "เพราะว่าเดี๋ยว", "start": 43.169, "end": 44.124, "gold": false}, {"text": "ต่อไปทุกคน", "start": 44.124, "end": 44.771, "gold": false}, {"text": "ใครจะแฮ็ก", "start": 44.771, "end": 45.352, "gold": false}, {"text": "ก็พิมพ์ๆๆๆ", "start": 45.352, "end": 45.999, "gold": false}, {"text": "แล้วก็เดี๋ยว", "start": 46.039, "end": 46.901, "gold": false}, {"text": "มันแฮ็กให้", "start": 46.901, "end": 47.619, "gold": false}, {"text": "ซึ่งปกติอ่ะ", "start": 47.719, "end": 48.314, "gold": false}, {"text": "ผมจะไม่พูด", "start": 48.314, "end": 48.854, "gold": false}, {"text": "เรื่องอะไร", "start": 48.854, "end": 49.395, "gold": false}, {"text": "แบบนี้ที่", "start": 49.395, "end": 49.882, "gold": false}, {"text": "มันดูเหมือน", "start": 49.882, "end": 50.477, "gold": false}, {"text": "กับว่าหวือหวา", "start": 50.477, "end": 51.176, "gold": false}, {"text": "โอ้มันจะมา", "start": 51.176, "end": 51.714, "gold": false}, {"text": "แล้วมันจะ", "start": 51.714, "end": 52.198, "gold": false}, {"text": "พังแล้ว", "start": 52.198, "end": 52.581, "gold": false}, {"text": "แต่ว่าครั้งนี้", "start": 52.581, "end": 53.348, "gold": false}, {"text": "เนี่ยดูเหมือนว่า", "start": 53.348, "end": 54.204, "gold": false}, {"text": "เรื่องมัน", "start": 54.204, "end": 54.685, "gold": false}, {"text": "จะมี", "start": 54.685, "end": 54.899, "gold": false}, {"text": "มูล", "start": 54.939, "end": 55.08, "gold": false}, {"text": "เว้ย", "start": 55.08, "end": 55.269, "gold": false}, {"text": "มันจะมี", "start": 55.269, "end": 55.599, "gold": false}, {"text": "AI", "start": 55.699, "end": 55.867, "gold": true}, {"text": "ตัวนึงที่", "start": 55.867, "end": 56.623, "gold": false}, {"text": "เก่งจริงๆ", "start": 56.623, "end": 57.379, "gold": false}, {"text": "แล้วก็เขา", "start": 57.419, "end": 58.299, "gold": false}, {"text": "ปล่อยให้แค่", "start": 58.299, "end": 59.375, "gold": false}, {"text": "partner", "start": 59.375, "end": 60.059, "gold": false}, {"text": "คือบริษัท", "start": 60.119, "end": 60.495, "gold": false}, {"text": "ซอฟต์แวร์", "start": 60.495, "end": 60.87, "gold": false}, {"text": "ต่างๆ", "start": 60.87, "end": 61.079, "gold": false}, {"text": "ใช้", "start": 61.119, "end": 61.25, "gold": false}, {"text": "ไม่ว่าจะเป็น", "start": 61.25, "end": 61.776, "gold": false}, {"text": "Google", "start": 61.776, "end": 62.039, "gold": true}, {"text": "Microsoft", "start": 62.099, "end": 62.594, "gold": true}, {"text": "Linux", "start": 62.594, "end": 62.869, "gold": true}, {"text": "Foundation", "start": 62.869, "end": 63.419, "gold": true}, {"text": "นั่นนู่นนี่นะ", "start": 63.479, "end": 64.42, "gold": false}, {"text": "เพื่อที่จะ", "start": 64.42, "end": 65.143, "gold": false}, {"text": "เอาไปใช้ใน", "start": 65.143, "end": 65.867, "gold": false}, {"text": "การหาช่องโหว่", "start": 65.867, "end": 66.808, "gold": false}, {"text": "ในซอฟต์แวร์", "start": 66.808, "end": 67.464, "gold": false}, {"text": "ของเขา", "start": 67.464, "end": 67.823, "gold": false}, {"text": "เขาไม่ปล่อย", "start": 67.823, "end": 68.479, "gold": false}, {"text": "public", "start": 68.5, "end": 68.897, "gold": false}, {"text": "เพราะว่านั่นแหละ", "start": 68.897, "end": 69.957, "gold": false}, {"text": "มันอันตราย", "start": 69.957, "end": 70.619, "gold": false}, {"text": "คือในรายงาน", "start": 70.68, "end": 71.303, "gold": false}, {"text": "เนี่ยเขียน", "start": 71.303, "end": 71.869, "gold": false}, {"text": "ว่าเขาเอา", "start": 71.869, "end": 72.379, "gold": false}, {"text": "AI", "start": 72.439, "end": 72.553, "gold": true}, {"text": "ตัวเนี้ยไป", "start": 72.553, "end": 73.123, "gold": false}, {"text": "ขังไว้ใน", "start": 73.123, "end": 73.579, "gold": false}, {"text": "Sandbox", "start": 73.619, "end": 74.058, "gold": true}, {"text": "ซึ่งปกติแล้ว", "start": 74.058, "end": 74.811, "gold": false}, {"text": "มันจะออกมา", "start": 74.811, "end": 75.439, "gold": false}, {"text": "ไม่ได้หรอกนะ", "start": 75.439, "end": 76.132, "gold": false}, {"text": "แต่เขาสั่งให้", "start": 76.132, "end": 76.883, "gold": false}, {"text": "AI", "start": 76.883, "end": 76.999, "gold": true}, {"text": "ตัวเนี้ยหาทาง", "start": 77.04, "end": 77.983, "gold": false}, {"text": "ออกมาให้ได้", "start": 77.983, "end": 78.781, "gold": false}, {"text": "นะแล้วก็แจ้ง", "start": 78.781, "end": 79.66, "gold": false}, {"text": "ฉันด้วย", "start": 79.66, "end": 80.173, "gold": false}, {"text": "อ่ะแล้วเขา", "start": 80.173, "end": 80.905, "gold": false}, {"text": "ก็ไปกินข้าว", "start": 80.905, "end": 81.645, "gold": false}, {"text": "ปรากฏว่าเขา", "start": 81.645, "end": 82.385, "gold": false}, {"text": "กินข้าวอยู่แล้ว", "start": 82.385, "end": 83.32, "gold": false}, {"text": "เขาได้รับ", "start": 83.32, "end": 83.88, "gold": false}, {"text": "อีเมลจาก", "start": 83.88, "end": 84.379, "gold": false}, {"text": "AI", "start": 84.5, "end": 84.592, "gold": true}, {"text": "ตัวนี้บอก", "start": 84.592, "end": 85.007, "gold": false}, {"text": "ว่าฉันออกมา", "start": 85.007, "end": 85.513, "gold": false}, {"text": "ได้แล้วนะ", "start": 85.513, "end": 86.07, "gold": false}, {"text": "ฉันทำหนึ่ง", "start": 86.07, "end": 86.689, "gold": false}, {"text": "สองสามสี่", "start": 86.689, "end": 87.246, "gold": false}, {"text": "แบบนี้", "start": 87.246, "end": 87.629, "gold": false}, {"text": "ซึ่งน่าตกใจ", "start": 87.629, "end": 88.33, "gold": false}, {"text": "มากเพราะว่าใน", "start": 88.33, "end": 89.159, "gold": false}, {"text": "Sandbox", "start": 89.22, "end": 89.609, "gold": true}, {"text": "นั้นน่ะมัน", "start": 89.609, "end": 90.165, "gold": false}, {"text": "เข้าอินเทอร์เน็ต", "start": 90.165, "end": 90.974, "gold": false}, {"text": "ไม่ได้เว้ย", "start": 90.974, "end": 91.479, "gold": false}, {"text": "แปลว่ามัน", "start": 91.5, "end": 92.093, "gold": false}, {"text": "ออกมาเสร็จ", "start": 92.093, "end": 92.751, "gold": false}, {"text": "แล้วมันก็", "start": 92.751, "end": 93.344, "gold": false}, {"text": "เชื่อมตัว", "start": 93.344, "end": 93.936, "gold": false}, {"text": "มันเองเข้ากับ", "start": 93.936, "end": 94.792, "gold": false}, {"text": "อินเทอร์เน็ต", "start": 94.792, "end": 95.582, "gold": false}, {"text": "โลกภายนอก", "start": 95.582, "end": 96.174, "gold": false}, {"text": "แล้วก็ส่ง", "start": 96.174, "end": 96.767, "gold": false}, {"text": "อีเมลมาหา", "start": 96.767, "end": 97.36, "gold": false}, {"text": "นักวิจัยตามคำสั่ง", "start": 97.36, "end": 98.479, "gold": false}, {"text": "นี่ยังดีที่", "start": 98.5, "end": 99.304, "gold": false}, {"text": "มันยังทำตาม", "start": 99.304, "end": 100.108, "gold": false}, {"text": "คำสั่งอยู่", "start": 100.108, "end": 100.839, "gold": false}, {"text": "คือพล็อตอย่าง", "start": 100.9, "end": 101.983, "gold": false}, {"text": "กับหนังไซไฟ", "start": 101.983, "end": 102.899, "gold": false}, {"text": "เอาเป็นว่า", "start": 102.919, "end": 103.4, "gold": false}, {"text": "เดี๋ยวมีโอกาส", "start": 103.4, "end": 104.025, "gold": false}, {"text": "จะเล่าให้", "start": 104.025, "end": 104.458, "gold": false}, {"text": "ฟังใน", "start": 104.458, "end": 104.675, "gold": false}, {"text": "channel", "start": 104.675, "end": 104.979, "gold": false}, {"text": "ผมครับ", "start": 105.378, "end": 105.528, "gold": false}];
+        var RAW_GROUPS = [[0, 2], [3, 5], [6, 8], [9, 11], [12, 14], [15, 17], [18, 20], [21, 23], [24, 26], [27, 29], [30, 31], [32, 34], [35, 36], [37, 38], [39, 40], [41, 43], [44, 45], [46, 47], [48, 49], [50, 51], [52, 54], [55, 57], [58, 60], [61, 62], [63, 65], [66, 68], [69, 71], [72, 73], [74, 76], [77, 78], [79, 81], [82, 83], [84, 86], [87, 89], [90, 92], [93, 95], [96, 98], [99, 101], [102, 104], [105, 106], [107, 108], [109, 111], [112, 114], [115, 117], [118, 120], [121, 123], [124, 126], [127, 128], [129, 131], [132, 133], [134, 136], [137, 139], [140, 142], [143, 145], [146, 147], [148, 149], [150, 152], [153, 154], [155, 157], [158, 159], [160, 162], [163, 164], [165, 167], [168, 169], [170, 170]];
+        var COMP_DURATION = 105.527551;
+
+        var GROUPS = RAW_GROUPS.map(function (pair, gi) {
+          var ws = pair[0], we = pair[1];
+          var nextStart = gi + 1 < RAW_GROUPS.length ? WORDS[RAW_GROUPS[gi + 1][0]].start : COMP_DURATION;
+          var gEnd = Math.min(WORDS[we].end + 0.35, nextStart - 0.04);
+          return { wordStart: ws, wordEnd: we, start: WORDS[ws].start, end: gEnd };
+        });
+
+        var container = document.getElementById("hl-container");
+        var tl = gsap.timeline({ paused: true });
+
+        GROUPS.forEach(function (g, gi) {
+          var groupWords = WORDS.slice(g.wordStart, g.wordEnd + 1);
+          var grp = document.createElement("div");
+          grp.className = "hl-group";
+          grp.id = "hl-grp-" + gi;
+
+          var groupText = groupWords.map(function (w) { return w.text; }).join(" ");
+          var computedSize = fitFontSize(groupText, 70, "800", "IBM Plex Sans Thai", 1820);
+
+          groupWords.forEach(function (w, i) {
+            var wi = g.wordStart + i;
+            var wordEl = document.createElement("span");
+            wordEl.className = "hl-word";
+            wordEl.id = "hl-w-" + wi;
+            wordEl.style.fontSize = computedSize + "px";
+            var bgEl = document.createElement("span");
+            bgEl.className = "hl-word-bg" + (w.gold ? " gold" : "");
+            bgEl.id = "hl-bg-" + wi;
+            var textEl = document.createElement("span");
+            textEl.className = "hl-word-text";
+            textEl.textContent = w.text;
+            wordEl.appendChild(bgEl);
+            wordEl.appendChild(textEl);
+            grp.appendChild(wordEl);
+          });
+          container.appendChild(grp);
+
+          // group enter: fade-up lift
+          tl.set(grp, { visibility: "visible" }, g.start);
+          tl.fromTo(grp, { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.18, ease: "power3.out" }, g.start);
+
+          groupWords.forEach(function (w, i) {
+            var wi = g.wordStart + i;
+            var bgEl = document.getElementById("hl-bg-" + wi);
+            var wordEl = document.getElementById("hl-w-" + wi);
+            var textEl = wordEl.querySelector(".hl-word-text");
+            var isGold = bgEl.classList.contains("gold");
+            // box sweeps in from the left as the word is spoken
+            tl.to(bgEl, { opacity: 1, scaleX: 1, duration: 0.16, ease: "power3.out" }, w.start);
+            // word pops, then settles
+            tl.to(wordEl, { scale: 1.07, duration: 0.14, ease: "back.out(2.4)" }, w.start);
+            tl.to(wordEl, { scale: 1.0, duration: 0.18, ease: "power2.out" }, w.start + 0.14);
+            // gold box needs dark text for contrast — flip text colour with the box
+            if (isGold) {
+              tl.to(textEl, { color: "#1c1206", duration: 0.1, ease: "power2.out" }, w.start);
+              tl.to(textEl, { color: "#ffffff", duration: 0.1, ease: "power2.in" }, w.end);
+            }
+            // box exits with a slight overshoot
+            tl.to(bgEl, { opacity: 0, scaleX: 1.03, duration: 0.12, ease: "power2.in" }, w.end);
+            tl.set(bgEl, { scaleX: 0 }, w.end + 0.12);
+          });
+
+          tl.to(grp, { opacity: 0, duration: 0.14, ease: "power2.in" }, g.end - 0.14);
+          tl.set(grp, { opacity: 0, visibility: "hidden" }, g.end);
+        });
+
+        tl.seek(0);
+        window.__timelines["captions-burst"] = tl;
+      })();
+    </script>
+  </body>
+</html>
