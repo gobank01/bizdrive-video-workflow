@@ -2,7 +2,7 @@
   "id": "2026-05-21-claude-package",
   "template": "05-stacked-vertical-karaoke",
   "createdAt": "2026-05-21",
-  "status": "rendered",
+  "status": "delivered",
   "source": {
     "rawSlug": "2026-05-21-claude-package",
     "top": "input/top.mp4",
@@ -10,5 +10,6 @@
     "bg": "input/bg.png"
   },
   "notes": "Follow templates/_shared/docs/V88_PLAYBOOK.md to run the pipeline.",
-  "final": "output/finals/final.mp4"
+  "final": "output/finals/2026-05-21-claude-package.mp4",
+  "thumbnail": "output/finals/2026-05-21-claude-package.png"
 }
