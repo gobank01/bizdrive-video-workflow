@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- No font link here: index.html has no text. All caption text + fonts
+         live in the captions-highlight sub-composition. -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      Template 04 — fullscreen-vertical-karaoke.
+      Same full-screen layout as Template 02, but captions use the BIZDRIVE
+      Karaoke style (caption-highlight): a coloured box sweeps word-by-word in
+      sync with the speech — red box for normal words, gold box for brand /
+      number / tech tokens.
+      The bottom (talking-head) video fills the whole 1080x1920 frame.
+      B-roll inserts also fill the whole frame. No top frame, no circle crop.
+      Paths are per-job generic:
+        assets/input/bg.png                            (fallback background)
+        assets/intermediates/bottom_visual_master.mp4  (job face master, full-screen)
+        assets/intermediates/broll/broll-NN.mp4        (job B-roll, added by scripts/add-broll.py)
+      A new job's workspace already has these symlinks (see tools/new-job.sh),
+      so no path-fixing is needed. Per-job build:
+        python3 scripts/set-duration.py <seconds>
+        python3 scripts/build-highlight-captions.py <caption-groups.json> compositions/captions-highlight.html <seconds> 330
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      .clip { position: absolute; }
+      .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+      /* Full-screen media: the face video and every B-roll clip fill the frame. */
+      .fullscreen-media { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform-origin: center center; will-change: transform, object-position, opacity, filter; }
+      #bottomVideo { z-index: 1; }
+      .broll-frame { object-fit: cover; object-position: 50% 50%; opacity: 0; visibility: hidden; filter: brightness(.98) contrast(1.02) saturate(1.02); z-index: 4; }
+      /* Lower-third scrim — keeps the karaoke captions readable over any full-screen footage. */
+      .caption-scrim { left: 0; right: 0; bottom: 0; width: 100%; height: 760px; background: linear-gradient(180deg, rgba(0,0,0,0) 0%, rgba(0,0,0,.58) 42%, rgba(0,0,0,.9) 100%); z-index: 9; pointer-events: none; }
+      /* All caption styling + animation lives in the captions-highlight sub-composition. */
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
+      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="103.561333" data-track-index="0" />
+
+      <video id="bottomVideo" class="clip fullscreen-media" data-layout-allow-overflow="true" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-motion-kind="slow-fullscreen-inner-zoom" data-motion-duration="103.561333" data-volume="0" muted playsinline></video>
+
+      <!-- B-roll clips are inserted here per job by scripts/add-broll.py
+           (each becomes a full-screen timed clip on tracks 4+). -->
+
+      <div id="captionScrim" class="clip caption-scrim" data-start="0" data-duration="103.561333" data-track-index="9"></div>
+
+      <div id="captions-mount" class="clip" style="z-index: 10;" data-composition-id="captions-highlight" data-composition-src="compositions/captions-highlight.html" data-start="0" data-duration="103.561333" data-track-index="3" data-width="1080" data-height="1920"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const compositionDuration = 103.561333;
+
+      // Full-screen face video — gentle continuous inner zoom.
+      tl.from("#bottomVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.set("#bottomVideo", { scale: 1.0, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
+      tl.to("#bottomVideo", { scale: 1.05, duration: compositionDuration, ease: "sine.inOut" }, 0);
+
+      // B-roll — full-screen inserts with soft transitions + slow inner motion.
+      document.querySelectorAll(".broll-frame").forEach((clip) => {
+        const start = Number(clip.dataset.start || 0);
+        const duration = Number(clip.dataset.duration || 0);
+        const mode = clip.dataset.transitionMode || "soft";
+        const fallbackDuration = mode === "bridge" ? 0.26 : 0.22;
+        const inDuration = Math.min(Number(clip.dataset.transitionIn || fallbackDuration), duration / 3);
+        const outDuration = Math.min(Number(clip.dataset.transitionOut || fallbackDuration), duration / 3);
+        const exitStart = Math.max(start + duration - outDuration, start + inDuration);
+        const panFrom = clip.dataset.panFrom || "50% 50%";
+        const panTo = clip.dataset.panTo || "50% 50%";
+        const enterEase = mode === "bridge" ? "power3.out" : "power2.out";
+        const exitEase = mode === "bridge" ? "power2.inOut" : "power2.out";
+        tl.set(clip, { autoAlpha: 0, scale: 1.02, objectPosition: panFrom, transformOrigin: "center center", filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
+        tl.fromTo(clip, { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, { autoAlpha: 1, filter: "brightness(1) contrast(1.03) saturate(1.04)", duration: inDuration, ease: enterEase, immediateRender: false }, start);
+        tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { scale: 1.06, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase }, exitStart);
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

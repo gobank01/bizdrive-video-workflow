@@ -1,0 +1,117 @@
+{
+  "id": "04-fullscreen-vertical-karaoke",
+  "version": "v1",
+  "createdAt": "2026-05-21",
+  "name": "Full-screen Vertical with Karaoke Highlight Captions",
+  "description": "Single talking-head video filling the entire 1080x1920 vertical frame, with BIZDRIVE Karaoke captions — a coloured box sweeps word-by-word in sync with the speech (red box for normal words, gold box for brand / number / tech tokens). Same full-screen layout and B-roll as Template 02; only the caption system differs.",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "fallback bg.png (rarely visible — the face video covers it)",
+    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
+    "broll": "full-screen 1080x1920 inserts, object-fit cover, replace the whole frame while active",
+    "captionPosition": "lower third, bottom: 330px (build-highlight-captions.py arg 4)"
+  },
+
+  "captions": {
+    "system": "caption-highlight",
+    "style": "BIZDRIVE Karaoke",
+    "subComposition": "compositions/captions-highlight.html",
+    "buildScript": "scripts/build-highlight-captions.py",
+    "referenceComponent": "compositions/components/caption-highlight.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 800,
+    "fontSize": "70px, auto-fit down if a group overflows",
+    "mechanic": "a coloured box sweeps word-by-word (scaleX 0->1, transform-origin left) in sync with speech; the spoken word pops scale 1.0 -> 1.07 then settles",
+    "colors": {
+      "text": "#ffffff — flips to #1c1206 (dark) while a gold box is active, for WCAG contrast",
+      "normalBox": "linear-gradient 135deg #ff2d55 -> #d11138 (red)",
+      "goldBox": "linear-gradient 135deg #ffd93d -> #f4c20f -> #d99a06 (gold)"
+    },
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 32,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms — these get the gold box",
+    "perWordTiming": "interpolated inside each group by character weight (caption-groups.json carries group start/end + token text+gold only)"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": "n/a — no top video in this template",
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "mixNote": "mix BGM with ffmpeg amix normalize=0 so the voice keeps its polished level (plain amix halves it)",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "fullScreen": true,
+    "aspectRatio": "9:16",
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "Template 04 B-roll fills the whole frame — generate clips at aspect_ratio 9:16, resolution 720p, generate_audio false."
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Optional. At most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA, punch on punchlines)."
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate02": "Identical full-screen layout and pipeline. The only change is Step 11: build captions with scripts/build-highlight-captions.py (karaoke) instead of build-burst-captions.py (particle-burst). The caption-groups.json schema is the same — both caption systems consume it.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-highlight-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-highlight.html <DURATION> 330"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10 (pythainlp required for the caption build)",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "job": "jobs/2026-05-20-arm",
+    "input": "raw-media/2026-05-20-arm/bottom.mp4 (Anthropic 'Mythos' AI tech-news story)",
+    "output": "jobs/2026-05-20-arm/output/finals/final.mp4 — 1080x1920, 105.55s, 3166 frames, 65 caption groups, 18 gold tokens, 0/0 lint, WCAG AA pass",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}
