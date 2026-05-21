@@ -2,6 +2,9 @@
 
 Reusable HyperFrames patterns. Each template solves a specific shape of video.
 
+> 📸 **[CATALOG.md](CATALOG.md) — visual index with a thumbnail of every template.**
+> Regenerate it with `bash tools/build-catalog.sh` after adding or changing a template.
+
 ## Comparison
 
 | #  | Template                    | Aspect       | Use case                                          | Caption style         | Status            |
@@ -9,17 +12,31 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 01 | stacked-vertical-burst      | 1080×1920    | talking-head + screen recording + B-roll (stacked) | particle burst + gold | ⭐ **locked v88** |
 | 02 | fullscreen-vertical-burst   | 1080×1920    | single talking-head full-screen + full-screen B-roll | particle burst + gold | ✅ ready (2026-05-20) |
 | 03 | fullscreen-top-insert-burst | 1080×1920    | single talking-head full-screen + B-roll in a floating 16:9 top insert | particle burst + gold | ✅ ready (2026-05-20) |
+| 04 | fullscreen-vertical-karaoke | 1080×1920    | single talking-head full-screen + full-screen B-roll | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
+| 05 | stacked-vertical-karaoke    | 1080×1920    | talking-head + screen recording + B-roll (stacked) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
-### 01 vs 02 vs 03 — which to pick
+### Which to pick
 
-- **Template 01** — you have TWO videos: a screen recording AND a face cam. Screen
-  goes in the top frame, face in the bottom circle.
-- **Template 02** — you have ONE video: just the talking head. It fills the whole
-  screen; B-roll cutaways also fill the whole screen.
-- **Template 03** — you have ONE video: just the talking head, full-screen. B-roll
-  plays in a floating 16:9 card over the upper third — the face stays visible
-  around it (the reaction / commentary look).
+Two axes: **layout** (do you have a screen recording?) and **caption style**
+(premium particle-burst vs punchy karaoke).
+
+- **Template 01** — TWO videos: screen recording AND face cam. Screen in the top
+  frame, face in the bottom circle. **Particle-burst** captions.
+- **Template 02** — ONE video: just the talking head, full-screen; B-roll
+  cutaways also full-screen. **Particle-burst** captions (premium feel).
+- **Template 03** — ONE video, full-screen. B-roll plays in a floating 16:9 card
+  over the upper third — face stays visible around it (reaction / commentary look).
+- **Template 04** — same full-screen layout as Template 02, but **karaoke**
+  captions: a coloured box sweeps word-by-word (red for normal, gold for
+  numbers/brands). Punchy, CapCut-style.
+- **Template 05** — same stacked layout as Template 01 (screen + face), but
+  **karaoke** captions instead of particle-burst.
+
+> **Same layout, different captions:** 01 ↔ 05 (stacked) and 02 ↔ 04
+> (full-screen). Particle-burst = premium/calm; karaoke box sweep = punchy/viral.
+> The `caption-groups.json` is identical for both — only the Step 11 build script
+> differs (`build-burst-captions.py` vs `build-highlight-captions.py`).
 
 ## When to add a new template
 

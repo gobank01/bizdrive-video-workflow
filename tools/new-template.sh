@@ -66,3 +66,4 @@ echo "  4. Edit templates/${NUM}-${SLUG}/prompts/       (subagent slot defaults)
 echo "  5. Add to templates/README.md comparison table"
 echo ""
 echo "Then test with: bash tools/new-job.sh ${NUM} test-slug"
+echo "After the first render, refresh the visual index: bash tools/build-catalog.sh"

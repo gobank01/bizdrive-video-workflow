@@ -1,0 +1,117 @@
+{
+  "id": "05-stacked-vertical-karaoke",
+  "version": "v1",
+  "createdAt": "2026-05-21",
+  "name": "Stacked Vertical with Karaoke Highlight Captions",
+  "description": "BIZDRIVE-style vertical talking-head video: top frame is screen recording, bottom is face on a circle, with optional B-roll inserts in the top frame. Same stacked layout as Template 01 — the only difference is the caption system: BIZDRIVE Karaoke (caption-highlight), a coloured box that sweeps word-by-word in sync with the speech (red box for normal words, gold box for brand / number / tech tokens).",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "full-frame bg.png image",
+    "topFrame": { "width": 1080, "height": 607.5, "radius": 30, "border": "4px gold gradient" },
+    "bottomFrame": { "shape": "circle", "diameter": 607.5, "border": "4px gold gradient" },
+    "gap": 40,
+    "captionPosition": "in the band below the bottom circle, bottom: 360px (build-highlight-captions.py arg 4)"
+  },
+
+  "captions": {
+    "system": "caption-highlight",
+    "style": "BIZDRIVE Karaoke",
+    "subComposition": "compositions/captions-highlight.html",
+    "buildScript": "scripts/build-highlight-captions.py",
+    "referenceComponent": "compositions/components/caption-highlight.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 800,
+    "fontSize": "70px, auto-fit down if a group overflows",
+    "bottomPx": 360,
+    "mechanic": "a coloured box sweeps word-by-word (scaleX 0->1, transform-origin left) in sync with speech; the spoken word pops scale 1.0 -> 1.07 then settles",
+    "colors": {
+      "text": "#ffffff — flips to #1c1206 (dark) while a gold box is active, for WCAG contrast",
+      "normalBox": "linear-gradient 135deg #ff2d55 -> #d11138 (red)",
+      "goldBox": "linear-gradient 135deg #ffd93d -> #f4c20f -> #d99a06 (gold)"
+    },
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 32,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms — these get the gold box",
+    "perWordTiming": "interpolated inside each group by character weight (caption-groups.json carries group start/end + token text+gold only)"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": true,
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "mixNote": "mix BGM with ffmpeg amix normalize=0 so the voice keeps its polished level",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "minTopFootageBetweenInserts": 3,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "B-roll fills the top frame (16:9-ish), not the whole screen — generate clips at 720p, 16:9, generate_audio false.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on. mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+  },
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate01": "Identical stacked layout (top screen frame + bottom face circle), motion, audio, B-roll and pipeline. The only change is Step 11: build captions with scripts/build-highlight-captions.py (karaoke box sweep) instead of build-burst-captions.py (particle-burst). The caption-groups.json schema is the same — both caption systems consume it.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-highlight-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-highlight.html <DURATION> 360"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "job": "(none yet — first job will become the reference)",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}

@@ -1,0 +1,138 @@
+<!doctype html>
+<html lang="th">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;800&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }
+      #highlight { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; pointer-events: none; }
+      #hl-container { position: absolute; inset: 0; z-index: 10; pointer-events: none; }
+      .hl-group {
+        position: absolute; bottom: 360px; left: 0; width: 100%;
+        display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;
+        gap: 16px 10px; padding: 0 56px; opacity: 0; visibility: hidden;
+      }
+      .hl-word {
+        font-family: "IBM Plex Sans Thai", sans-serif; font-weight: 800;
+        font-size: 70px; color: #ffffff; display: inline-block;
+        letter-spacing: 0; line-height: 1.12; position: relative;
+        padding: 10px 20px 16px;
+        text-shadow: 0 4px 16px rgba(0,0,0,.55), 0 2px 5px rgba(0,0,0,.6);
+        transform-origin: 50% 60%; will-change: transform;
+      }
+      .hl-word-bg {
+        position: absolute; inset: 0; border-radius: 14px;
+        background: linear-gradient(135deg, #ff2d55 0%, #d11138 100%);
+        box-shadow: 0 10px 26px rgba(209,17,56,.40), inset 0 1px 0 rgba(255,255,255,.28);
+        opacity: 0; transform: scaleX(0); transform-origin: 0% 50%; z-index: -1;
+      }
+      .hl-word-bg.gold {
+        background: linear-gradient(135deg, #ffd93d 0%, #f4c20f 55%, #d99a06 100%);
+        box-shadow: 0 10px 26px rgba(244,194,15,.42), inset 0 1px 0 rgba(255,255,255,.4);
+      }
+      .hl-word-text { position: relative; z-index: 1; }
+    </style>
+  </head>
+  <body>
+    <div id="highlight" data-composition-id="captions-highlight" data-timeline-locked
+         data-start="0" data-duration="76.717354" data-fps="30" data-width="1080" data-height="1920">
+      <div id="hl-container"></div>
+    </div>
+    <script>
+      (function () {
+        window.__timelines = window.__timelines || {};
+        var _fitCanvas = document.createElement("canvas");
+        var _fitCtx = _fitCanvas.getContext("2d");
+        function fitFontSize(text, baseFontSize, fontWeight, fontFamily, maxWidth) {
+          var size = baseFontSize;
+          var minSize = Math.floor(baseFontSize * 0.6);
+          while (size > minSize) {
+            _fitCtx.font = fontWeight + " " + size + "px " + fontFamily;
+            if (_fitCtx.measureText(text).width <= maxWidth) return size;
+            size -= 2;
+          }
+          return minSize;
+        }
+
+        var WORDS = [{"text": "มาอัปเดต", "start": 0.28, "end": 0.962, "gold": false}, {"text": "ตอนนี้", "start": 0.962, "end": 1.474, "gold": false}, {"text": "ทุกคน", "start": 1.474, "end": 1.9, "gold": false}, {"text": "หลังจากที่", "start": 1.98, "end": 3.09, "gold": false}, {"text": "พี่แบงค์ทำ", "start": 3.09, "end": 4.2, "gold": false}, {"text": "Workflow", "start": 4.26, "end": 4.84, "gold": true}, {"text": "โปรแกรมตัดต่อ", "start": 5.0, "end": 5.827, "gold": false}, {"text": "เสร็จแล้ว", "start": 5.827, "end": 6.4, "gold": false}, {"text": "แล้วเอามา", "start": 6.42, "end": 7.263, "gold": false}, {"text": "ใช้เองเว้ย", "start": 7.263, "end": 8.2, "gold": false}, {"text": "สิ่งที่", "start": 8.26, "end": 9.119, "gold": false}, {"text": "เกิดขึ้น", "start": 9.119, "end": 10.1, "gold": false}, {"text": "ก็คือมัน", "start": 10.1, "end": 11.74, "gold": false}, {"text": "มันโหดเกิน", "start": 11.78, "end": 12.58, "gold": false}, {"text": "นะครับ", "start": 12.58, "end": 13.06, "gold": false}, {"text": "พี่แบงค์", "start": 13.08, "end": 13.6, "gold": false}, {"text": "Copy", "start": 13.66, "end": 14.08, "gold": true}, {"text": "Link", "start": 14.08, "end": 14.5, "gold": true}, {"text": "ที่เป็น", "start": 14.56, "end": 15.14, "gold": false}, {"text": "Footage", "start": 15.24, "end": 16.62, "gold": true}, {"text": "แบบที่เรา", "start": 16.68, "end": 17.713, "gold": false}, {"text": "อัดคลิปไว้", "start": 17.713, "end": 18.86, "gold": false}, {"text": "อันนี้", "start": 18.94, "end": 19.626, "gold": false}, {"text": "ข้างล่าง", "start": 19.626, "end": 20.54, "gold": false}, {"text": "อันนี้", "start": 20.58, "end": 21.19, "gold": false}, {"text": "ข้างบน", "start": 21.19, "end": 21.8, "gold": false}, {"text": "เป็นหน้าจอ", "start": 21.8, "end": 22.562, "gold": false}, {"text": "นะครับ", "start": 22.562, "end": 23.02, "gold": false}, {"text": "พอ", "start": 23.08, "end": 23.22, "gold": false}, {"text": "Copy", "start": 23.22, "end": 23.5, "gold": true}, {"text": "เสร็จปุ๊บ", "start": 23.52, "end": 24.126, "gold": false}, {"text": "พี่แบงค์ก็", "start": 24.126, "end": 24.8, "gold": false}, {"text": "แค่บอกว่า", "start": 24.8, "end": 25.9, "gold": false}, {"text": "ตัดต่อให้หน่อย", "start": 25.9, "end": 26.922, "gold": false}, {"text": "นะครับ", "start": 26.922, "end": 27.36, "gold": false}, {"text": "ใช้", "start": 27.4, "end": 27.629, "gold": false}, {"text": "Template", "start": 27.629, "end": 28.24, "gold": true}, {"text": "1", "start": 28.3, "end": 28.36, "gold": true}, {"text": "ก็จะทำเป็น", "start": 28.36, "end": 28.96, "gold": false}, {"text": "Template", "start": 29.0, "end": 29.894, "gold": true}, {"text": "ไว้นะครับ", "start": 29.894, "end": 30.9, "gold": false}, {"text": "Template", "start": 30.96, "end": 32.062, "gold": true}, {"text": "1", "start": 32.062, "end": 32.2, "gold": true}, {"text": "แล้วก็", "start": 32.2, "end": 33.2, "gold": false}, {"text": "วางเลย", "start": 33.2, "end": 34.2, "gold": false}, {"text": "แล้วไปกินข้าว", "start": 34.24, "end": 35.378, "gold": false}, {"text": "ได้เลยทุกคน", "start": 35.378, "end": 36.34, "gold": false}, {"text": "เดี๋ยวเสร็จปึ๊บ", "start": 36.4, "end": 37.9, "gold": false}, {"text": "มันก็แจ้งเตือน", "start": 37.9, "end": 39.1, "gold": false}, {"text": "ไม่เกิน", "start": 39.1, "end": 39.908, "gold": false}, {"text": "10", "start": 39.908, "end": 40.138, "gold": true}, {"text": "นาที", "start": 40.138, "end": 40.6, "gold": false}, {"text": "อันนี้", "start": 40.64, "end": 41.516, "gold": false}, {"text": "ตกใจ", "start": 41.516, "end": 42.1, "gold": false}, {"text": "เฮ้ยมันไปถึง", "start": 42.1, "end": 43.3, "gold": false}, {"text": "จุดนี้แล้วหรอ", "start": 43.3, "end": 44.012, "gold": false}, {"text": "นะครับ", "start": 44.012, "end": 44.34, "gold": false}, {"text": "แค่", "start": 44.38, "end": 44.543, "gold": false}, {"text": "Set", "start": 44.543, "end": 44.706, "gold": true}, {"text": "Template", "start": 44.706, "end": 45.14, "gold": true}, {"text": "ไว้แล้ว", "start": 45.18, "end": 46.3, "gold": false}, {"text": "แทบไม่ต้อง", "start": 46.3, "end": 47.257, "gold": false}, {"text": "ตรวจ", "start": 47.257, "end": 47.64, "gold": false}, {"text": "มันเป๊ะมาก", "start": 47.7, "end": 48.829, "gold": false}, {"text": "ทั้ง", "start": 48.829, "end": 49.28, "gold": false}, {"text": "Caption", "start": 49.36, "end": 50.22, "gold": true}, {"text": "หรือพวก", "start": 50.28, "end": 50.98, "gold": false}, {"text": "Insert", "start": 50.98, "end": 51.58, "gold": true}, {"text": "ต่างๆ", "start": 51.64, "end": 52.5, "gold": false}, {"text": "แล้วตอนนี้", "start": 52.5, "end": 53.389, "gold": false}, {"text": "พี่แบงค์", "start": 53.389, "end": 54.1, "gold": false}, {"text": "กำลังพัฒนา", "start": 54.1, "end": 55.171, "gold": false}, {"text": "ระบบ", "start": 55.171, "end": 55.6, "gold": false}, {"text": "ที่ตรวจจับ", "start": 55.6, "end": 56.538, "gold": false}, {"text": "อารมณ์", "start": 56.538, "end": 57.1, "gold": false}, {"text": "ในคลิปได้", "start": 57.1, "end": 58.3, "gold": false}, {"text": "ถ้าอารมณ์", "start": 58.38, "end": 59.64, "gold": false}, {"text": "ตกใจ", "start": 59.64, "end": 60.2, "gold": false}, {"text": "มันก็จะมี", "start": 60.2, "end": 61.68, "gold": false}, {"text": "Meme", "start": 61.76, "end": 61.989, "gold": true}, {"text": "โผล่ขึ้นมา", "start": 61.989, "end": 62.56, "gold": false}, {"text": "มี", "start": 62.6, "end": 62.715, "gold": false}, {"text": "Effect", "start": 62.715, "end": 63.06, "gold": true}, {"text": "โผล่ขึ้นมาอีก", "start": 63.12, "end": 63.7, "gold": false}, {"text": "โหอันนี้", "start": 63.8, "end": 64.553, "gold": false}, {"text": "รู้สึกเลย", "start": 64.553, "end": 65.4, "gold": false}, {"text": "เราเองทำได้", "start": 65.4, "end": 66.9, "gold": false}, {"text": "ยังตกใจเลย", "start": 66.9, "end": 68.22, "gold": false}, {"text": "เมื่อวาน", "start": 68.32, "end": 68.992, "gold": false}, {"text": "เอาเรื่องนี้", "start": 68.992, "end": 70.0, "gold": false}, {"text": "ไปสอนนักเรียน", "start": 70.0, "end": 71.3, "gold": false}, {"text": "นักเรียน", "start": 71.34, "end": 72.14, "gold": false}, {"text": "ก็ทำได้", "start": 72.14, "end": 72.84, "gold": false}, {"text": "Copy", "start": 72.9, "end": 73.087, "gold": true}, {"text": "Template", "start": 73.087, "end": 73.46, "gold": true}, {"text": "นี้ให้เลย", "start": 73.52, "end": 74.33, "gold": false}, {"text": "ทุกคน", "start": 74.33, "end": 74.78, "gold": false}, {"text": "ทุกคนทำได้", "start": 74.84, "end": 76.009, "gold": false}, {"text": "แน่นอน", "start": 76.009, "end": 76.71, "gold": false}];
+        var RAW_GROUPS = [[0, 2], [3, 4], [5, 5], [6, 7], [8, 9], [10, 11], [12, 12], [13, 14], [15, 15], [16, 17], [18, 18], [19, 19], [20, 21], [22, 23], [24, 25], [26, 27], [28, 29], [30, 31], [32, 32], [33, 34], [35, 36], [37, 38], [39, 40], [41, 42], [43, 44], [45, 46], [47, 47], [48, 48], [49, 51], [52, 53], [54, 54], [55, 56], [57, 59], [60, 60], [61, 62], [63, 64], [65, 65], [66, 67], [68, 68], [69, 70], [71, 72], [73, 74], [75, 75], [76, 77], [78, 78], [79, 80], [81, 82], [83, 83], [84, 85], [86, 86], [87, 87], [88, 89], [90, 90], [91, 92], [93, 94], [95, 96], [97, 98]];
+        var COMP_DURATION = 76.717354;
+
+        var GROUPS = RAW_GROUPS.map(function (pair, gi) {
+          var ws = pair[0], we = pair[1];
+          var nextStart = gi + 1 < RAW_GROUPS.length ? WORDS[RAW_GROUPS[gi + 1][0]].start : COMP_DURATION;
+          var gEnd = Math.min(WORDS[we].end + 0.35, nextStart - 0.04);
+          return { wordStart: ws, wordEnd: we, start: WORDS[ws].start, end: gEnd };
+        });
+
+        var container = document.getElementById("hl-container");
+        var tl = gsap.timeline({ paused: true });
+
+        GROUPS.forEach(function (g, gi) {
+          var groupWords = WORDS.slice(g.wordStart, g.wordEnd + 1);
+          var grp = document.createElement("div");
+          grp.className = "hl-group";
+          grp.id = "hl-grp-" + gi;
+
+          var groupText = groupWords.map(function (w) { return w.text; }).join(" ");
+          var computedSize = fitFontSize(groupText, 70, "800", "IBM Plex Sans Thai", 1820);
+
+          groupWords.forEach(function (w, i) {
+            var wi = g.wordStart + i;
+            var wordEl = document.createElement("span");
+            wordEl.className = "hl-word";
+            wordEl.id = "hl-w-" + wi;
+            wordEl.style.fontSize = computedSize + "px";
+            var bgEl = document.createElement("span");
+            bgEl.className = "hl-word-bg" + (w.gold ? " gold" : "");
+            bgEl.id = "hl-bg-" + wi;
+            var textEl = document.createElement("span");
+            textEl.className = "hl-word-text";
+            textEl.textContent = w.text;
+            wordEl.appendChild(bgEl);
+            wordEl.appendChild(textEl);
+            grp.appendChild(wordEl);
+          });
+          container.appendChild(grp);
+
+          // group enter: fade-up lift
+          tl.set(grp, { visibility: "visible" }, g.start);
+          tl.fromTo(grp, { opacity: 0, y: 24 },
+            { opacity: 1, y: 0, duration: 0.18, ease: "power3.out" }, g.start);
+
+          groupWords.forEach(function (w, i) {
+            var wi = g.wordStart + i;
+            var bgEl = document.getElementById("hl-bg-" + wi);
+            var wordEl = document.getElementById("hl-w-" + wi);
+            var textEl = wordEl.querySelector(".hl-word-text");
+            var isGold = bgEl.classList.contains("gold");
+            // box sweeps in from the left as the word is spoken
+            tl.to(bgEl, { opacity: 1, scaleX: 1, duration: 0.16, ease: "power3.out" }, w.start);
+            // word pops, then settles
+            tl.to(wordEl, { scale: 1.07, duration: 0.14, ease: "back.out(2.4)" }, w.start);
+            tl.to(wordEl, { scale: 1.0, duration: 0.18, ease: "power2.out" }, w.start + 0.14);
+            // gold box needs dark text for contrast — flip text colour with the box
+            if (isGold) {
+              tl.to(textEl, { color: "#1c1206", duration: 0.1, ease: "power2.out" }, w.start);
+              tl.to(textEl, { color: "#ffffff", duration: 0.1, ease: "power2.in" }, w.end);
+            }
+            // box exits with a slight overshoot
+            tl.to(bgEl, { opacity: 0, scaleX: 1.03, duration: 0.12, ease: "power2.in" }, w.end);
+            tl.set(bgEl, { scaleX: 0 }, w.end + 0.12);
+          });
+
+          tl.to(grp, { opacity: 0, duration: 0.14, ease: "power2.in" }, g.end - 0.14);
+          tl.set(grp, { opacity: 0, visibility: "hidden" }, g.end);
+        });
+
+        tl.seek(0);
+        window.__timelines["captions-highlight"] = tl;
+      })();
+    </script>
+  </body>
+</html>

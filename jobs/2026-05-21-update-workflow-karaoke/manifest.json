@@ -1,0 +1,22 @@
+{
+  "id": "2026-05-21-update-workflow-karaoke",
+  "template": "05-stacked-vertical-karaoke",
+  "createdAt": "2026-05-21",
+  "status": "complete",
+  "source": {
+    "rawSlug": "2026-05-21-update-workflow",
+    "top": "input/top.mp4",
+    "bottom": "input/bottom.mp4",
+    "bg": "input/bg.png"
+  },
+  "notes": "Template 05 verification + karaoke version of the update-workflow clip. Reused intermediates (masters/speech/transcript/caption-groups) from 2026-05-21-update-workflow.",
+  "output": {
+    "final": "output/finals/final.mp4",
+    "duration": 76.721,
+    "frames": 2301,
+    "loudnessLUFS": -16.8,
+    "captionGroups": 57,
+    "goldTokens": 19,
+    "sfxCount": 5
+  }
+}
