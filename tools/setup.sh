@@ -32,10 +32,18 @@ case "$(uname -s)" in
 esac
 
 # auto_install <tool> — try to install a missing system tool for the current OS.
-# Returns 0 if installed (or already present), 1 if it could not.
+# Returns 0 if installed (or already adequate), 1 if it could not.
+# "adequate" is tool-specific: python3 must also have pip+venv, node must be
+# >= 18. A bare `command -v` is NOT enough — a fresh WSL has python3 without
+# pip/venv, and apt may already have an old node; in both cases we must still
+# install/upgrade rather than return early on the binary alone.
 auto_install() {
   tool="$1"
-  command -v "$tool" >/dev/null 2>&1 && return 0
+  case "$tool" in
+    python3) python_stack_ok && return 0 ;;
+    node)    node_ok && return 0 ;;
+    *)       command -v "$tool" >/dev/null 2>&1 && return 0 ;;
+  esac
   echo "  → installing $tool..."
   case "$OS" in
     macos)
@@ -68,7 +76,12 @@ auto_install() {
       fi ;;
     *) return 1 ;;
   esac
-  command -v "$tool" >/dev/null 2>&1
+  # Final verdict uses the same tool-specific adequacy check as the entry guard.
+  case "$tool" in
+    python3) python_stack_ok ;;
+    node)    node_ok ;;
+    *)       command -v "$tool" >/dev/null 2>&1 ;;
+  esac
 }
 
 # Repo needs Node 18+. Ubuntu's apt often ships an older Node, so install the
