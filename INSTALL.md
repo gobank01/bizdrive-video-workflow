@@ -38,17 +38,24 @@ PowerShell.
 
 ### Step 3 — Install Claude Code
 
-In the Ubuntu window, paste this and press Enter:
+In the Ubuntu window, first make sure the basic tools exist (a fresh Ubuntu may
+not have `curl` or `git` yet), then install Claude Code:
 
 ```bash
+sudo apt-get update && sudo apt-get install -y curl git
 curl -fsSL https://claude.ai/install.sh | bash
 ```
 
-When it finishes, start it by typing:
+Then start it:
 
 ```bash
 claude
 ```
+
+If you get `claude: command not found`, the installer added it to your PATH but
+this window hasn't picked it up yet — just **close the Ubuntu window and open it
+again**, then type `claude`. (Per Claude's official FAQ, a new shell session
+loads the updated PATH.)
 
 Sign in when prompted. **You're done with the manual part.** 🎉
 

@@ -54,7 +54,7 @@ auto_install() {
         sudo apt-get update -qq
         case "$tool" in
           ffmpeg|ffprobe) sudo apt-get install -y ffmpeg ;;
-          node) sudo apt-get install -y nodejs npm ;;
+          node) install_node_apt ;;
           python3) sudo apt-get install -y python3 python3-pip python3-venv ;;
         esac
       elif command -v dnf >/dev/null 2>&1; then
@@ -71,17 +71,54 @@ auto_install() {
   command -v "$tool" >/dev/null 2>&1
 }
 
+# Repo needs Node 18+. Ubuntu's apt often ships an older Node, so install the
+# current LTS from NodeSource. Falls back to apt if the NodeSource setup fails.
+install_node_apt() {
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - 2>/dev/null \
+    && sudo apt-get install -y nodejs && return 0
+  sudo apt-get install -y nodejs npm
+}
+
+# node_ok — true only if node exists AND is >= 18.
+node_ok() {
+  command -v node >/dev/null 2>&1 || return 1
+  ver=$(node -p "process.versions.node.split('.')[0]" 2>/dev/null || echo 0)
+  [ "$ver" -ge 18 ] 2>/dev/null
+}
+
+# python_stack_ok — true only if python3 exists AND pip AND venv are usable.
+# A fresh WSL has python3 but not pip/venv, which would silently break setup.
+python_stack_ok() {
+  command -v python3 >/dev/null 2>&1 || return 1
+  python3 -c "import ensurepip, venv" >/dev/null 2>&1 \
+    && python3 -m pip --version >/dev/null 2>&1
+}
+
 # --- 1. System tools (auto-install what's missing) ---
 echo "→ Checking system tools (will auto-install any that are missing)..."
 STILL_MISSING=""
-for t in ffmpeg ffprobe python3 node; do
-  auto_install "$t" || STILL_MISSING="$STILL_MISSING $t"
-done
+auto_install ffmpeg  || STILL_MISSING="$STILL_MISSING ffmpeg"
+auto_install ffprobe || STILL_MISSING="$STILL_MISSING ffprobe"
+
+# python3: must have pip + venv too, not just the binary. A fresh WSL ships
+# python3 without them, so command -v alone is not enough.
+if ! python_stack_ok; then
+  auto_install python3 || true
+fi
+python_stack_ok || STILL_MISSING="$STILL_MISSING python3(+pip/venv)"
+
+# node: must be >= 18, not just present. apt may have an old node already.
+if ! node_ok; then
+  auto_install node || true
+fi
+node_ok || STILL_MISSING="$STILL_MISSING node(>=18)"
+
 if [ -n "$STILL_MISSING" ]; then
   echo "✗ Could not auto-install:$STILL_MISSING" >&2
   echo "  Install them by hand, then re-run this script:" >&2
   echo "    macOS:        brew install ffmpeg python node" >&2
-  echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-venv nodejs npm" >&2
+  echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-pip python3-venv" >&2
+  echo "                  Node 18+: https://github.com/nodesource/distributions" >&2
   exit 1
 fi
 PY_OK=$(python3 -c "import sys; print('yes' if sys.version_info >= (3,10) else 'no')")
