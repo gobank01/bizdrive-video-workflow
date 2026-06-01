@@ -1,0 +1,25 @@
+{
+  "_note": "UI label maps for tools/template-manager.html. The Template Manager is fully data-driven — it has NO hard-coded sections/layouts/captions. To add a new feature section, layout family, or caption system, add its label here and run python3 tools/build-manager.py. An id with no label here still works in the manager; it just shows the raw id until you name it.",
+
+  "sections": {
+    "edit": "✂️  ตัดต่อ",
+    "captions": "💬  ซับ / คำบรรยาย",
+    "broll": "🎞️  B-roll",
+    "audio": "🔊  เสียง",
+    "extras": "✨  ของแถม"
+  },
+  "sectionOrder": ["edit", "captions", "broll", "audio", "extras"],
+
+  "layouts": {
+    "stacked": "จอบน + วงกลมหน้า",
+    "fullscreen": "เต็มจอ",
+    "top-insert": "เต็มจอ + การ์ด B-roll ลอย",
+    "corner-cam": "จอบันทึกหน้าจอเต็มจอ + กล้องมุม",
+    "horizontal-talking-head": "เต็มจอ 16:9 แนวนอน (YouTube)"
+  },
+
+  "captions": {
+    "particle-burst": "ซับ particle-burst (พรีเมียม)",
+    "caption-highlight": "ซับคาราโอเกะ (กล่องกวาดคำ)"
+  }
+}

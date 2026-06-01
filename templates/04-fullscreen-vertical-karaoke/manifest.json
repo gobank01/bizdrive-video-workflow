@@ -86,6 +86,84 @@
     "note": "Optional. At most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA, punch on punchlines)."
   },
 
+  "features": [
+    {
+      "id": "dead_air_cut",
+      "label": { "th": "ตัดช่วงเงียบ (dead air)", "en": "Dead-air jump cut" },
+      "section": "edit",
+      "step": "6",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+    },
+    {
+      "id": "audio_polish",
+      "label": { "th": "ปรับแต่งเสียงพูด (polish)", "en": "Audio polish" },
+      "section": "audio",
+      "step": "8",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+    },
+    {
+      "id": "captions",
+      "label": { "th": "ซับ / คำบรรยายไทย", "en": "Thai captions" },
+      "section": "captions",
+      "step": "9-11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+    },
+    {
+      "id": "broll",
+      "label": { "th": "B-roll แทรกภาพ", "en": "B-roll inserts" },
+      "section": "broll",
+      "step": "11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
+      "options": [
+        { "id": "mode", "type": "enum", "label": { "th": "แหล่ง B-roll", "en": "Source" }, "values": ["ai-gen", "stock"], "default": "ai-gen" },
+        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 4, "min": 0, "max": 8 }
+      ]
+    },
+    {
+      "id": "bgm",
+      "label": { "th": "เพลงประกอบ (BGM)", "en": "Background music" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+      "options": [
+        { "id": "gain", "type": "number", "label": { "th": "ระดับเสียง", "en": "Gain" }, "default": 5, "min": 0, "max": 20, "unit": "%" }
+      ]
+    },
+    {
+      "id": "sfx",
+      "label": { "th": "เอฟเฟกต์เสียง (SFX)", "en": "Sound effects" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+    },
+    {
+      "id": "thumbnail",
+      "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
+      "section": "extras",
+      "step": "16",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+      "options": [
+        { "id": "main", "type": "text", "label": { "th": "บรรทัดบน (ขาว)", "en": "Main line" }, "default": "" },
+        { "id": "hero", "type": "text", "label": { "th": "บรรทัดเด่น (ทอง)", "en": "Hero line" }, "default": "" },
+        { "id": "sub", "type": "text", "label": { "th": "บรรทัดล่าง (ฟ้า)", "en": "Sub line" }, "default": "" }
+      ]
+    }
+  ],
+
   "pipeline": {
     "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
     "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",

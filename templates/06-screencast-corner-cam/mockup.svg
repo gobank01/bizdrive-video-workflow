@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 760" font-family="'IBM Plex Sans Thai','Noto Sans Thai','Inter',sans-serif">
+  <rect width="940" height="760" rx="22" fill="#0b1330"/>
+  <rect x="1.5" y="1.5" width="937" height="757" rx="21" fill="none" stroke="#1f2c55" stroke-width="2"/>
+  <text x="470" y="48" text-anchor="middle" font-size="31" font-weight="800" fill="#f4c20f" letter-spacing="1">TEMPLATE 06</text>
+  <text x="470" y="73" text-anchor="middle" font-size="15" font-weight="600" fill="#9fb0d8">06-screencast-corner-cam</text>
+
+  <defs>
+    <clipPath id="clip06"><rect x="300" y="92" width="340" height="604" rx="16"/></clipPath>
+    <linearGradient id="screen06" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#16284f"/><stop offset="1" stop-color="#0a1430"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#clip06)">
+    <!-- full-screen screen recording -->
+    <rect x="300" y="92" width="340" height="604" fill="url(#screen06)"/>
+    <rect x="330" y="150" width="280" height="34" rx="8" fill="#24386b"/>
+    <rect x="330" y="208" width="280" height="146" rx="12" fill="#1d2f5c"/>
+    <rect x="330" y="372" width="170" height="20" rx="6" fill="#24386b"/>
+    <rect x="330" y="406" width="234" height="20" rx="6" fill="#1d2f5c"/>
+    <text x="470" y="290" text-anchor="middle" font-size="15" font-weight="700" fill="#5a6e9c">screen recording · full-screen</text>
+    <!-- corner-cam: presenter face circle, upper-left -->
+    <circle cx="372" cy="164" r="50" fill="#3a4f86" stroke="#f4c20f" stroke-width="4"/>
+    <circle cx="372" cy="152" r="17" fill="#9fb0d8"/>
+    <path d="M346 198a26 22 0 0 1 52 0z" fill="#9fb0d8"/>
+    <!-- caption scrim + particle-burst caption -->
+    <rect x="300" y="520" width="340" height="176" fill="#000000" opacity="0.55"/>
+    <rect x="332" y="586" width="276" height="58" rx="14" fill="#0a1640" stroke="#f4c20f" stroke-width="1.5" opacity="0.92"/>
+    <text x="470" y="623" text-anchor="middle" font-size="22" font-weight="800" fill="#ffffff">แคปชั่น <tspan fill="#ffd93d">เด่น</tspan></text>
+  </g>
+  <rect x="300" y="92" width="340" height="604" rx="16" fill="none" stroke="#f4c20f" stroke-width="2.5" opacity="0.9"/>
+
+  <!-- callouts -->
+  <line x1="656" y1="247" x2="487" y2="247" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="487" cy="247" r="6.5" fill="#f4c20f"/><circle cx="487" cy="247" r="2.6" fill="#0b1330"/>
+  <rect x="656" y="230" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="788" y="252" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">จอบันทึกหน้าจอ · เต็มจอ</text>
+
+  <line x1="284" y1="164" x2="372" y2="164" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="372" cy="164" r="6.5" fill="#f4c20f"/><circle cx="372" cy="164" r="2.6" fill="#0b1330"/>
+  <rect x="20" y="147" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="152" y="169" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">หน้าคนพูด · กล้องมุม (corner-cam)</text>
+
+  <line x1="656" y1="615" x2="470" y2="615" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="470" cy="615" r="6.5" fill="#f4c20f"/><circle cx="470" cy="615" r="2.6" fill="#0b1330"/>
+  <rect x="656" y="598" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="788" y="620" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">แคปชั่น particle-burst</text>
+
+  <text x="470" y="734" text-anchor="middle" font-size="15" font-weight="600" fill="#9fb0d8">9:16 · 1080×1920    ·    captions: particle-burst</text>
+</svg>

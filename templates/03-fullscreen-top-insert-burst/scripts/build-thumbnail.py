@@ -14,9 +14,15 @@ What it does:
      1080x1920 headline (white MAIN / gold-gradient HERO / soft SUB,
      auto-fit to width), snapshotted via `hyperframes snapshot`.
   2. Writes the thumbnail PNG to  output/finals/<clip>.png
-  3. If  output/finals/final.mp4  exists, embeds the PNG into it as cover
-     art (attached_pic) and writes  output/finals/<clip>.mp4 , then removes
-     final.mp4 — the clip-named file is the deliverable (NOT "final.mp4").
+  3. If  output/finals/final.mp4  exists, **prepends the PNG as the first
+     0.1s (3 frames) of the video** and writes  output/finals/<clip>.mp4 ,
+     then removes final.mp4. The clip-named file is the deliverable.
+
+     Why prepend, not attached_pic: macOS Finder / QuickLook (and FB / YouTube
+     uploaders) read the first video frame as the poster icon for `.mp4`
+     files — the iTunes-style `attached_pic` mjpeg stream is ignored on the
+     `isom` brand container we produce. CapCut does the same thing (verified
+     against a working reference 2026-05-24).
 
 <clip> = the job id (from ../manifest.json) or the job folder name.
 """
@@ -172,17 +178,45 @@ def main():
     shutil.copy(snap, png_out)
     print(f"  ✓ thumbnail PNG → {png_out.name}")
 
-    # --- 2. embed the thumbnail into the final clip as cover art ---
+    # --- 2. prepend the thumbnail as the first 0.1s (3 frames) of the video.
+    #        Finder / QuickLook / FB / YouTube use the first frame as poster.
     final_mp4 = FINALS / "final.mp4"
     if final_mp4.exists():
         clip_mp4 = FINALS / f"{clip}.mp4"
+
+        # Probe the video's actual width/height so this works for both 1080x1920
+        # vertical templates (01-06) and 1920x1080 horizontal (07).
+        probe = subprocess.run(
+            ["ffprobe", "-v", "error", "-select_streams", "v:0",
+             "-show_entries", "stream=width,height", "-of", "csv=p=0:s=x",
+             str(final_mp4)],
+            capture_output=True, text=True, check=True).stdout.strip()
+        try:
+            vw, vh = (int(x) for x in probe.split("x"))
+        except Exception:
+            vw, vh = 1080, 1920
+
         subprocess.run(
-            ["ffmpeg", "-y", "-v", "error", "-i", str(final_mp4), "-i", str(png_out),
-             "-map", "0:v", "-map", "0:a", "-map", "1", "-c", "copy", "-c:v:1", "mjpeg",
-             "-disposition:v:1", "attached_pic", "-movflags", "+faststart", str(clip_mp4)],
+            ["ffmpeg", "-y", "-v", "error",
+             "-loop", "1", "-framerate", "30", "-t", "0.1", "-i", str(png_out),
+             "-f", "lavfi", "-t", "0.1", "-i", "anullsrc=r=48000:cl=stereo",
+             "-i", str(final_mp4),
+             "-filter_complex",
+             f"[0:v]scale={vw}:{vh}:force_original_aspect_ratio=decrease,"
+             f"pad={vw}:{vh}:(ow-iw)/2:(oh-ih)/2,setsar=1,format=yuv420p[v0];"
+             f"[2:v]scale={vw}:{vh},setsar=1,format=yuv420p[v1];"
+             "[v0][v1]concat=n=2:v=1:a=0[v];"
+             "[1:a][2:a]concat=n=2:v=0:a=1[a]",
+             "-map", "[v]", "-map", "[a]",
+             "-c:v", "libx264", "-preset", "fast", "-crf", "18",
+             "-r", "30", "-pix_fmt", "yuv420p",
+             "-g", "30", "-keyint_min", "30",
+             "-c:a", "aac", "-b:a", "192k", "-ar", "48000",
+             "-movflags", "+faststart",
+             str(clip_mp4)],
             check=True)
         final_mp4.unlink()
-        print(f"  ✓ cover embedded → {clip_mp4.name}  (final.mp4 replaced)")
+        print(f"  ✓ thumbnail prepended (0.1s poster) → {clip_mp4.name}  (final.mp4 replaced)")
     else:
         print(f"  ⚠ no output/finals/final.mp4 — PNG built, run after the final mux to embed it")
 

@@ -260,9 +260,164 @@ Do not modify the raw transcript file. Write only {{caption-groups.json}} and re
 
 ---
 
-## Section C — Why these prompts have to be long
+## Section C — Shorts Finder Subagent (Longform → N Shorts)
 
-Both prompts feel verbose, but every clause is load-bearing:
+**Purpose:** Take a LONG raw recording (5-60 min) and decide where to extract self-contained **60-90s** short-form clips suitable for Reels / TikTok / Shorts. Each chosen short becomes its own child job (T01/T04/T05/etc.) that the rest of the v88 pipeline processes normally.
+
+**Strategy lock (project rule, 2026-05-27):** every short MUST be **60-90 seconds**. Target average is **70-85s**. **No clip may exceed 90s** — anything longer must be trimmed, split into two shorts (if both halves work standalone), or rejected. Stronger constraint than the previous 60-120s spec; do NOT relax.
+
+This is the pre-processor for `tools/01-longform-shorts/split.sh`. Phase 1 (`tools/01-longform-shorts/prep.sh`) prepares the inputs; this subagent decides the cuts; Phase 2 scaffolds the child jobs.
+
+**Input files the subagent must be able to read:**
+- The raw ElevenLabs JSON of the FULL source (provide absolute path)
+- The silencedetect JSON (provide absolute path)
+- The source MP4 (for spot-checking)
+
+**Output:** `shorts.json` at the absolute path you specify in the prompt.
+
+### Prompt
+
+```
+You are the Shorts Finder for the BIZDRIVE longform-to-shorts workflow.
+
+Your job is to read a long recording and pick the moments that work as STANDALONE short-form clips (Reels/TikTok/Shorts, **60-90s each, HARD CEILING 90s**). Quality over quantity — return only moments that genuinely work on their own.
+
+## Inputs
+
+- **Raw transcript (ElevenLabs Scribe v2, full source)**: {{ABS_PATH_RAW_JSON}}
+- **Silence points (ffmpeg silencedetect, gaps ≥ 0.8s)**: {{ABS_PATH_SILENCE_JSON}}
+- **Source media**: {{ABS_PATH_SOURCE_MP4}}
+- **Source duration**: {{DURATION_SECONDS}}s (authoritative — raw.json.duration may be null)
+- **Topic / context**: {{TOPIC}}
+- **Output**: {{ABS_PATH_SHORTS_JSON}}
+
+## What makes a good short (read carefully)
+
+A "good short" is a self-contained moment that satisfies ALL of:
+
+1. **Hook in the first 3 seconds.** Opens with a question, claim, number, or strong statement — NOT mid-sentence, NOT "อย่างที่ผมพูดเมื่อกี้...", NOT a connector like "และ/แต่/ก็".
+2. **Self-contained.** Understandable without context from earlier in the long video. If understanding requires "what he said 5 minutes ago", reject it.
+3. **Payoff at the end.** Ends on a punchline, twist, lesson, quote, or numeric reveal. Avoids fade-out / "ก็ประมาณนี้นะครับ".
+4. **60-90 seconds — HARD CEILING 90s, HARD FLOOR 60s.** Target average 70-85s. If a candidate is 91-110s, trim it to ≤90s by dropping the weakest entry from either end. If it's >110s but contains TWO standalone payoffs, split into two shorts. If it can't fit ≤90s without breaking the hook/payoff, REJECT it — do not ship a 95s "close enough" clip.
+5. **One topic.** Doesn't visibly switch subject mid-clip.
+6. **Snaps to silence at both ends.** Start and end must align (±200ms) to a `silence_end` (start) and `silence_start` (end) point from silence.json, OR sit on a clean word boundary in raw.json.words[]. Never cut mid-word.
+
+## How to scan
+
+1. Read `raw.json.words[]` linearly. Build a mental map of topic shifts (signaled by long pauses ≥ 1.5s + opener phrases: "อีกเรื่อง...", "ผมจะเล่า...", "เคยมั้ยที่...", "วันนึง...", numeric claims, rhetorical questions).
+2. For each candidate topic chunk, find:
+   - **Start candidate**: the first word AFTER a silence_end where the speaker launches the hook clean.
+   - **End candidate**: the last word BEFORE a silence_start where the payoff lands.
+3. Trim internal dead air / false starts within the candidate using the same rules as `editorial-rules.md` (last-take-wins, filler drop). But unlike Section A, you do NOT produce an EDL — just the outer [start, end]. Internal cleanup happens later in v88 Step 3.
+4. Score each candidate 0-10 against the four signals below.
+
+## Scoring (return per short)
+
+- **hook_score** (0-10): how strong is the opening 3s as a standalone hook?
+- **payoff_score** (0-10): how strong is the ending — quote, twist, number, lesson?
+- **completeness** (0-10): does it work without prior context?
+- **emotion_peak** (0-10): is there at least one moment of emphasis (raised voice, numeric punch, name-drop, surprise word)?
+- **overall** = round((hook + payoff + completeness + emotion) / 4, 1)
+
+**Threshold**: only emit shorts with `overall ≥ 7.0`. If nothing clears the bar, return an empty array — it is correct to say "this long video has no shippable shorts" rather than force-pick.
+
+**Quantity**: AI chooses. No fixed N. Typically 2-10 from a 20-min clip. Do NOT pad with weak picks to hit a number. Do NOT pick overlapping ranges.
+
+## Hard requirements
+
+1. All timestamps in `raw.json.words[]` boundaries (do not invent).
+2. `start_ms < end_ms`, both integers (ms).
+3. Shorts in chronological order, non-overlapping.
+4. `(end_ms - start_ms)` between **60000 and 90000** (60-90s, no exceptions).
+5. `start_ms ≥ 0`, `end_ms ≤ DURATION_SECONDS * 1000`.
+6. Each short MUST include a `hook_quote` (the literal first ~10 words spoken) and `payoff_quote` (literal last ~8 words) — quoted from raw text, not paraphrased.
+7. Each short gets a `title_th` (≤ 40 Thai chars, click-worthy, no clickbait lies) and a `template_hint` ∈ {"01", "04", "05", "any"}.
+
+## Template hint guidance
+
+- `"05"` — default. Stacked vertical + karaoke captions. Works for almost everything.
+- `"04"` — fullscreen single talking head + karaoke. Use when the moment is one camera angle, no need for b-roll variety.
+- `"01"` — stacked + particle-burst captions. Use when the moment is heavy on numbers / brand names that pop better as burst.
+- `"any"` — moment is template-agnostic; let the user pick.
+
+## Output schema
+
+Write strict JSON to {{ABS_PATH_SHORTS_JSON}}:
+
+```json
+{
+  "source_duration": {{DURATION_SECONDS}},
+  "language": "th",
+  "topic": "{{TOPIC}}",
+  "shorts": [
+    {
+      "rank": 1,
+      "start_ms": 124300,
+      "end_ms": 207800,
+      "duration_s": 83.5,
+      "title_th": "ทำไมผมเลิกถือหุ้นจีนหลังโควิด",
+      "hook_quote": "เคยมั้ยที่...",
+      "payoff_quote": "...นั่นคือบทเรียนล้านบาท",
+      "scores": {"hook": 9, "payoff": 8, "completeness": 9, "emotion": 8, "overall": 8.5},
+      "template_hint": "05",
+      "notes": "Clean silence at 124.1s → strong hook 'เคยมั้ยที่'; payoff lands on numeric quote; one topic."
+    }
+  ],
+  "rejected": [
+    {"range_ms": [45000, 130000], "reason": "Topic switches at 90s; first half no payoff."}
+  ]
+}
+```
+
+## After writing the file, report back (under 300 words)
+
+1. How many shorts cleared the threshold, total kept_seconds, % of source captured.
+2. For each short: rank, duration, title, overall score, template_hint.
+3. The 2-3 best rejection decisions (what almost qualified + why it didn't).
+4. Anything ambiguous you flagged (low-confidence keep or near-miss reject).
+5. Whether the long video as a whole feels "shorts-rich" (≥3 strong picks) or "lean" (0-2).
+
+Do not slice the video yourself. Do not produce EDLs. Just shorts.json + the summary.
+```
+
+### Expected output shape
+
+```json
+{
+  "source_duration": 1247.5,
+  "language": "th",
+  "topic": "พี่แบงค์เล่าเรื่องการลงทุน 20 ปี",
+  "shorts": [
+    {
+      "rank": 1,
+      "start_ms": 124300,
+      "end_ms": 207800,
+      "duration_s": 83.5,
+      "title_th": "ทำไมผมเลิกถือหุ้นจีนหลังโควิด",
+      "hook_quote": "เคยมั้ยที่ลงทุนแล้วรู้สึกว่าตัวเองโง่",
+      "payoff_quote": "นั่นคือบทเรียนล้านบาท",
+      "scores": {"hook": 9, "payoff": 8, "completeness": 9, "emotion": 8, "overall": 8.5},
+      "template_hint": "05",
+      "notes": "Clean silence at 124.1s; one topic; numeric payoff."
+    }
+  ],
+  "rejected": []
+}
+```
+
+### Validating the output
+
+- Every short: `start_ms < end_ms`, **`60000 ≤ (end - start) ≤ 90000`** (60-90s window, hard limits)
+- Shorts chronological + non-overlapping
+- `overall ≥ 7.0` for every kept short
+- Sum of durations ≤ source duration (sanity)
+- `tools/01-longform-shorts/split.sh` reads this directly — if it errors, the schema is off
+
+---
+
+## Section D — Why these prompts have to be long
+
+All three prompts feel verbose, but every clause is load-bearing:
 
 | Clause | Why it's there |
 |--------|----------------|

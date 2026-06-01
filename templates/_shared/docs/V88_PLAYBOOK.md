@@ -80,6 +80,45 @@ npm run preflight
 
 All commands assume CWD = `stacked-video/`. Replace `<JOB>` with a slug (e.g. `clip-2026-05-20`) and `<INPUT_DIR>` with the source media folder.
 
+### Step 0 — Read the Job Spec (if one was supplied)
+
+If the user supplied a **Job Spec** (a `bizdrive-job-spec` JSON block built with
+`tools/template-manager.html`), parse it first — it decides which steps below
+run. See [`JOB_SPEC.md`](JOB_SPEC.md) for the format and the full feature →
+step gating table.
+
+- Save the spec JSON to `jobs/<JOB>/job-spec.json` so the run is reproducible.
+- A feature with `"on": false` means **skip the step(s) it owns** — do not run
+  them anyway. A feature absent from the spec falls back to the template
+  manifest `default` (all default to on).
+- Quick gating map: `dead_air_cut`→Step 6 · `audio_polish`→Step 8 ·
+  `captions`→Steps 9–11 (caption part) · `broll`→Step 11 (B-roll) ·
+  `bgm`/`sfx`→Step 14 · `end_card`→Step 11 (T03) · `thumbnail`→Step 16.
+- Core steps (1, 2, 3–5, 7, 12, 13, 14-mux, 15) always run.
+
+No Job Spec? Run every step — the original full-pipeline behavior is unchanged.
+
+### Step 0c — Chunked workflow (T07 only, optional)
+
+For long-form Template 07 cuts (≥10 min) where a mistake mid-clip would force
+a full re-edit, the chunked variant slices the source into N time-windowed
+chunks, runs v88 Steps 2–13 **per chunk** (resumable), and merges everything
+at the end. Each chunk is its own mini-job — a mistake in chunk 03 only
+re-does chunk 03.
+
+**Triggered by** Job Spec `chunked: { on: true, chunkMinutes: 5 }` on a T07
+job. See [Template 07 README](../../07-fullscreen-horizontal-karaoke/README.md)
+"Chunked workflow" section for the per-chunk command sequence. Master state
+lives in `<job>/chunks.json`; track progress with
+`scripts/chunk-status.py` and finalise with `scripts/merge-chunks.py`.
+
+Lint is **soft by default** for chunked jobs — `npm run check` runs once at
+merge time and a failure does not block the deliverable (set
+`chunked.lintMode: strict` to make failures fatal).
+
+Default `chunked: off` keeps the single-pass v88 behavior unchanged on all
+templates.
+
 ### Step 1 — Inspect source media
 
 ```bash
@@ -90,6 +129,12 @@ ffprobe -v error -show_entries format=duration,start_time:stream=codec_type,r_fr
 Confirm: top duration == bottom duration, both have 30 fps (or matching fps), bottom has 1+ audio stream.
 
 ### Step 2 — Transcribe with ElevenLabs Scribe v2 (3-output mode)
+
+> **Skip-condition (longform child jobs):** if the Job Spec carries
+> `inputs.transcript_provided`, the transcript was already produced by
+> `tools/01-longform-shorts/prep.sh` and sliced by `tools/01-longform-shorts/split.sh`. Copy
+> `intermediates/raw-elevenlabs.json` to `assets/<JOB>/v88-test/raw-elevenlabs.json`
+> and skip the API call below. Duration is already patched.
 
 ```bash
 mkdir -p assets/<JOB>/v88-test
@@ -145,6 +190,9 @@ npm run apply:edits -- <INPUT_DIR>/bottom.mp4 assets/<JOB>/v88-test/edl-rough-sa
 
 ### Step 6 — Silero VAD jump-cut on the post-rough audio
 
+> 🔘 **Job Spec gate** — `dead_air_cut: 0` → skip this step entirely. In Step 7
+> apply only `edl-rough-safe.json` (no `edl-jump.json`); original pacing is kept.
+
 ```bash
 mkdir -p assets/<JOB>/v88-test/.tmp
 ffmpeg -y -i assets/<JOB>/v88-test/cleaned-rough.mp4 -ac 1 -ar 16000 assets/<JOB>/v88-test/.tmp/post-rough.wav
@@ -174,6 +222,10 @@ ffprobe -v error -show_entries format=duration:stream=codec_type,nb_frames -of c
 ```
 
 ### Step 8 — Polish bottom audio
+
+> 🔘 **Job Spec gate** — `audio_polish: 0` → skip the polish chain. Extract the
+> raw audio from `bottom_visual_master.mp4` as `speech_polished.wav` (still the
+> filename the rest of the pipeline expects) and continue.
 
 2-pass loudnorm chain (analyze → apply):
 
@@ -220,6 +272,10 @@ This gives word timing aligned to the EDITED timeline (0 → ~duration), which i
 
 ### Step 10 — Post-process subagent → caption-groups.json
 
+> 🔘 **Job Spec gate** — `captions: 0` → skip Steps 9–11's caption work
+> (re-transcribe, this post-process subagent, `build-*-captions.py`) and do not
+> mount the caption track in Step 11. The clip ships with no on-screen captions.
+
 Spawn a second subagent with the prompt in [`SUBAGENT_PROMPTS.md`](SUBAGENT_PROMPTS.md) Section B. Inputs:
 
 - Raw transcript: `assets/<JOB>/transcript/raw-elevenlabs.json`
@@ -246,6 +302,11 @@ Output: `assets/<JOB>/transcript/caption-groups.json` with structure:
 ## 4. Composition build & render
 
 ### Step 11 — Build composition + burst captions
+
+> 🔘 **Job Spec gates** — `captions: 0` → skip `build-*-captions.py` and the
+> caption mount (`set-duration.py` still runs). `broll: 0` → skip B-roll
+> generation and `add-broll.py`. `end_card: 0` (Template 03) → skip installing
+> and mounting the `tiktok-follow` block.
 
 The workspace `index.html` is copied from Template 01 and already uses
 **generic per-job paths** — no path-fixing needed:
@@ -304,6 +365,10 @@ Watch for the `sparse keyframes` warning — apply_edits.py re-encodes segments 
 The final audio mux is **one script** — `scripts/mix-sfx.py` — driven by a
 per-job `assets/intermediates/sfx-plan.json`.
 
+> 🔘 **Job Spec gates** — `bgm: 0` → omit `bgm` from `sfx-plan.json`; `final.mp4`
+> is speech (+ SFX) only. `sfx: 0` → write `"sfx": []` (empty). With both off,
+> `final.mp4` carries the polished speech alone. The mux itself always runs.
+
 **SFX rule (v88) — every clip gets sound effects, kept sparse:**
 
 - **At most 5 SFX per clip.** Hard cap.
@@ -360,13 +425,26 @@ npm run qa:timestamps -- --input ../preview-<JOB>/<JOB>-final.mp4 --output-dir r
 
 Frame count after BGM mix MUST equal frame count before. Audio duration metadata may drift ±25ms — that's container overhead, not frame loss.
 
-### Step 16 — Thumbnail + cover embed (MANDATORY)
+### Step 16 — Thumbnail + poster-frame prepend (default ON)
 
-**Every clip ships a thumbnail — this step is NOT optional.** Whenever a clip is
-edited, it gets a default thumbnail (BG + a big 3-line headline; the BIZDRIVE
-logo and the "ให้ AI ทำงานแทนคุณ" bottom strip are already baked into `bg.png`),
-and that thumbnail is embedded into the clip as cover art. Template-agnostic —
-the same `scripts/build-thumbnail.py` ships in all templates (01-05).
+> 🔘 **Job Spec gate** — `thumbnail: 0` → skip this step; deliver
+> `output/finals/final.mp4` with no thumbnail prepended. **With no Job Spec, or
+> `thumbnail: 1`, this step runs — it is the default and must not be skipped
+> silently.** Use the spec's `thumbnail.main / hero / sub` lines if provided.
+
+**By default every clip ships a thumbnail.** Whenever a clip is edited, it gets
+a default thumbnail (BG + a big 3-line headline; the BIZDRIVE logo and the
+"ให้ AI ทำงานแทนคุณ" bottom strip are already baked into `bg.png`), and that
+thumbnail is **prepended as the first 0.1s of the clip** so Finder, QuickLook,
+Facebook and YouTube uploaders all pick it up as the poster icon.
+Template-agnostic — the same `scripts/build-thumbnail.py` ships in all
+templates (01-07).
+
+> **Why prepend, not `attached_pic` cover stream:** macOS Finder / QuickLook
+> only read the FIRST VIDEO FRAME as the poster icon for `.mp4` files. The
+> iTunes-style `attached_pic` mjpeg stream we used previously was silently
+> ignored on the `isom` brand container ffmpeg produces. Verified 2026-05-24
+> against a working CapCut reference — CapCut uses the same prepend trick.
 
 ```bash
 # Run from the job workspace, AFTER Step 14 (final mux). Args: <main> <hero> <sub>
@@ -382,7 +460,9 @@ python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใ
 - **Output is named after the clip, NOT "final":**
   - `output/finals/<clip>.png` — the thumbnail (1080×1920)
   - `output/finals/<clip>.mp4` — the deliverable clip with the thumbnail
-    embedded as cover art (`attached_pic`); `final.mp4` is replaced by it.
+    prepended as the first 0.1s (3 frames) of video + 0.1s silence; this
+    is what Finder / FB / YouTube read as the poster. `final.mp4` is
+    replaced by it. The clip's effective duration grows by ~0.1s.
   - `<clip>` = the job id from `manifest.json` (e.g. `2026-05-21-ai-3-levels`).
 - A re-snapshottable `thumbnail/` project + `thumbnail/thumbnail.json` (the 3
   lines on record) are left in the workspace (gitignored).
@@ -410,7 +490,7 @@ python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใ
 | 14 — MP4 | Final mux (speech + BGM + SFX) — superseded by Step 16 | `output/finals/final.mp4` |
 | 15 — QA | Timestamp sheet | `reports/<JOB>/timestamps/timestamp-qa-sheet.jpg` |
 | 16 — Thumbnail | Default thumbnail (BG + headline) | `output/finals/<clip>.png` ⭐ |
-| 16 — MP4 | **Deliverable clip** (final + embedded cover art) | `output/finals/<clip>.mp4` ⭐ |
+| 16 — MP4 | **Deliverable clip** (final + 0.1s thumbnail poster frame) | `output/finals/<clip>.mp4` ⭐ |
 
 ---
 

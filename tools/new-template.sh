@@ -55,15 +55,28 @@ find "$NEW_TEMPLATE" -type f \( -name "*.md" -o -name "*.json" -o -name "*.html"
   fi
 done
 
+# RULE: the Template Manager display file always stays in sync with the set of
+# templates. Re-generate it now so the new template appears in
+# tools/template-manager.html. See templates/_shared/docs/JOB_SPEC.md §4.
+if [ -f "$REPO_ROOT/tools/build-manager.py" ]; then
+  if python3 "$REPO_ROOT/tools/build-manager.py" >/dev/null 2>&1; then
+    echo "→ Template Manager synced (tools/template-manager.html)"
+  else
+    echo "⚠ build-manager.py failed — run it manually: python3 tools/build-manager.py"
+  fi
+fi
+
 echo ""
 echo "✓ Template scaffolded: $NEW_TEMPLATE"
 echo ""
 echo "Next:"
-echo "  1. Edit templates/${NUM}-${SLUG}/manifest.json  (aspect, fps, caption style)"
+echo "  1. Edit templates/${NUM}-${SLUG}/manifest.json  (aspect, fps, caption style,"
+echo "     and the features[] block — the toggles the Template Manager will show)"
 echo "  2. Edit templates/${NUM}-${SLUG}/DESIGN.md      (colors, fonts, position)"
 echo "  3. Edit templates/${NUM}-${SLUG}/index.html     (composition layout)"
 echo "  4. Edit templates/${NUM}-${SLUG}/prompts/       (subagent slot defaults)"
 echo "  5. Add to templates/README.md comparison table"
+echo "  6. Re-run: python3 tools/build-manager.py  (after editing manifest.json)"
 echo ""
 echo "Then test with: bash tools/new-job.sh ${NUM} test-slug"
 echo "After the first render, refresh the visual index: bash tools/build-catalog.sh"

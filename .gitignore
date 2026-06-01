@@ -28,12 +28,21 @@ templates/_shared/env/.env
 # Other top-level work folders not part of this repo
 /robot/
 
-# Per-job artifacts (kept only as needed)
-jobs/*/intermediates/
-jobs/*/output/
-jobs/*/workspace/.tmp/
-jobs/*/workspace/node_modules/
-jobs/*/workspace/thumbnail/
+# Longform pre-processor staging (large transcripts + symlinked source video)
+/staging/
+
+# Per-job work — local only, never shared (client content lives here)
+/jobs/
+
+# Scratch / test / experiment folders (not part of the shareable repo)
+/bizdrive-manus-ai-45s/
+/caption-highlight-test/
+/compositions/
+/iphone-17-promax/
+/meme-detect-test/
+/promo-template/
+/reverse-engineer-test/
+/thumbnail-test/
 
 # Per-template asset folders (large media)
 templates/_shared/bgm/
@@ -45,15 +54,5 @@ templates/*/reference/output/
 archive/
 render-checks/
 reports/
-
-# Keep template specs + scripts + docs in git.
-# Keep job manifests + notes + small JSON artifacts in git.
-# Track these explicitly:
-!jobs/*/manifest.json
-!jobs/*/notes.md
-!jobs/*/workspace/index.html
-!jobs/*/workspace/package.json
-!jobs/*/workspace/compositions/**
-!jobs/*/workspace/scripts/**
 sample-pack-v88.zip
 .sample-pack-stage/

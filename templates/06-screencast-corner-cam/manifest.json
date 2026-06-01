@@ -1,9 +1,10 @@
 {
-  "id": "03-fullscreen-top-insert-burst",
+  "id": "06-screencast-corner-cam",
   "version": "v1",
-  "createdAt": "2026-05-20",
-  "name": "Full-screen Vertical with Top Insert + Particle-Burst Captions",
-  "description": "Single talking-head video filling the entire 1080x1920 vertical frame, with kinetic particle-burst Thai captions. B-roll plays inside a floating 16:9 rounded insert card over the upper third of the frame — the face video stays visible around the card, it does not cover the whole screen.",
+  "createdAt": "2026-05-21",
+  "name": "Screencast with Corner Cam + Particle-Burst Captions",
+  "description": "A screen recording fills the entire 1080x1920 vertical frame while the presenter's talking-head face rides along as a small circular corner-cam in the upper-left. The corner-cam stays on screen the whole clip — even while full-screen B-roll plays — so the presenter is always visible. Kinetic particle-burst Thai captions over a lower-third scrim. Built for vertical / phone-screen / app-demo screencasts.",
+  "layoutType": "corner-cam",
 
   "output": {
     "width": 1080,
@@ -17,15 +18,18 @@
   },
 
   "layout": {
-    "background": "fallback bg.png (rarely visible — the face video covers it)",
-    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
-    "broll": "floating 16:9 insert card, 984x554 px, left 48 / top 24, rounded 30px + gold 4px border, pops in/out near the top of the frame while active",
-    "captionPosition": "lower third, bottom: 360px (same as Template 01)"
+    "background": "fallback bg.png (rarely visible — the screen recording covers it)",
+    "screen": "top_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.04 — best for vertical / phone-screen content",
+    "cornerCam": "bottom_visual_master.mp4 (the face) as a circular 408px PiP, upper-left at left 56 / top 84, 5px gold gradient border + drop shadow; pops in at the start, then holds steady on top for the whole clip",
+    "broll": "full-screen 1080x1920 inserts, object-fit cover — they replace the screen but sit BELOW the corner-cam, so the presenter stays visible",
+    "captionPosition": "lower third, subtitle-cue top 1490px, over a 760px caption scrim"
   },
 
   "captions": {
     "system": "particle-burst",
     "subComposition": "compositions/captions-burst.html",
+    "buildScript": "scripts/build-burst-captions.py",
+    "referenceComponent": "compositions/components/caption-particle-burst.html",
     "font": "IBM Plex Sans Thai",
     "fontWeight": 900,
     "fontSize": 64,
@@ -42,7 +46,7 @@
 
   "audio": {
     "master": "bottom",
-    "topMuted": "n/a — no top video in this template",
+    "topMuted": true,
     "targetLoudness": -16,
     "loudnessTolerance": [-18, -14],
     "truePeakMax": -1.5,
@@ -58,23 +62,15 @@
 
   "broll": {
     "enabled": true,
-    "fullScreen": false,
-    "insert": {
-      "shape": "floating 16:9 rounded card near the top of the frame",
-      "x": 48,
-      "y": 24,
-      "width": 984,
-      "height": 554,
-      "borderRadius": 30,
-      "border": "4px solid #f4c20f"
-    },
-    "aspectRatio": "16:9",
+    "fullScreen": true,
+    "aspectRatio": "9:16",
     "maxPerMinute": 4,
     "duration": 3,
     "minSpacingSeconds": 6,
-    "transitionMode": { "soft": 0.26, "bridge": 0.30 },
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
     "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
-    "aiGenNote": "Template 03 B-roll plays inside a 16:9 insert card — generate clips at aspect_ratio 16:9, resolution 720p, generate_audio false."
+    "aiGenNote": "Template 06 B-roll fills the whole frame under the corner-cam — generate clips at aspect_ratio 9:16, resolution 720p, generate_audio false.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
   },
 
   "sfx": {
@@ -87,7 +83,7 @@
     "targetPeakDb": -5,
     "mixScript": "scripts/mix-sfx.py",
     "plan": "assets/intermediates/sfx-plan.json",
-    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA/follow-card, punch on punchlines, riser before reveals). mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA, punch on punchlines, riser before reveals). mix-sfx.py enforces the rule and writes output/finals/final.mp4."
   },
 
   "features": [
@@ -153,20 +149,6 @@
       "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
     },
     {
-      "id": "end_card",
-      "label": { "th": "การ์ดปิดท้าย ชวนติดตาม (TikTok follow)", "en": "TikTok follow end-card" },
-      "section": "extras",
-      "step": "11",
-      "default": true,
-      "advanced": false,
-      "whenOff": "ไม่ติดตั้ง tiktok-follow block / ไม่ mount #tiktok-follow-mount",
-      "options": [
-        { "id": "name", "type": "text", "label": { "th": "ชื่อที่แสดง", "en": "Display name" }, "default": "9arm" },
-        { "id": "handle", "type": "text", "label": { "th": "แฮนเดิล", "en": "Handle" }, "default": "@9arm" },
-        { "id": "followers", "type": "text", "label": { "th": "จำนวนผู้ติดตาม", "en": "Followers" }, "default": "20,000" }
-      ]
-    },
-    {
       "id": "thumbnail",
       "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
       "section": "extras",
@@ -190,8 +172,9 @@
     "vad": "silero-vad",
     "editorialRules": "templates/_shared/references/editorial-rules.md",
     "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
-    "differenceFromTemplate01": "Only ONE source video (bottom = the talking head). There is no top.mp4 / screen recording. V88_PLAYBOOK Step 7 trims bottom only — skip the parallel top trim. Everything else is identical.",
-    "differenceFromTemplate02": "Same single full-screen face video, but B-roll does NOT cover the frame — it plays inside a floating 16:9 insert card over the upper third. B-roll is generated at 16:9 (not 9:16), and add-broll.py emits .top-insert cards instead of .fullscreen-media clips."
+    "sourceMedia": "TWO source videos like Template 01/05 — top.mp4 (screen recording) + bottom.mp4 (face, master audio). V88_PLAYBOOK Step 7 trims both in parallel with the same EDL (lip-sync lock).",
+    "differenceFromTemplate01": "Template 01 splits the frame 50/50 (screen in a framed top half, face in a bottom circle). Template 06 makes the screen FULL-SCREEN and shrinks the face to a small circular corner-cam — the screen is the hero. Use T01 for 16:9 desktop captures (shown at native aspect); use T06 for vertical / phone-screen content shown full-bleed.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-burst-captions.py && python3 scripts/add-broll.py <starts...>"
   },
 
   "compatibility": {

@@ -1,0 +1,54 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "bizdrive-job-spec",
+  "title": "BIZDRIVE Job Spec",
+  "description": "A per-clip work order produced by tools/template-manager.html. It tells an AI agent which template to use and which pipeline features to run. A feature with on:false means the agent SKIPS the step(s) that feature owns. See templates/_shared/docs/JOB_SPEC.md.",
+  "type": "object",
+  "required": ["spec", "version", "template", "features"],
+  "additionalProperties": false,
+  "properties": {
+    "spec": { "const": "bizdrive-job-spec" },
+    "version": { "type": "integer", "enum": [1] },
+    "template": {
+      "type": "string",
+      "description": "Template id, e.g. 04-fullscreen-vertical-karaoke. Must match a templates/NN-*/ directory.",
+      "pattern": "^[0-9]{2}-"
+    },
+    "video": {
+      "type": "string",
+      "description": "Source video link or file path. May be empty — the user can supply it in chat instead."
+    },
+    "topic": {
+      "type": "string",
+      "description": "One-sentence topic / context of the clip. Feeds the editorial subagent slot."
+    },
+    "durationTarget": {
+      "type": ["number", "null"],
+      "description": "Target final duration in seconds (a ceiling — the agent shrinks if content is shorter). null = follow content."
+    },
+    "features": {
+      "type": "object",
+      "description": "Keyed by feature id (see each template manifest's features[]). Every value has an 'on' boolean; option keys depend on the feature.",
+      "additionalProperties": {
+        "type": "object",
+        "required": ["on"],
+        "properties": {
+          "on": { "type": "boolean", "description": "true = run this feature's step(s); false = skip them." },
+          "mode": { "type": "string", "enum": ["ai-gen", "stock"], "description": "broll: B-roll source." },
+          "max": { "type": "integer", "minimum": 0, "description": "broll: max number of inserts." },
+          "gain": { "type": "number", "minimum": 0, "description": "bgm: gain percent." },
+          "main": { "type": "string", "description": "thumbnail: white top line." },
+          "hero": { "type": "string", "description": "thumbnail: gold hero line." },
+          "sub": { "type": "string", "description": "thumbnail: soft-blue bottom line." },
+          "name": { "type": "string", "description": "end_card: display name." },
+          "handle": { "type": "string", "description": "end_card: @handle." },
+          "followers": { "type": "string", "description": "end_card: follower count." }
+        }
+      }
+    },
+    "notes": {
+      "type": "string",
+      "description": "Free-text adjustments the user wants — creative direction, things to emphasise or avoid."
+    }
+  }
+}

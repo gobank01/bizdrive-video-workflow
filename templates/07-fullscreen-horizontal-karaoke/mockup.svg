@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 940 760" font-family="'IBM Plex Sans Thai','Noto Sans Thai','Inter',sans-serif">
+  <rect width="940" height="760" rx="22" fill="#0b1330"/>
+  <rect x="1.5" y="1.5" width="937" height="757" rx="21" fill="none" stroke="#1f2c55" stroke-width="2"/>
+  <text x="470" y="48" text-anchor="middle" font-size="31" font-weight="800" fill="#f4c20f" letter-spacing="1">TEMPLATE 07</text>
+  <text x="470" y="73" text-anchor="middle" font-size="15" font-weight="600" fill="#9fb0d8">07-fullscreen-horizontal-karaoke</text>
+
+  <!-- Outer 9:16 slot (matches the gallery rhythm) — letterboxed top/bottom because T07 is 16:9 -->
+  <rect x="300" y="92" width="340" height="604" rx="16" fill="#040814"/>
+  <text x="470" y="220" text-anchor="middle" font-size="13" font-weight="700" fill="#3a4a6f" letter-spacing="2">↓ 16:9 HORIZONTAL ↓</text>
+
+  <!-- Inner 16:9 frame, centered. 340 wide → 191 tall. Center y = 92 + (604-191)/2 ≈ 298.5 -->
+  <defs>
+    <clipPath id="clip07"><rect x="300" y="298" width="340" height="192" rx="10"/></clipPath>
+    <linearGradient id="face07" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#2a3a66"/><stop offset="1" stop-color="#0a1430"/>
+    </linearGradient>
+  </defs>
+  <g clip-path="url(#clip07)">
+    <!-- Fullscreen face -->
+    <rect x="300" y="298" width="340" height="192" fill="url(#face07)"/>
+    <circle cx="470" cy="376" r="36" fill="#5a8dff" opacity="0.85"/>
+    <path d="M440 426a30 25 0 0 1 60 0z" fill="#5a8dff" opacity="0.85"/>
+    <!-- Lower-third scrim -->
+    <rect x="300" y="438" width="340" height="52" fill="#000000" opacity="0.55"/>
+    <!-- Karaoke caption (red + gold tspan) — like T05 -->
+    <rect x="318" y="448" width="92" height="30" rx="6" fill="url(#capRed)"/>
+    <rect x="416" y="448" width="76" height="30" rx="6" fill="url(#capGold)"/>
+    <rect x="498" y="448" width="124" height="30" rx="6" fill="url(#capRed)"/>
+    <text x="364" y="469" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">ซับ</text>
+    <text x="454" y="469" text-anchor="middle" font-size="15" font-weight="800" fill="#1c1206">เด่น</text>
+    <text x="560" y="469" text-anchor="middle" font-size="15" font-weight="800" fill="#ffffff">คาราโอเกะ</text>
+  </g>
+  <defs>
+    <linearGradient id="capRed" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff2d55"/><stop offset="1" stop-color="#d11138"/>
+    </linearGradient>
+    <linearGradient id="capGold" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ffd93d"/><stop offset="1" stop-color="#d99a06"/>
+    </linearGradient>
+  </defs>
+  <rect x="300" y="298" width="340" height="192" rx="10" fill="none" stroke="#f4c20f" stroke-width="2.5" opacity="0.9"/>
+
+  <!-- callouts -->
+  <line x1="656" y1="334" x2="540" y2="334" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="540" cy="334" r="6.5" fill="#f4c20f"/><circle cx="540" cy="334" r="2.6" fill="#0b1330"/>
+  <rect x="656" y="317" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="788" y="339" text-anchor="middle" font-size="15" font-weight="600" fill="#ffffff">หน้าคนพูด · เต็มจอ 16:9</text>
+
+  <line x1="284" y1="463" x2="380" y2="463" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="380" cy="463" r="6.5" fill="#f4c20f"/><circle cx="380" cy="463" r="2.6" fill="#0b1330"/>
+  <rect x="20" y="446" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="152" y="468" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">ซับคาราโอเกะ · แดง/ทอง</text>
+
+  <line x1="656" y1="555" x2="500" y2="555" stroke="#f4c20f" stroke-width="2"/>
+  <circle cx="500" cy="555" r="6.5" fill="#f4c20f"/><circle cx="500" cy="555" r="2.6" fill="#0b1330"/>
+  <rect x="656" y="538" width="264" height="34" rx="17" fill="#16224a" stroke="#f4c20f" stroke-width="1.5"/>
+  <text x="788" y="560" text-anchor="middle" font-size="14" font-weight="600" fill="#ffffff">B-roll · 1 ต่อ 2 นาที</text>
+
+  <text x="470" y="734" text-anchor="middle" font-size="15" font-weight="600" fill="#9fb0d8">16:9 · 1920×1080    ·    captions: caption-highlight (karaoke)</text>
+</svg>

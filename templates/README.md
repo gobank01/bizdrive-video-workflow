@@ -14,6 +14,8 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 03 | fullscreen-top-insert-burst | 1080×1920    | single talking-head full-screen + B-roll in a floating 16:9 top insert | particle burst + gold | ✅ ready (2026-05-20) |
 | 04 | fullscreen-vertical-karaoke | 1080×1920    | single talking-head full-screen + full-screen B-roll | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
 | 05 | stacked-vertical-karaoke    | 1080×1920    | talking-head + screen recording + B-roll (stacked) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
+| 06 | screencast-corner-cam       | 1080×1920    | full-screen screen recording + face as a corner-cam + full-screen B-roll | particle burst + gold | ✅ ready (2026-05-21) |
+| 07 | fullscreen-horizontal-karaoke | **1920×1080** | **YouTube long-form** talking-head + full-screen B-roll (~1 per 2 min) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-22) |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
 ### Which to pick
@@ -32,6 +34,15 @@ Two axes: **layout** (do you have a screen recording?) and **caption style**
   numbers/brands). Punchy, CapCut-style.
 - **Template 05** — same stacked layout as Template 01 (screen + face), but
   **karaoke** captions instead of particle-burst.
+- **Template 06** — TWO videos (screen + face), but the screen recording fills
+  the whole frame and the face is a small **corner-cam** that stays on screen
+  the entire clip. **Particle-burst** captions. For vertical / phone-screen
+  screencasts (use Template 01 for 16:9 desktop captures).
+- **Template 07** — first **16:9 horizontal** template (1920×1080), built for
+  **YouTube long-form** cuts. Full-screen talking-head + full-screen B-roll +
+  **karaoke** captions. B-roll is long-form cadence (≥120s spacing, 4s each,
+  ~1 per 2 minutes) instead of the 9:16 sparse-4/60s rule. Thumbnail default OFF
+  (use a separate 1280×720 YouTube cover).
 
 > **Same layout, different captions:** 01 ↔ 05 (stacked) and 02 ↔ 04
 > (full-screen). Particle-burst = premium/calm; karaoke box sweep = punchy/viral.
@@ -60,11 +71,17 @@ Examples that do NOT need new templates:
 ```bash
 bash tools/new-template.sh 02 horizontal-talking-head
 # Customize templates/02-horizontal-talking-head/:
-#   - manifest.json  (aspect, fps, caption style, gold rule)
+#   - manifest.json  (aspect, fps, caption style, gold rule, features[])
 #   - index.html     (composition layout)
 #   - DESIGN.md      (colors, fonts, position)
 #   - prompts/       (subagent slot defaults specific to this template)
 ```
+
+`new-template.sh` runs `tools/build-manager.py` automatically, so the new
+template appears in the Template Manager (`tools/template-manager.html`) right
+away. **After you edit the new `manifest.json` — especially its `features[]`
+block — re-run `python3 tools/build-manager.py`** so the manager picks up the
+real values. This sync is a project rule; see [AGENTS.md](../AGENTS.md) RULE 1.
 
 ## Shared infrastructure (`_shared/`)
 

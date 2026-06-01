@@ -1,14 +1,15 @@
 {
-  "id": "05-stacked-vertical-karaoke",
+  "id": "07-fullscreen-horizontal-karaoke",
   "version": "v1",
-  "createdAt": "2026-05-21",
-  "name": "Stacked Vertical with Karaoke Highlight Captions",
-  "description": "BIZDRIVE-style vertical talking-head video: top frame is screen recording, bottom is face on a circle, with optional B-roll inserts in the top frame. Same stacked layout as Template 01 — the only difference is the caption system: BIZDRIVE Karaoke (caption-highlight), a coloured box that sweeps word-by-word in sync with the speech (red box for normal words, gold box for brand / number / tech tokens).",
+  "createdAt": "2026-05-22",
+  "name": "Full-screen Horizontal with Karaoke Highlight Captions (YouTube cut)",
+  "description": "A 1920x1080 (16:9 horizontal) talking-head edit for YouTube-style long-form cuts. The face video fills the whole frame; B-roll inserts also fill the frame. Captions are BIZDRIVE Karaoke (red/gold word-sweep, the same caption-highlight system as Template 04/05). Long-form B-roll cadence: one 4-second insert per ~2 minutes (not the 9:16 sparse-4/60s rule).",
+  "layoutType": "horizontal-talking-head",
 
   "output": {
-    "width": 1080,
-    "height": 1920,
-    "aspect": "9:16",
+    "width": 1920,
+    "height": 1080,
+    "aspect": "16:9",
     "fps": 30,
     "codec": "h264",
     "audioCodec": "aac",
@@ -17,11 +18,10 @@
   },
 
   "layout": {
-    "background": "full-frame bg.png image",
-    "topFrame": { "width": 1080, "height": 607.5, "radius": 30, "border": "4px gold gradient" },
-    "bottomFrame": { "shape": "circle", "diameter": 607.5, "border": "4px gold gradient" },
-    "gap": 40,
-    "captionPosition": "in the band below the bottom circle, bottom: 360px (build-highlight-captions.py arg 4)"
+    "background": "fallback bg.png (rarely visible — the face video covers it)",
+    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.04",
+    "broll": "full-screen 1920x1080 inserts, object-fit cover, replace the whole frame while active",
+    "captionPosition": "lower third, bottom: 120px (build-highlight-captions.py arg 4); scrim height 400px"
   },
 
   "captions": {
@@ -32,8 +32,8 @@
     "referenceComponent": "compositions/components/caption-highlight.html",
     "font": "IBM Plex Sans Thai",
     "fontWeight": 800,
-    "fontSize": "70px, auto-fit down if a group overflows",
-    "bottomPx": 360,
+    "fontSize": "80px, auto-fit down if a group overflows (slightly bigger than T04/T05's 70px for horizontal readability)",
+    "bottomPx": 120,
     "mechanic": "a coloured box sweeps word-by-word (scaleX 0->1, transform-origin left) in sync with speech; the spoken word pops scale 1.0 -> 1.07 then settles",
     "colors": {
       "text": "#ffffff — flips to #1c1206 (dark) while a gold box is active, for WCAG contrast",
@@ -42,13 +42,12 @@
     },
     "tokensPerGroup": "1-3",
     "maxCharsPerGroup": 32,
-    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms — these get the gold box",
-    "perWordTiming": "interpolated inside each group by character weight (caption-groups.json carries group start/end + token text+gold only)"
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms"
   },
 
   "audio": {
     "master": "bottom",
-    "topMuted": true,
+    "topMuted": "n/a — no top video in this template",
     "targetLoudness": -16,
     "loudnessTolerance": [-18, -14],
     "truePeakMax": -1.5,
@@ -57,7 +56,6 @@
       "enabled": true,
       "gainPercent": 5,
       "intent": "barely audible ambient bed",
-      "mixNote": "mix BGM with ffmpeg amix normalize=0 so the voice keeps its polished level",
       "defaultFallback": "mixkit-480 Curiosity",
       "techFallback": "mixkit-1167 Close Up"
     }
@@ -65,27 +63,27 @@
 
   "broll": {
     "enabled": true,
-    "maxPerMinute": 4,
-    "duration": 3,
-    "minSpacingSeconds": 6,
-    "minTopFootageBetweenInserts": 3,
+    "fullScreen": true,
+    "aspectRatio": "16:9",
+    "duration": 4,
+    "minSpacingSeconds": 120,
+    "cadenceNote": "Long-form YouTube cadence — ~1 insert per 2 minutes of final video. No hard maxPerMinute cap (a 20-minute cut gets ~10 inserts).",
     "transitionMode": { "soft": 0.22, "bridge": 0.26 },
     "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
-    "aiGenNote": "B-roll fills the top frame (16:9-ish), not the whole screen — generate clips at 720p, 16:9, generate_audio false.",
-    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
+    "aiGenNote": "Template 07 B-roll fills the whole horizontal frame — generate clips at aspect_ratio 16:9, resolution 720p, generate_audio false."
   },
 
   "sfx": {
     "enabled": true,
     "library": "templates/_shared/sfx/sfx-library.json",
     "maxPerClip": 5,
-    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
-    "minSpacingSeconds": 4,
+    "pacing": "Long-form: ≤5 SFX even on a 20-min cut — keep them sparse + memorable",
+    "minSpacingSeconds": 60,
     "contextMatched": true,
     "targetPeakDb": -5,
     "mixScript": "scripts/mix-sfx.py",
     "plan": "assets/intermediates/sfx-plan.json",
-    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on. mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+    "note": "For long-form, the v88 hard cap of 5 SFX still applies — each one should land on a topic turn, reveal, or CTA, not a generic transition."
   },
 
   "features": [
@@ -114,11 +112,11 @@
       "step": "9-11",
       "default": true,
       "advanced": false,
-      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-highlight-captions.py); ไม่ mount caption track"
     },
     {
       "id": "broll",
-      "label": { "th": "B-roll แทรกภาพ", "en": "B-roll inserts" },
+      "label": { "th": "B-roll แทรกภาพ (~1 ต่อ 2 นาที)", "en": "B-roll inserts (~1 per 2 min)" },
       "section": "broll",
       "step": "11",
       "default": true,
@@ -126,7 +124,7 @@
       "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
       "options": [
         { "id": "mode", "type": "enum", "label": { "th": "แหล่ง B-roll", "en": "Source" }, "values": ["ai-gen", "stock"], "default": "ai-gen" },
-        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 4, "min": 0, "max": 8 }
+        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 5, "min": 0, "max": 15 }
       ]
     },
     {
@@ -155,13 +153,41 @@
       "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
       "section": "extras",
       "step": "16",
-      "default": true,
+      "default": false,
       "advanced": false,
-      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art. **Default off สำหรับ T07** เพราะ build-thumbnail.py ปัจจุบันรองรับเฉพาะ 9:16 1080x1920 — สำหรับ YouTube ใช้ภาพปก 1280x720 ที่ออกแบบแยก",
       "options": [
         { "id": "main", "type": "text", "label": { "th": "บรรทัดบน (ขาว)", "en": "Main line" }, "default": "" },
         { "id": "hero", "type": "text", "label": { "th": "บรรทัดเด่น (ทอง)", "en": "Hero line" }, "default": "" },
         { "id": "sub", "type": "text", "label": { "th": "บรรทัดล่าง (ฟ้า)", "en": "Sub line" }, "default": "" }
+      ]
+    },
+    {
+      "id": "chunked",
+      "label": { "th": "ทำงานเป็น chunk (long-form)", "en": "Chunked workflow (long-form)" },
+      "section": "edit",
+      "step": "0c",
+      "default": false,
+      "advanced": false,
+      "whenOff": "รัน v88 ครั้งเดียวทั้งคลิป (วิธีปกติ) — เหมาะกับคลิป ≤10 นาที",
+      "whenOn": "แบ่ง source bottom.mp4 เป็น chunks ตาม chunkMinutes แล้วรัน v88 Step 2-13 แยกต่อ chunk (resumable). ใช้: scripts/split-chunks.py → ทำทีละ chunk → scripts/merge-chunks.py. Lint แบบ soft (ตอน merge เท่านั้น).",
+      "options": [
+        {
+          "id": "chunkMinutes",
+          "type": "number",
+          "label": { "th": "ขนาด chunk (นาที)", "en": "Chunk size (minutes)" },
+          "default": 5,
+          "min": 2,
+          "max": 15,
+          "unit": "min"
+        },
+        {
+          "id": "lintMode",
+          "type": "enum",
+          "label": { "th": "Lint", "en": "Lint mode" },
+          "values": ["soft", "strict"],
+          "default": "soft"
+        }
       ]
     }
   ],
@@ -174,19 +200,21 @@
     "vad": "silero-vad",
     "editorialRules": "templates/_shared/references/editorial-rules.md",
     "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
-    "differenceFromTemplate01": "Identical stacked layout (top screen frame + bottom face circle), motion, audio, B-roll and pipeline. The only change is Step 11: build captions with scripts/build-highlight-captions.py (karaoke box sweep) instead of build-burst-captions.py (particle-burst). The caption-groups.json schema is the same — both caption systems consume it.",
-    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-highlight-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-highlight.html <DURATION> 360"
+    "sourceMedia": "ONE source video (bottom = the talking head). There is no top.mp4. V88_PLAYBOOK Step 7 trims bottom only — skip the parallel top trim. Everything else is identical to T04 except the aspect.",
+    "differenceFromTemplate04": "Same fullscreen-face + fullscreen-B-roll + karaoke layout. The only structural change is the aspect: T04 is 1080x1920 (9:16 vertical, Reels/TikTok); T07 is 1920x1080 (16:9 horizontal, YouTube). B-roll generation aspect flips accordingly, and the long-form B-roll cadence (≥120s, 4s each) replaces the 9:16 sparse-4/60s rule.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-highlight-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-highlight.html <DURATION> 120"
   },
 
   "compatibility": {
     "hyperframes": ">=0.6.25",
-    "python": ">=3.10",
+    "python": ">=3.10 (pythainlp required for the caption build)",
     "nodejs": ">=18",
     "ffmpeg": ">=4.0"
   },
 
   "reference": {
-    "job": "(none yet — first job will become the reference)",
+    "input": "(none yet — first job pending)",
+    "output": "(none yet)",
     "goldenTest": {
       "durationTolerance": 0.05,
       "frameCountExact": true
