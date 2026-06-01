@@ -26,6 +26,11 @@ In a hurry? **[QUICKSTART.md](QUICKSTART.md)** is the one-page version.
 Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
 
+> **On Windows / non-technical?** See **[INSTALL.md](INSTALL.md)** — a 3-step
+> WSL bootstrap, then Claude Code installs everything else for you.
+> `tools/setup.sh` now auto-installs missing tools (ffmpeg / Python / Node) on
+> macOS and Linux/WSL.
+
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ---

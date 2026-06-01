@@ -23,17 +23,65 @@ echo " BIZDRIVE video workflow — environment setup"
 echo "=================================================="
 echo ""
 
-# --- 1. System tools ---
-echo "→ Checking system tools..."
-MISSING=""
-command -v ffmpeg  >/dev/null 2>&1 || MISSING="$MISSING ffmpeg"
-command -v ffprobe >/dev/null 2>&1 || MISSING="$MISSING ffprobe"
-command -v python3 >/dev/null 2>&1 || MISSING="$MISSING python3"
-command -v node    >/dev/null 2>&1 || MISSING="$MISSING node"
-if [ -n "$MISSING" ]; then
-  echo "✗ Missing:$MISSING" >&2
-  echo "  macOS:  brew install ffmpeg python node" >&2
-  echo "  Linux:  apt-get install ffmpeg python3 nodejs" >&2
+# --- 0. Detect OS + package manager (for auto-install) ---
+case "$(uname -s)" in
+  Darwin*) OS="macos" ;;
+  Linux*)  OS="linux" ;;          # includes WSL (Windows users run inside WSL/Ubuntu)
+  MINGW*|MSYS*|CYGWIN*) OS="gitbash" ;;
+  *) OS="unknown" ;;
+esac
+
+# auto_install <tool> — try to install a missing system tool for the current OS.
+# Returns 0 if installed (or already present), 1 if it could not.
+auto_install() {
+  tool="$1"
+  command -v "$tool" >/dev/null 2>&1 && return 0
+  echo "  → installing $tool..."
+  case "$OS" in
+    macos)
+      command -v brew >/dev/null 2>&1 || {
+        echo "    Homebrew not found. Installing it first..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
+        eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv 2>/dev/null)"
+      }
+      case "$tool" in
+        ffmpeg|ffprobe) brew install ffmpeg ;;   # ffprobe ships with ffmpeg
+        node) brew install node ;;
+        python3) brew install python ;;
+      esac ;;
+    linux)
+      if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update -qq
+        case "$tool" in
+          ffmpeg|ffprobe) sudo apt-get install -y ffmpeg ;;
+          node) sudo apt-get install -y nodejs npm ;;
+          python3) sudo apt-get install -y python3 python3-pip python3-venv ;;
+        esac
+      elif command -v dnf >/dev/null 2>&1; then
+        case "$tool" in
+          ffmpeg|ffprobe) sudo dnf install -y ffmpeg ;;
+          node) sudo dnf install -y nodejs npm ;;
+          python3) sudo dnf install -y python3 python3-pip ;;
+        esac
+      else
+        return 1
+      fi ;;
+    *) return 1 ;;
+  esac
+  command -v "$tool" >/dev/null 2>&1
+}
+
+# --- 1. System tools (auto-install what's missing) ---
+echo "→ Checking system tools (will auto-install any that are missing)..."
+STILL_MISSING=""
+for t in ffmpeg ffprobe python3 node; do
+  auto_install "$t" || STILL_MISSING="$STILL_MISSING $t"
+done
+if [ -n "$STILL_MISSING" ]; then
+  echo "✗ Could not auto-install:$STILL_MISSING" >&2
+  echo "  Install them by hand, then re-run this script:" >&2
+  echo "    macOS:        brew install ffmpeg python node" >&2
+  echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-venv nodejs npm" >&2
   exit 1
 fi
 PY_OK=$(python3 -c "import sys; print('yes' if sys.version_info >= (3,10) else 'no')")
@@ -46,7 +94,10 @@ echo "  ✓ ffmpeg, ffprobe, python3 ($(python3 --version | cut -d' ' -f2)), nod
 # --- 2. Python deps ---
 echo ""
 echo "→ Installing Python deps (pythainlp, nlpo3, certifi)..."
-python3 -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi
+# --user fails on PEP 668 "externally-managed" Python (common on Ubuntu/WSL);
+# fall back to --break-system-packages, which is safe for these pure-Python libs.
+python3 -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi 2>/dev/null \
+  || python3 -m pip install --user --break-system-packages --quiet --upgrade pythainlp nlpo3 certifi
 echo "  ✓ Thai NLP libs + certifi installed"
 
 # --- 3. Silero VAD venv ---
