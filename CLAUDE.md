@@ -4,30 +4,64 @@
 the Template Manager sync rule, the Job Spec rule, the locked v88 pipeline, and
 when to add a template. Every rule there applies to Claude Code.
 
-## First-run setup (auto-install)
+## First-run setup — "install" / "setup" means do ALL of this, end to end
 
-If a user asks you to "install", "set up", or "get this working" — or if a
-pipeline command fails because `ffmpeg`, `python3`, `node`, or the Silero VAD
-venv is missing — run the one setup script. It is OS-aware and **auto-installs**
-missing system tools (macOS via Homebrew, Linux/WSL via apt/dnf):
+When the user says anything like **"install"**, **"setup"**, **"set this up"**,
+**"ติดตั้ง"**, **"get this working"** — or when a pipeline command fails because a
+tool is missing — run the WHOLE sequence below without stopping between steps.
+Do not hand intermediate commands back to the user; you run them. The same flow
+works on macOS and Linux/WSL (Windows users are inside WSL — treat it as Linux).
+Finish only when the project is fully ready to make a video.
+
+**Step 1 — Run the OS-aware installer.** It auto-installs ffmpeg, python3 (+pip
++venv), Node 18+, the Thai NLP libs, and the Silero VAD venv (~437 MB):
 
 ```bash
 bash tools/setup.sh
 ```
 
-Then create the API-key file and ask the user for their keys (never invent them):
+If it reports a tool it could not auto-install, install that tool yourself with
+the platform's package manager (macOS `brew`, Linux/WSL `sudo apt-get`/`dnf`),
+then re-run `bash tools/setup.sh`. Never make the user install by hand.
+
+**Step 2 — API keys.** `setup.sh` creates `templates/_shared/env/.env` from the
+example. Open it and ask the user to paste their keys (never invent them):
 
 ```
-templates/_shared/env/.env
-  ELEVENLABS_API_KEY=...        # required — https://elevenlabs.io/app/settings/api-keys
-  OPENROUTER_API_KEY=...        # optional, B-roll — https://openrouter.ai/keys
+ELEVENLABS_API_KEY=...     # required  — https://elevenlabs.io/app/settings/api-keys
+OPENROUTER_API_KEY=...     # optional (B-roll) — https://openrouter.ai/keys
 ```
 
-Windows users run inside **WSL/Ubuntu** (the human bootstrap is in
-[INSTALL.md](INSTALL.md)); from your side WSL is just Linux, so `tools/setup.sh`
-works unchanged. If `setup.sh` reports a tool it could not auto-install, install
-it for the user with the platform's package manager, then re-run the script —
-don't make the user do it by hand.
+If the user only has the ElevenLabs key, that is enough to start — leave
+OpenRouter blank and skip B-roll later.
+
+**Step 3 — Verify the environment is actually ready.** Run preflight and confirm
+every check is "yes":
+
+```bash
+bash templates/_shared/scripts/clean-cut/preflight.sh
+```
+
+It prints JSON for `ffmpeg`, `ffprobe`, `python3`, `silero_vad`. If any is "no",
+go back to Step 1 for that piece — don't proceed.
+
+**Step 4 — Report ready + tell the user the next move.** When preflight is clean
+and the ElevenLabs key is in `.env`, tell the user setup is complete and how to
+start their first clip, e.g.:
+
+> ติดตั้งครบแล้ว ✅ วางคลิปของคุณ (top.mp4 = จอ, bottom.mp4 = หน้า, bg.png) แล้วบอกผม
+> ว่า "ตัดต่อคลิปนี้ ใช้ Template 01" — ผมจะรันไปป์ไลน์ v88 ให้
+
+The 16-step production pipeline itself lives in
+[`templates/_shared/docs/V88_PLAYBOOK.md`](templates/_shared/docs/V88_PLAYBOOK.md);
+follow it when the user asks to edit a clip — that is a separate task from setup.
+
+> **Permission popups:** this repo ships `.claude/settings.json` with
+> `defaultMode: bypassPermissions`, so inside this project you can run the setup
+> commands without prompting. If the user is on the VS Code extension and wants
+> no prompts machine-wide (before the repo is even cloned), point them at
+> `tools/enable-claude-bypass.ps1` (Windows) / `tools/enable-claude-bypass.sh`
+> (mac/Linux). See [INSTALL.md](INSTALL.md).
 
 ## Claude Code specifics
 
