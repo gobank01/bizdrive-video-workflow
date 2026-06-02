@@ -56,6 +56,8 @@ auto_install() {
         ffmpeg|ffprobe) brew install ffmpeg ;;   # ffprobe ships with ffmpeg
         node) brew install node ;;
         python3) brew install python ;;
+        git) brew install git ;;
+        curl) brew install curl ;;
       esac ;;
     linux)
       if command -v apt-get >/dev/null 2>&1; then
@@ -64,12 +66,16 @@ auto_install() {
           ffmpeg|ffprobe) sudo apt-get install -y ffmpeg ;;
           node) install_node_apt ;;
           python3) sudo apt-get install -y python3 python3-pip python3-venv ;;
+          git) sudo apt-get install -y git ;;
+          curl) sudo apt-get install -y curl ;;
         esac
       elif command -v dnf >/dev/null 2>&1; then
         case "$tool" in
           ffmpeg|ffprobe) sudo dnf install -y ffmpeg ;;
           node) sudo dnf install -y nodejs npm ;;
           python3) sudo dnf install -y python3 python3-pip ;;
+          git) sudo dnf install -y git ;;
+          curl) sudo dnf install -y curl ;;
         esac
       else
         return 1
@@ -110,6 +116,8 @@ python_stack_ok() {
 # --- 1. System tools (auto-install what's missing) ---
 echo "→ Checking system tools (will auto-install any that are missing)..."
 STILL_MISSING=""
+auto_install git     || STILL_MISSING="$STILL_MISSING git"
+auto_install curl    || STILL_MISSING="$STILL_MISSING curl"
 auto_install ffmpeg  || STILL_MISSING="$STILL_MISSING ffmpeg"
 auto_install ffprobe || STILL_MISSING="$STILL_MISSING ffprobe"
 
