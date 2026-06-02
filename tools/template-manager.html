@@ -458,6 +458,84 @@
         <span class="tool-card-copymsg" id="t1_copymsg"></span>
       </div>
     </div>
+
+    <div class="tool-card">
+      <div class="tool-card-head">
+        <div class="tool-card-icon">✂️</div>
+        <div class="tool-card-titlewrap">
+          <div class="tool-card-num">TOOL 02</div>
+          <div class="tool-card-name">Rough Cut</div>
+          <div class="tool-card-tagline">คลิปเดี่ยว → ตัดกระชับ (ของเสีย + รีดน้ำ) เสียงดี — ยังไม่ใส่ caption/template</div>
+        </div>
+        <a href="../tools/02-rough-cut/README.md" target="_blank" class="tool-card-cta">วิธีใช้ →</a>
+      </div>
+      <div class="tool-card-rows">
+        <div class="tool-row">
+          <div class="tool-row-label">ใช้เมื่อ</div>
+          <div class="tool-row-body">
+            มี <b>คลิปเดี่ยว</b> ที่อยากได้ฉบับ <b>ตัดกระชับ ดู/โพสต์ได้เลย</b>
+            (ตัดพูดผิด/พูดวน/dead air + ปรับระดับเสียง) — หรือจะเอา rough cut ไป <b>เข้า v88 ต่อ</b> ก็ได้
+          </div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-row-label">พิมพ์</div>
+          <div class="tool-row-body">
+            <span class="quote">"ใช้ tool 2 กับ <code>/Downloads/talk.mp4</code>"</span>
+            <span class="muted">— อยากกำหนดความยาว เติม <span class="quote">"ขอ 90 วินาที"</span></span>
+          </div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-row-label">AI ทำ</div>
+          <div class="tool-row-body">
+            transcribe <span class="arrow">→</span> AI ตัด <b>ของเสีย + รีดน้ำ</b> (ตัด<b>เนื้อหา</b>เข้าเป้าถ้าสั่งวินาที)
+            <span class="arrow">→</span> VAD jump-cut <span class="arrow">→</span> ปรับระดับเสียง (loudnorm)
+            <span class="arrow">→</span> <b>rough-cut.mp4</b> (คงสัดส่วน+fps เดิม)
+          </div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-row-label">ตัวอย่าง</div>
+          <div class="tool-row-body">
+            <span class="muted">clip 128s → Clean 120s (ตัดของเสีย) · หรือ "ขอ 90 วิ" → 92s (ยอมตัดประเด็นเข้าเป้า)</span>
+          </div>
+        </div>
+        <div class="tool-row">
+          <div class="tool-row-label">ได้ไฟล์</div>
+          <div class="tool-row-body">
+            <code>staging/roughcut/&lt;date&gt;-&lt;slug&gt;/rough-cut.mp4</code>
+            + <code>edl.json</code> <span class="muted">— ยังไม่มี caption/template/B-roll/thumbnail</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- กรอกข้อมูล → คัดลอก prompt ไปวาง AI -->
+      <div class="tool-card-form">
+        <div class="tool-card-form-title">🎯 กรอกข้อมูล → คัดลอก prompt</div>
+        <label class="fld">
+          <span class="lbl">Source path (path ของคลิปดิบ)</span>
+          <input type="text" id="t2_source" placeholder="/Users/you/Downloads/talk.mp4" />
+        </label>
+        <div class="row3">
+          <label class="fld" style="margin:0">
+            <span class="lbl">Slug (ชื่อสั้น)</span>
+            <input type="text" id="t2_slug" placeholder="my-talk" />
+          </label>
+          <label class="fld" style="margin:0">
+            <span class="lbl">Context (แก่นของคลิป — เว้นได้)</span>
+            <input type="text" id="t2_context" placeholder="พี่แบงค์อธิบายว่าสั่งงาน AI ไม่ยาก" />
+          </label>
+          <label class="fld" style="margin:0">
+            <span class="lbl">ความยาวเป้าหมาย (วิ — เว้น = ไม่บังคับ)</span>
+            <input type="number" id="t2_target" placeholder="90" min="1" />
+          </label>
+        </div>
+      </div>
+
+      <pre class="tool-card-out" id="t2_out"></pre>
+      <div class="tool-card-copy-row">
+        <button class="tool-card-copy" id="t2_copy">📋 คัดลอก prompt</button>
+        <span class="tool-card-copymsg" id="t2_copymsg"></span>
+      </div>
+    </div>
     <!-- เพิ่ม tool ใหม่: ก๊อปบล็อก .tool-card ด้านบนแล้วแก้ icon/num/name/tagline/rows/link -->
   </div>
 </section>
@@ -2137,6 +2215,56 @@ renderSpec();
 
   [src, slug, topic, tpl].forEach((el) => el.addEventListener("input", render));
   tpl.addEventListener("change", render);
+
+  copyBtn.addEventListener("click", async () => {
+    const { text } = buildPrompt();
+    try {
+      await navigator.clipboard.writeText(text);
+      copyMsg.textContent = "✓ คัดลอกแล้ว — วางในแชต AI ได้เลย";
+      setTimeout(() => (copyMsg.textContent = ""), 3000);
+    } catch (e) {
+      copyMsg.textContent = "✗ คัดลอกไม่สำเร็จ — ก๊อปด้วยมือจากกล่องด้านบน";
+    }
+  });
+
+  render();
+})();
+</script>
+
+<!-- Tool 02 prompt generator (outside data markers — safe from build-manager.py) -->
+<script>
+(function () {
+  const $ = (id) => document.getElementById(id);
+  const src = $("t2_source"), slug = $("t2_slug"), ctx = $("t2_context"), tgt = $("t2_target");
+  const out = $("t2_out"), copyBtn = $("t2_copy"), copyMsg = $("t2_copymsg");
+  if (!src || !out) return;
+
+  function buildPrompt() {
+    const s = src.value.trim();
+    const sl = slug.value.trim();
+    const c = ctx.value.trim();
+    const tv = tgt.value.trim();
+    const ready = s && sl;
+
+    let text = `ใช้ tool 2 กับคลิปนี้:\n`;
+    text += `  source: ${s || "<path>"}\n`;
+    text += `  slug:   ${sl || "<slug>"}\n`;
+    if (c)  text += `  context: ${c}\n`;
+    if (tv) text += `  target:  ${tv} วินาที\n`;
+    return { text, ready };
+  }
+
+  function render() {
+    const { text, ready } = buildPrompt();
+    const html = text
+      .replace(/^(ใช้ tool 2[^\n]*)$/m, '<span class="acc">$1</span>')
+      .replace(/^( {2}[a-z]+:)/gm, '<span class="key">$1</span>');
+    out.innerHTML = html;
+    copyBtn.disabled = !ready;
+    if (!ready) copyMsg.textContent = "";
+  }
+
+  [src, slug, ctx, tgt].forEach((el) => el.addEventListener("input", render));
 
   copyBtn.addEventListener("click", async () => {
     const { text } = buildPrompt();

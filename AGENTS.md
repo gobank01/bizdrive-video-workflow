@@ -92,6 +92,8 @@ explicitly sets `thumbnail: 0`.
 | `templates/_shared/docs/SUBAGENT_PROMPTS.md` | the 3 load-bearing AI prompts (editorial, captions, shorts finder) |
 | `tools/01-longform-shorts/` | **Tool 01 — Longform → Shorts**: prep + Shorts Finder + split + helpers (see its README) |
 | `tools/01-longform-shorts/shipit.sh <staging-or-source>` | one-command orchestrator: prep → Shorts Finder → split → v88-clip × N (resumable) |
+| `tools/02-rough-cut/` | **Tool 02 — Rough Cut**: single raw clip → one finished rough cut (condense, no caption/template); see its README + `docs/adr/0001-2` |
+| `tools/02-rough-cut/roughcut.sh <raw.mp4> [slug] [--target <sec>] [--context "..."]` | one-command: transcribe → editorial (invisible + water cuts; content cuts in `--target`) → VAD jump-cut → loudnorm → `staging/roughcut/<date>-<slug>/rough-cut.mp4` (pauses once at Step 3) |
 | `tools/v88-clip.sh <job-dir>` | run all 16 v88 steps mechanically for ONE child job (pauses at Steps 3 + 10 for subagent) |
 | `templates/_shared/docs/MISTAKES.md` | incident log — read before debugging |
 | `templates/README.md` | the 5 templates + when to add one |
