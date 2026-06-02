@@ -23,17 +23,115 @@ echo " BIZDRIVE video workflow — environment setup"
 echo "=================================================="
 echo ""
 
-# --- 1. System tools ---
-echo "→ Checking system tools..."
-MISSING=""
-command -v ffmpeg  >/dev/null 2>&1 || MISSING="$MISSING ffmpeg"
-command -v ffprobe >/dev/null 2>&1 || MISSING="$MISSING ffprobe"
-command -v python3 >/dev/null 2>&1 || MISSING="$MISSING python3"
-command -v node    >/dev/null 2>&1 || MISSING="$MISSING node"
-if [ -n "$MISSING" ]; then
-  echo "✗ Missing:$MISSING" >&2
-  echo "  macOS:  brew install ffmpeg python node" >&2
-  echo "  Linux:  apt-get install ffmpeg python3 nodejs" >&2
+# --- 0. Detect OS + package manager (for auto-install) ---
+case "$(uname -s)" in
+  Darwin*) OS="macos" ;;
+  Linux*)  OS="linux" ;;          # includes WSL (Windows users run inside WSL/Ubuntu)
+  MINGW*|MSYS*|CYGWIN*) OS="gitbash" ;;
+  *) OS="unknown" ;;
+esac
+
+# auto_install <tool> — try to install a missing system tool for the current OS.
+# Returns 0 if installed (or already adequate), 1 if it could not.
+# "adequate" is tool-specific: python3 must also have pip+venv, node must be
+# >= 18. A bare `command -v` is NOT enough — a fresh WSL has python3 without
+# pip/venv, and apt may already have an old node; in both cases we must still
+# install/upgrade rather than return early on the binary alone.
+auto_install() {
+  tool="$1"
+  case "$tool" in
+    python3) python_stack_ok && return 0 ;;
+    node)    node_ok && return 0 ;;
+    *)       command -v "$tool" >/dev/null 2>&1 && return 0 ;;
+  esac
+  echo "  → installing $tool..."
+  case "$OS" in
+    macos)
+      command -v brew >/dev/null 2>&1 || {
+        echo "    Homebrew not found. Installing it first..."
+        /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)" || return 1
+        eval "$(/opt/homebrew/bin/brew shellenv 2>/dev/null || /usr/local/bin/brew shellenv 2>/dev/null)"
+      }
+      case "$tool" in
+        ffmpeg|ffprobe) brew install ffmpeg ;;   # ffprobe ships with ffmpeg
+        node) brew install node ;;
+        python3) brew install python ;;
+      esac ;;
+    linux)
+      if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update -qq
+        case "$tool" in
+          ffmpeg|ffprobe) sudo apt-get install -y ffmpeg ;;
+          node) install_node_apt ;;
+          python3) sudo apt-get install -y python3 python3-pip python3-venv ;;
+        esac
+      elif command -v dnf >/dev/null 2>&1; then
+        case "$tool" in
+          ffmpeg|ffprobe) sudo dnf install -y ffmpeg ;;
+          node) sudo dnf install -y nodejs npm ;;
+          python3) sudo dnf install -y python3 python3-pip ;;
+        esac
+      else
+        return 1
+      fi ;;
+    *) return 1 ;;
+  esac
+  # Final verdict uses the same tool-specific adequacy check as the entry guard.
+  case "$tool" in
+    python3) python_stack_ok ;;
+    node)    node_ok ;;
+    *)       command -v "$tool" >/dev/null 2>&1 ;;
+  esac
+}
+
+# Repo needs Node 18+. Ubuntu's apt often ships an older Node, so install the
+# current LTS from NodeSource. Falls back to apt if the NodeSource setup fails.
+install_node_apt() {
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - 2>/dev/null \
+    && sudo apt-get install -y nodejs && return 0
+  sudo apt-get install -y nodejs npm
+}
+
+# node_ok — true only if node exists AND is >= 18.
+node_ok() {
+  command -v node >/dev/null 2>&1 || return 1
+  ver=$(node -p "process.versions.node.split('.')[0]" 2>/dev/null || echo 0)
+  [ "$ver" -ge 18 ] 2>/dev/null
+}
+
+# python_stack_ok — true only if python3 exists AND pip AND venv are usable.
+# A fresh WSL has python3 but not pip/venv, which would silently break setup.
+python_stack_ok() {
+  command -v python3 >/dev/null 2>&1 || return 1
+  python3 -c "import ensurepip, venv" >/dev/null 2>&1 \
+    && python3 -m pip --version >/dev/null 2>&1
+}
+
+# --- 1. System tools (auto-install what's missing) ---
+echo "→ Checking system tools (will auto-install any that are missing)..."
+STILL_MISSING=""
+auto_install ffmpeg  || STILL_MISSING="$STILL_MISSING ffmpeg"
+auto_install ffprobe || STILL_MISSING="$STILL_MISSING ffprobe"
+
+# python3: must have pip + venv too, not just the binary. A fresh WSL ships
+# python3 without them, so command -v alone is not enough.
+if ! python_stack_ok; then
+  auto_install python3 || true
+fi
+python_stack_ok || STILL_MISSING="$STILL_MISSING python3(+pip/venv)"
+
+# node: must be >= 18, not just present. apt may have an old node already.
+if ! node_ok; then
+  auto_install node || true
+fi
+node_ok || STILL_MISSING="$STILL_MISSING node(>=18)"
+
+if [ -n "$STILL_MISSING" ]; then
+  echo "✗ Could not auto-install:$STILL_MISSING" >&2
+  echo "  Install them by hand, then re-run this script:" >&2
+  echo "    macOS:        brew install ffmpeg python node" >&2
+  echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-pip python3-venv" >&2
+  echo "                  Node 18+: https://github.com/nodesource/distributions" >&2
   exit 1
 fi
 PY_OK=$(python3 -c "import sys; print('yes' if sys.version_info >= (3,10) else 'no')")
@@ -46,7 +144,10 @@ echo "  ✓ ffmpeg, ffprobe, python3 ($(python3 --version | cut -d' ' -f2)), nod
 # --- 2. Python deps ---
 echo ""
 echo "→ Installing Python deps (pythainlp, nlpo3, certifi)..."
-python3 -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi
+# --user fails on PEP 668 "externally-managed" Python (common on Ubuntu/WSL);
+# fall back to --break-system-packages, which is safe for these pure-Python libs.
+python3 -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi 2>/dev/null \
+  || python3 -m pip install --user --break-system-packages --quiet --upgrade pythainlp nlpo3 certifi
 echo "  ✓ Thai NLP libs + certifi installed"
 
 # --- 3. Silero VAD venv ---

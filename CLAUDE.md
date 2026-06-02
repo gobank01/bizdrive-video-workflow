@@ -4,6 +4,31 @@
 the Template Manager sync rule, the Job Spec rule, the locked v88 pipeline, and
 when to add a template. Every rule there applies to Claude Code.
 
+## First-run setup (auto-install)
+
+If a user asks you to "install", "set up", or "get this working" — or if a
+pipeline command fails because `ffmpeg`, `python3`, `node`, or the Silero VAD
+venv is missing — run the one setup script. It is OS-aware and **auto-installs**
+missing system tools (macOS via Homebrew, Linux/WSL via apt/dnf):
+
+```bash
+bash tools/setup.sh
+```
+
+Then create the API-key file and ask the user for their keys (never invent them):
+
+```
+templates/_shared/env/.env
+  ELEVENLABS_API_KEY=...        # required — https://elevenlabs.io/app/settings/api-keys
+  OPENROUTER_API_KEY=...        # optional, B-roll — https://openrouter.ai/keys
+```
+
+Windows users run inside **WSL/Ubuntu** (the human bootstrap is in
+[INSTALL.md](INSTALL.md)); from your side WSL is just Linux, so `tools/setup.sh`
+works unchanged. If `setup.sh` reports a tool it could not auto-install, install
+it for the user with the platform's package manager, then re-run the script —
+don't make the user do it by hand.
+
 ## Claude Code specifics
 
 - **Skills:** invoke `bizdrive-video` for editing/producing clips, and the
