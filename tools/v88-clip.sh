@@ -116,6 +116,7 @@ case "$TEMPLATE_NUM" in
   04|05) CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
   06)    CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
   07)    CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
+  08)    CAPTION_SCRIPT="build-weightshift-captions.py" ; CAPTION_HTML="captions-weightshift.html" ;;
   *)
     echo "✗ Unknown template number: $TEMPLATE_NUM" >&2
     exit 1 ;;
@@ -124,7 +125,7 @@ esac
 # Bottom px (caption position) per template
 case "$TEMPLATE_NUM" in
   04|02) CAPTION_BOTTOM=330 ;;
-  05|01) CAPTION_BOTTOM=360 ;;
+  05|01|08) CAPTION_BOTTOM=360 ;;
   *)     CAPTION_BOTTOM=330 ;;
 esac
 
