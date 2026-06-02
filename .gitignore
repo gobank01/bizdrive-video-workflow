@@ -25,6 +25,9 @@ templates/_shared/env/.env
 # Raw source media library (large files; never commit)
 /raw-media/
 
+# Local-only sound-effects library (large; not part of the shareable repo)
+/Sfx/
+
 # Other top-level work folders not part of this repo
 /robot/
 
