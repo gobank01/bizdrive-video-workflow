@@ -84,6 +84,29 @@ Claude will:
 
 ---
 
+## Part 2.5 — (optional) Stop Claude from asking permission every time
+
+If you edit with **Claude Code inside VS Code** and don't want to click "Allow"
+on every command, run this once to make new chats start in bypass mode:
+
+**Windows** (in PowerShell, from the repo folder):
+```powershell
+powershell -ExecutionPolicy Bypass -File tools\enable-claude-bypass.ps1
+```
+
+**Mac / Linux:**
+```bash
+bash tools/enable-claude-bypass.sh
+```
+
+Then reload VS Code (`Ctrl/Cmd+Shift+P` → **Reload Window**). It backs up your
+settings first and only changes two keys.
+
+> ⚠️ Bypass mode lets Claude run commands and edit files **without asking**. Use
+> it only on your own trusted machine. (This repo also ships
+> `.claude/settings.json` set to bypass, so once the repo is cloned Claude won't
+> prompt inside it either.)
+
 ## Part 3 — Making videos (forever after)
 
 Every time you want to make a video:
