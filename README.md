@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)
 ![Node](https://img.shields.io/badge/Node-18%2B-339933)
 ![STT](https://img.shields.io/badge/STT-ElevenLabs%20Scribe%20v2-orange)
-![templates](https://img.shields.io/badge/templates-4-lightgrey)
+![templates](https://img.shields.io/badge/templates-8-lightgrey)
 
 Multi-template HyperFrames video production. Each template is a reusable pattern (aspect ratio, layout, caption style). Each job is one rendered video.
 
@@ -26,10 +26,10 @@ In a hurry? **[QUICKSTART.md](QUICKSTART.md)** is the one-page version.
 Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
 
-> **On Windows / non-technical?** See **[INSTALL.md](INSTALL.md)** — a 3-step
-> WSL bootstrap, then Claude Code installs everything else for you.
-> `tools/setup.sh` now auto-installs missing tools (ffmpeg / Python / Node) on
-> macOS and Linux/WSL.
+> **On Windows / non-technical?** See **[INSTALL.md](INSTALL.md)** — double-click
+> `tools/INSTALL-WINDOWS-NO-WSL.bat` and it installs everything natively (Git,
+> ffmpeg, Python, Node, Claude Code, deps). **No WSL, no reboot.** `tools/setup.sh`
+> covers macOS/Linux; `tools/setup-windows.ps1` covers native Windows.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -151,7 +151,7 @@ jobs/2026-05-19-bizdrive-video-div/output/finals/final.mp4
 
 ## 📚 Required reading (in order)
 
-1. `templates/_shared/docs/V88_PLAYBOOK.md` — 15-step pipeline
+1. `templates/_shared/docs/V88_PLAYBOOK.md` — 16-step pipeline
 2. `templates/_shared/docs/SUBAGENT_PROMPTS.md` — verbatim AI prompts
 3. `templates/_shared/docs/WORKFLOW.md` — full BIZDRIVE workflow
 4. `templates/_shared/docs/MISTAKES.md` — past incidents + fixes (v67-v88)

@@ -1,105 +1,114 @@
 # Install — Windows (for non-technical users)
 
-Goal: get this video pipeline running on a Windows PC, with **Claude Code doing
-almost all the work**. You only do a tiny one-time bootstrap; after that, Claude
-installs everything else and makes your videos.
-
-> **Why a bootstrap at all?** Claude Code can install Python, Node, ffmpeg, this
-> repo, and run the whole pipeline for you — but *something* has to install
-> Claude Code first, and on Windows that needs WSL (a Linux environment inside
-> Windows). Claude can't install the thing it runs inside. So the 3 steps below
-> are the unavoidable minimum; everything after is automatic.
+Goal: get this video pipeline running on a Windows PC. The recommended path
+installs everything **natively on Windows — no WSL, no reboot.** Claude Code
+runs the pipeline by driving ffmpeg, Python, and Node directly.
 
 ---
 
-## Part 1 — One-time bootstrap (do this once, ~15 min, mostly waiting)
+## ⚡ Fastest path — the one-click installer (no WSL)
 
-### Step 1 — Install WSL (the only "Run as administrator" moment)
-
-1. Click **Start**, type `powershell`.
-2. **Right-click → "Run as administrator".**
-3. Paste this one line and press Enter:
+1. Download the repo as a ZIP from GitHub (green **Code → Download ZIP**) and
+   unzip it — **or** open the folder a teacher handed you.
+2. Go into the `tools` folder and **double-click `INSTALL-WINDOWS-NO-WSL.bat`**.
+3. If a blue **"Windows protected your PC"** box appears, click
+   **More info → Run anyway** (normal for any unsigned script).
+4. Wait ~10–15 min while it downloads ~500 MB. If a Windows **"Do you want to
+   allow this app…?"** (UAC) popup appears while installing a tool, click
+   **Yes**.
+5. When it finishes, open a **new** PowerShell/Terminal window and type:
    ```powershell
-   wsl --install
+   cd ~\bizdrive-video-workflow
+   claude
    ```
-4. **Reboot** when it asks.
+   Sign in, then paste your **ElevenLabs API key** when Claude asks
+   (<https://elevenlabs.io/app/settings/api-keys>).
 
-That is the last time you ever need PowerShell or administrator. ✅
+That's it. The `.bat` file only launches `tools/setup-windows.ps1`; the
+PowerShell script does the real install. No WSL, no reboot, and no admin
+PowerShell required. Some installers may still show a UAC **Yes** popup.
 
-> Older Windows? `wsl --install` works on Windows 10 (version 2004+) and
-> Windows 11. If it says the command isn't found, run Windows Update first.
+### What gets installed
 
-### Step 2 — Open Ubuntu (normal window, no admin)
+| # | Item | Method | Purpose |
+|---|------|--------|---------|
+| 1 | Git + Git Bash | `winget` | clone repo and run bash scripts |
+| 2 | ffmpeg / ffprobe | `winget` | cut, encode, inspect video |
+| 3 | Python 3.12 + `python3` shim | `winget` + `~\.ii23\bin` | Thai NLP, VAD, transcription helpers |
+| 4 | Node.js LTS | `winget` | run HyperFrames / npm tools |
+| 5 | Claude Code | official `install.ps1` | student command interface |
+| 6 | This repo | `git clone` / `git pull` | `~\bizdrive-video-workflow` |
+| 7 | `pythainlp`, `nlpo3`, `certifi` | `pip` | Thai captions and HTTPS |
+| 8 | Silero VAD env (`silero-vad`, `soundfile`, `numpy`, optional `torchcodec`) | `pip` venv | detect speech / silence |
+| 9 | `.env` | copied from template | API keys |
 
-After the reboot an **Ubuntu** window opens by itself and asks you to pick a
-username and password. Type anything you'll remember (the password won't show as
-you type — that's normal). From now on you use **this Ubuntu window**, not
-PowerShell.
+> **Prefer to type one line instead of downloading?** Open PowerShell (normal,
+> not admin) and paste:
+> ```powershell
+> irm https://raw.githubusercontent.com/gobank01/bizdrive-video-workflow/main/tools/setup-windows.ps1 | iex
+> ```
 
-### Step 3 — Install Claude Code
+### Requirements
 
-In the Ubuntu window, first make sure the basic tools exist (a fresh Ubuntu may
-not have `curl` or `git` yet), then install Claude Code:
+- Windows 10 (2004+) or Windows 11 with **winget** (the built-in "App
+  Installer"). Almost every modern PC has it. If the installer says winget is
+  missing, install **App Installer** from the Microsoft Store
+  (<https://apps.microsoft.com/detail/9nblggh4nns1>) and re-run.
 
-```bash
-sudo apt-get update && sudo apt-get install -y curl git
-curl -fsSL https://claude.ai/install.sh | bash
-```
+### Just let Claude do it
 
-Then start it:
-
-```bash
-claude
-```
-
-If you get `claude: command not found`, the installer added it to your PATH but
-this window hasn't picked it up yet — just **close the Ubuntu window and open it
-again**, then type `claude`. (Per Claude's official FAQ, a new shell session
-loads the updated PATH.)
-
-Sign in when prompted. **You're done with the manual part.** 🎉
-
----
-
-## Part 2 — Let Claude do the rest (automatic)
-
-With Claude Code running, paste this single prompt:
-
-```
-Clone https://github.com/gobank01/bizdrive-video-workflow into my home folder,
-cd into it, and run `bash tools/setup.sh` to install everything. If anything is
-missing (Python, Node, ffmpeg) install it for me. Then ask me for my ElevenLabs
-API key and put it in templates/_shared/env/.env. When it's ready, tell me how to
-make my first video.
-```
-
-Claude will:
-- clone the repo,
-- run `tools/setup.sh` (auto-installs Python, Node, ffmpeg, the Thai NLP libs,
-  and the Silero voice-detection engine — ~437 MB, one-time),
-- create the `.env` file and ask you for your **ElevenLabs API key**
-  (get one at <https://elevenlabs.io/app/settings/api-keys>),
-- (optional) ask for an **OpenRouter key** if you want AI B-roll
-  (<https://openrouter.ai/keys>).
+If Claude Code is already installed, you don't even need the script — open
+`claude` in the repo folder and say **"ติดตั้งให้หน่อย"** / **"install this on
+Windows"**. Claude follows the Windows steps in
+[CLAUDE.md](CLAUDE.md) and installs everything for you (it will ask you to click
+any UAC popups, since it can't click those itself).
 
 ---
 
-## Part 2.5 — (optional) Stop Claude from asking permission every time
+## Part 2 — Making videos
+
+Every time you want to make a video:
+
+1. Open **PowerShell** (or Windows Terminal), go to the repo:
+   ```powershell
+   cd ~\bizdrive-video-workflow
+   ```
+2. Type `claude`.
+3. Tell it what you want, e.g.:
+   > Make a vertical video from these two clips: a screen recording and my face
+   > video. Use Template 01.
+
+Git Bash comes with Git; Claude uses it for bash-based pipeline scripts when
+needed. Claude follows the locked pipeline in
+[`templates/_shared/docs/V88_PLAYBOOK.md`](templates/_shared/docs/V88_PLAYBOOK.md)
+and hands you the finished `final.mp4`. Point it at your clips with normal
+Windows paths (e.g. `C:\Users\You\Desktop\top.mp4`).
+
+## If something breaks
+
+Just tell Claude the error — it can re-run the installer, install missing
+pieces, and diagnose live. If a single tool failed, you can also re-run:
+```powershell
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\setup-windows.ps1
+```
+The installer is idempotent — safe to run again; it skips what's already there.
+
+> **Note on Thai tokenizer (`nlpo3`):** it's a Rust wheel that occasionally
+> won't build on Windows. If so, the installer automatically falls back to
+> pythainlp's built-in tokenizer — captions still work, no action needed.
+
+---
+
+## (optional) Stop Claude from asking permission every time
 
 If you edit with **Claude Code inside VS Code** and don't want to click "Allow"
-on every command, run this once to make new chats start in bypass mode:
+on every command, run once from the repo folder:
 
-**Windows** (in PowerShell, from the repo folder):
 ```powershell
 powershell -ExecutionPolicy Bypass -File tools\enable-claude-bypass.ps1
 ```
 
-**Mac / Linux:**
-```bash
-bash tools/enable-claude-bypass.sh
-```
-
-Then reload VS Code (`Ctrl/Cmd+Shift+P` → **Reload Window**). It backs up your
+Then reload VS Code (`Ctrl+Shift+P` → **Reload Window**). It backs up your
 settings first and only changes two keys.
 
 > ⚠️ Bypass mode lets Claude run commands and edit files **without asking**. Use
@@ -107,39 +116,9 @@ settings first and only changes two keys.
 > `.claude/settings.json` set to bypass, so once the repo is cloned Claude won't
 > prompt inside it either.)
 
-## Part 3 — Making videos (forever after)
-
-Every time you want to make a video:
-
-1. Open the **Ubuntu** app (no admin, no PowerShell).
-2. Type `claude`.
-3. Tell it what you want, e.g.:
-   > Make a vertical video from these two clips: a screen recording and my face
-   > video. Use Template 01.
-
-Claude follows the locked pipeline in
-[`templates/_shared/docs/V88_PLAYBOOK.md`](templates/_shared/docs/V88_PLAYBOOK.md)
-and hands you the finished `final.mp4`.
-
----
-
-## Getting files in and out of WSL
-
-Your Windows files are visible from Ubuntu under `/mnt/c/...`. Example: your
-Desktop is `/mnt/c/Users/<YourName>/Desktop`. Tell Claude the path to your clips
-and where you want the finished video — it handles the rest.
-
-## If something breaks
-
-Just tell Claude the error — it can re-run `bash tools/setup.sh`, install missing
-pieces, and diagnose problems live. That's the whole point of the agent-driven
-setup: you don't debug, Claude does.
-
 ---
 
 ## Mac / Linux users
-
-Skip all of the above. Just:
 
 ```bash
 git clone https://github.com/gobank01/bizdrive-video-workflow.git
@@ -149,3 +128,15 @@ bash tools/setup.sh
 
 Then add your keys to `templates/_shared/env/.env`. See
 [ONBOARDING.md](ONBOARDING.md).
+
+---
+
+## Fallback — the old WSL path
+
+The native installer above is preferred. Only use WSL if `winget` is unavailable
+on a locked-down PC and you can't install App Installer. In an **admin**
+PowerShell: `wsl --install`, reboot, open Ubuntu, then inside it run
+`sudo apt-get update && sudo apt-get install -y curl git`,
+`curl -fsSL https://claude.ai/install.sh | bash`, clone the repo, and
+`bash tools/setup.sh`. This is the heavier route (Linux VM + reboot) and exists
+only as a safety net.

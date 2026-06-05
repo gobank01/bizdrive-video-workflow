@@ -16,6 +16,7 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 05 | stacked-vertical-karaoke    | 1080×1920    | talking-head + screen recording + B-roll (stacked) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
 | 06 | screencast-corner-cam       | 1080×1920    | full-screen screen recording + face as a corner-cam + full-screen B-roll | particle burst + gold | ✅ ready (2026-05-21) |
 | 07 | fullscreen-horizontal-karaoke | **1920×1080** | **YouTube long-form** talking-head + full-screen B-roll (~1 per 2 min) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-22) |
+| 08 | stacked-vertical-weightshift | 1080×1920    | talking-head + screen recording + B-roll (stacked) | **weight-shift** word emphasis | ✅ ready (2026-06-01) |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
 ### Which to pick
@@ -43,6 +44,9 @@ Two axes: **layout** (do you have a screen recording?) and **caption style**
   **karaoke** captions. B-roll is long-form cadence (≥120s spacing, 4s each,
   ~1 per 2 minutes) instead of the 9:16 sparse-4/60s rule. Thumbnail default OFF
   (use a separate 1280×720 YouTube cover).
+- **Template 08** — same stacked layout as Template 05, but captions use
+  **weight-shift** typography: the active word becomes bold while the rest stay
+  light. Cleaner and more premium than karaoke.
 
 > **Same layout, different captions:** 01 ↔ 05 (stacked) and 02 ↔ 04
 > (full-screen). Particle-burst = premium/calm; karaoke box sweep = punchy/viral.
@@ -89,7 +93,7 @@ Every template inherits these. Do NOT duplicate per-template:
 
 - `scripts/transcribe/` — ElevenLabs Scribe v2 + nlpo3 word-segmentation
 - `scripts/clean-cut/` — Silero VAD + editorial pad-bleed
-- `docs/V88_PLAYBOOK.md` — 15-step pipeline
+- `docs/V88_PLAYBOOK.md` — 16-step pipeline
 - `docs/SUBAGENT_PROMPTS.md` — verbatim editorial + post-process prompts
 - `docs/MISTAKES.md` — incidents log shared across all templates
 - `references/editorial-rules.md` — editorial subagent rules

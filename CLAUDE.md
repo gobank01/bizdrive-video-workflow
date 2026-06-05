@@ -9,23 +9,48 @@ when to add a template. Every rule there applies to Claude Code.
 When the user says anything like **"install"**, **"setup"**, **"set this up"**,
 **"ติดตั้ง"**, **"get this working"** — or when a pipeline command fails because a
 tool is missing — run the WHOLE sequence below without stopping between steps.
-Do not hand intermediate commands back to the user; you run them. The same flow
-works on macOS and Linux/WSL (Windows users are inside WSL — treat it as Linux).
+Do not hand intermediate commands back to the user; you run them.
 Finish only when the project is fully ready to make a video.
 
-**Step 1 — Run the OS-aware installer.** It auto-installs ffmpeg, python3 (+pip
-+venv), Node 18+, the Thai NLP libs, and the Silero VAD venv (~437 MB):
+**Step 1 — Run the installer for the current OS.** Detect the platform first
+(`uname -s`; on native Windows the Bash tool reports `MINGW*`/`MSYS*`, and
+`$OS` is `Windows_NT`). Then:
 
-```bash
-bash tools/setup.sh
-```
+- **macOS / Linux / WSL** — run the bash installer. It auto-installs ffmpeg,
+  python3 (+pip+venv), Node 18+, the Thai NLP libs, and the Silero VAD venv
+  (~437 MB):
 
-If it reports a tool it could not auto-install, install that tool yourself with
-the platform's package manager (macOS `brew`, Linux/WSL `sudo apt-get`/`dnf`),
-then re-run `bash tools/setup.sh`. Never make the user install by hand.
+  ```bash
+  bash tools/setup.sh
+  ```
 
-**Step 2 — API keys.** `setup.sh` creates `templates/_shared/env/.env` from the
-example. Open it and ask the user to paste their keys (never invent them):
+  If it reports a tool it could not auto-install, install it yourself with the
+  platform's package manager (macOS `brew`, Linux/WSL `sudo apt-get`/`dnf`),
+  then re-run. Never make the user install by hand.
+
+- **Native Windows (NO WSL)** — run the PowerShell installer instead. It uses
+  `winget` to install Git + Git Bash, ffmpeg, Python, Node, plus the Thai NLP
+  libs and the Silero VAD venv, all natively — no WSL, no reboot:
+
+  ```bash
+  powershell -NoProfile -ExecutionPolicy Bypass -File tools/setup-windows.ps1
+  ```
+
+  (Students can also just double-click `tools/INSTALL-WINDOWS-NO-WSL.bat`.)
+  Some `winget` installs raise a Windows UAC prompt — you cannot click it for
+  the user, so tell them to click **Yes** if it appears. If `winget` is missing,
+  have them install "App Installer" from the Microsoft Store, then re-run. If
+  `nlpo3` (a Rust wheel) fails on Windows, the installer falls back to
+  pythainlp's built-in tokenizer automatically — that is fine, continue.
+
+> The Silero VAD venv python differs by OS: `~/.ii23/vad-env/bin/python3` on
+> macOS/Linux, `~/.ii23/vad-env/Scripts/python.exe` on native Windows. The
+> mechanical runners already pick the right one — don't hardcode either. The
+> Windows installer also creates a `python3` shim at `~/.ii23/bin` because the
+> repo scripts use `python3`.
+
+**Step 2 — API keys.** The installer creates `templates/_shared/env/.env` from
+the example. Open it and ask the user to paste their keys (never invent them):
 
 ```
 ELEVENLABS_API_KEY=...     # required  — https://elevenlabs.io/app/settings/api-keys
@@ -44,6 +69,11 @@ bash templates/_shared/scripts/clean-cut/preflight.sh
 
 It prints JSON for `ffmpeg`, `ffprobe`, `python3`, `silero_vad`. If any is "no",
 go back to Step 1 for that piece — don't proceed.
+
+On native Windows this runs through Git Bash (installed in Step 1), so the same
+`bash …/preflight.sh` works. If Git Bash is somehow unavailable, verify by hand
+instead: `ffmpeg -version`, `python --version`, and
+`~/.ii23/vad-env/Scripts/python.exe -c "from silero_vad import load_silero_vad"`.
 
 **Step 4 — Report ready + tell the user the next move.** When preflight is clean
 and the ElevenLabs key is in `.env`, tell the user setup is complete and how to
@@ -83,7 +113,7 @@ follow it when the user asks to edit a clip — that is a separate task from set
 
 ## Quick map
 
-- `templates/NN-*/` — the 5 locked templates; each `manifest.json` has a
+- `templates/NN-*/` — the 8 locked templates; each `manifest.json` has a
   `features[]` block (the Template Manager's toggle surface)
 - `templates/_shared/` — pipeline scripts, docs, schemas, BGM/SFX/B-roll, and
   `manager-ui.json` (UI labels)

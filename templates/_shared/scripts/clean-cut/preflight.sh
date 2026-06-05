@@ -26,9 +26,12 @@ esac
 
 # Silero VAD = venv exists AND imports cleanly
 VENV="$HOME/.ii23/vad-env"
+# venv python: bin/python3 on macOS/Linux, Scripts/python.exe on native Windows.
+VENV_PY="$VENV/bin/python3"
+[ -x "$VENV_PY" ] || VENV_PY="$VENV/Scripts/python.exe"
 SILERO=no
-if [ -d "$VENV" ] && [ -x "$VENV/bin/python3" ]; then
-    if "$VENV/bin/python3" -c "from silero_vad import load_silero_vad" >/dev/null 2>&1; then
+if [ -d "$VENV" ] && [ -x "$VENV_PY" ]; then
+    if "$VENV_PY" -c "from silero_vad import load_silero_vad" >/dev/null 2>&1; then
         SILERO=yes
     fi
 fi

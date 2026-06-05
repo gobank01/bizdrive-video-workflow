@@ -68,7 +68,9 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
 CC="$REPO_ROOT/templates/_shared/scripts/clean-cut"
 TRANSCRIBE_PY="$REPO_ROOT/templates/_shared/scripts/transcribe/transcribe.py"
 ENV_FILE="$REPO_ROOT/templates/_shared/env/.env"
+# venv python: bin/python3 on macOS/Linux, Scripts/python.exe on native Windows.
 VAD_PY="$HOME/.ii23/vad-env/bin/python3"
+[ -x "$VAD_PY" ] || VAD_PY="$HOME/.ii23/vad-env/Scripts/python.exe"
 RULES="$CC/references/editorial-rules.md"
 
 if [ ! -f "$INPUT" ]; then
