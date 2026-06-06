@@ -14,6 +14,13 @@ $RepoUrl   = "https://github.com/gobank01/bizdrive-video-workflow"
 $VadEnv    = Join-Path $HOME ".bizdrive\vad-env"
 $BinDir    = Join-Path $HOME ".bizdrive\bin"
 
+# This script lives at <repo>\tools\install\windows\setup.ps1. If the student
+# unzipped the repo and double-clicked the .bat next to us, the repo is already
+# here (3 levels up) — use it in place, do NOT clone a second copy. Only clone
+# (later) if we're somehow run from outside a repo checkout.
+$ScriptDir = if ($PSScriptRoot) { $PSScriptRoot } else { Split-Path -Parent $MyInvocation.MyCommand.Path }
+$RepoFromZip = (Resolve-Path (Join-Path $ScriptDir "..\..\..")).Path
+
 function Section($t) { Write-Host "`n=== $t ===" -ForegroundColor Cyan }
 function Ok($t)      { Write-Host "  [ok] $t"   -ForegroundColor Green }
 function Info($t)    { Write-Host "  - $t" }
@@ -165,17 +172,25 @@ if (Have "claude") {
   if (Have "claude") { Ok "Claude Code installed" }
 }
 
-# --- 3. Clone (or update) the repo ---
+# --- 3. Locate the project ---
 Section "Getting the project"
-$Target = Join-Path $HOME "bizdrive-video-workflow"
-if (Test-Path (Join-Path $Target ".git")) {
-  Info "repo exists — pulling latest ..."
-  git -C $Target pull --ff-only 2>$null
-  Ok "repo updated"
+# Preferred: we're already inside the unzipped repo (the .bat sat next to us).
+# Detect it by the marker files, and just work in place — no second copy.
+if ((Test-Path (Join-Path $RepoFromZip "tools\setup.sh")) -and (Test-Path (Join-Path $RepoFromZip "templates"))) {
+  $Target = $RepoFromZip
+  Ok "ใช้โฟลเดอร์โปรเจกต์ที่แตกไฟล์มาแล้ว: $Target"
 } else {
-  Info "cloning into $Target ..."
-  git clone "$RepoUrl.git" $Target
-  Ok "repo cloned"
+  # Fallback: run from outside a checkout — clone a fresh copy into the home dir.
+  $Target = Join-Path $HOME "bizdrive-video-workflow"
+  if (Test-Path (Join-Path $Target ".git")) {
+    Info "repo exists — pulling latest ..."
+    git -C $Target pull --ff-only 2>$null
+    Ok "repo updated"
+  } else {
+    Info "cloning into $Target ..."
+    git clone "$RepoUrl.git" $Target
+    Ok "repo cloned"
+  }
 }
 Set-Location $Target
 
