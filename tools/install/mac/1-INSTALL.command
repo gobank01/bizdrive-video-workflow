@@ -2,11 +2,10 @@
 # BIZDRIVE Video — one-click Mac installer.
 #
 # Double-click this in Finder. It finds the repo (this file lives inside it),
-# then runs tools/setup.sh, which installs ffmpeg/Python/Node via Homebrew,
+# then runs tools/setup.sh, which installs ffmpeg/Python/Node, Claude Code,
 # the Thai NLP libs + Silero VAD, and asks for your API keys.
-#
-# First run only: if Homebrew isn't installed yet, macOS will ask for your
-# login password once (that's Homebrew, not us). Everything after is automatic.
+# If Homebrew already exists, setup uses it. If not, setup downloads user-level
+# tools into ~/.bizdrive/bin so a fresh Mac does not need a password prompt.
 
 set -e
 

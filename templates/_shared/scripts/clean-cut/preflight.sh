@@ -34,7 +34,7 @@ case "$(uname -s)" in
 esac
 
 # Silero VAD = venv exists AND imports cleanly
-VENV="$HOME/.ii23/vad-env"
+VENV="$HOME/.bizdrive/vad-env"
 # venv python: bin/python3 on macOS/Linux, Scripts/python.exe on native Windows.
 VENV_PY="$VENV/bin/python3"
 [ -x "$VENV_PY" ] || VENV_PY="$VENV/Scripts/python.exe"
@@ -46,7 +46,7 @@ if [ -d "$VENV" ] && [ -x "$VENV_PY" ]; then
 fi
 
 # Saved preference (from save_preference.sh). Falls back to "unset".
-CONFIG="$HOME/.ii23/config.json"
+CONFIG="$HOME/.bizdrive/config.json"
 PREF="unset"
 if [ -f "$CONFIG" ]; then
     # naive JSON read — works as long as save_preference.sh writes the same shape

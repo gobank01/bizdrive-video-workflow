@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Save the user's detector preference to ~/.ii23/config.json so the skill
+# Save the user's detector preference to ~/.bizdrive/config.json so the skill
 # doesn't ask every time.
 #
 # Usage: save_preference.sh vad      # or "ffmpeg"
@@ -12,8 +12,8 @@ if [ "$CHOICE" != "vad" ] && [ "$CHOICE" != "ffmpeg" ]; then
     exit 1
 fi
 
-mkdir -p "$HOME/.ii23"
-CONFIG="$HOME/.ii23/config.json"
+mkdir -p "$HOME/.bizdrive"
+CONFIG="$HOME/.bizdrive/config.json"
 
 python3 - <<PY
 import json, os

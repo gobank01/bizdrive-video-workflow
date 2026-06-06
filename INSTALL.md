@@ -1,8 +1,8 @@
-# Install — Windows (for non-technical users)
+# Install — one-click installers
 
-Goal: get this video pipeline running on a Windows PC. The recommended path
-installs everything **natively on Windows — no WSL, no reboot.** Claude Code
-runs the pipeline by driving ffmpeg, Python, and Node directly.
+Goal: get this video pipeline running on student machines with the least
+terminal work possible. Use the installer for the student's OS, then run the
+matching checker.
 
 ---
 
@@ -35,7 +35,7 @@ PowerShell required. Some installers may still show a UAC **Yes** popup.
 |---|------|--------|---------|
 | 1 | Git + Git Bash | `winget` | clone repo and run bash scripts |
 | 2 | ffmpeg / ffprobe | `winget` | cut, encode, inspect video |
-| 3 | Python 3.12 + `python3` shim | `winget` + `~\.ii23\bin` | Thai NLP, VAD, transcription helpers |
+| 3 | Python 3.12 + `python3` shim | `winget` + `~\.bizdrive\bin` | Thai NLP, VAD, transcription helpers |
 | 4 | Node.js LTS | `winget` | run HyperFrames / npm tools |
 | 5 | Claude Code | official `install.ps1` | student command interface |
 | 6 | This repo | `git clone` / `git pull` | `~\bizdrive-video-workflow` |
@@ -64,6 +64,20 @@ If Claude Code is already installed, you don't even need the script — open
 Windows"**. Claude follows the Windows steps in
 [CLAUDE.md](CLAUDE.md) and installs everything for you (it will ask you to click
 any UAC popups, since it can't click those itself).
+
+---
+
+## Mac fastest path — double-click installer
+
+1. Download the repo as a ZIP from GitHub and unzip it, or open the folder a
+   teacher handed you.
+2. Open `tools/install/mac/` and double-click `1-INSTALL.command`.
+3. Paste the API keys when asked, then wait while it installs the tools.
+4. Double-click `2-CHECK.command` to verify.
+
+The Mac installer also installs Claude Code. If Homebrew is already installed,
+it uses it. If Homebrew is not installed, it downloads user-level ffmpeg/ffprobe,
+Node, and Python into `~/.bizdrive/bin` without asking for the macOS login password.
 
 ---
 
@@ -120,7 +134,7 @@ settings first and only changes two keys.
 
 ---
 
-## Mac / Linux users
+## Manual Mac / Linux setup
 
 ```bash
 git clone https://github.com/gobank01/bizdrive-video-workflow.git

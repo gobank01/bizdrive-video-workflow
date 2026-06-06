@@ -16,10 +16,11 @@ tools/install/
 │  │                     directly — Windows opens .ps1 in Notepad.
 │  └─ check.ps1       ← the real checker.
 └─ mac/
-   ├─ 1-INSTALL.command  ← double-click first. Runs tools/setup.sh (Homebrew
-   │                        for ffmpeg/Python/Node, pip for the rest) and asks
-   │                        for your API keys. macOS may ask your login
-   │                        password once if Homebrew isn't installed yet.
+   ├─ 1-INSTALL.command  ← double-click first. Runs tools/setup.sh, asks for
+   │                        your API keys, and installs Claude Code. If Homebrew
+   │                        exists, it uses Homebrew. If not, it downloads
+   │                        user-level tools into ~/.bizdrive/bin so a fresh Mac can
+   │                        finish without a password prompt.
    └─ 2-CHECK.command    ← double-click after. Same green/red check as Windows.
 ```
 
@@ -27,10 +28,12 @@ tools/install/
 
 - **Windows** → `setup.ps1` / `check.ps1` are self-contained (they install via
   `winget` + `pip`, clone the repo into `~/bizdrive-video-workflow`, and write
-  `.env`). The VAD venv python on Windows is `…/.ii23/vad-env/Scripts/python.exe`.
+  `.env`). The VAD venv python on Windows is `…/.bizdrive/vad-env/Scripts/python.exe`.
 - **Mac/Linux** → the `.command` files are thin wrappers around the canonical
-  **`tools/setup.sh`** (Homebrew/apt + pip). The VAD venv python is
-  `…/.ii23/vad-env/bin/python3`.
+  **`tools/setup.sh`**. macOS uses existing Homebrew when present, otherwise
+  no-brew user-level binaries in `~/.bizdrive/bin`; Linux uses apt/dnf + pip. Both
+  also try to install Claude Code. The VAD venv python is
+  `…/.bizdrive/vad-env/bin/python3`.
 
 Both paths also run `npx hyperframes skills` — this warms the pinned
 `hyperframes@0.6.25` (so the first video render doesn't pause to download it) and
@@ -56,4 +59,5 @@ prompt — it leaves `.env` blank and Claude asks for the keys instead.
 If Claude Code is already installed, a student can skip these files and just say
 **"ติดตั้งให้หน่อย" / "install this"**. Claude follows the OS-specific steps in
 the repo's [CLAUDE.md](../../CLAUDE.md). It still can't click Windows UAC popups
-or type a macOS password — it will tell the user to do those.
+or fill any OS password prompt if one appears — it will tell the user to do
+those.

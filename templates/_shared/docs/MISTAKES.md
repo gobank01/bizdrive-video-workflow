@@ -34,7 +34,7 @@ torchaudio 2.11.0 requires torchcodec for audio I/O. Install torchcodec or pin t
 Fix (locked at v88):
 ```text
 After bash scripts/clean-cut/install_vad.sh:
-  ~/.ii23/vad-env/bin/pip install --quiet torchcodec
+  ~/.bizdrive/vad-env/bin/pip install --quiet torchcodec
 If a fresh install fails again, pin torchaudio<2.9 in install_vad.sh or pre-install torchcodec there.
 ```
 

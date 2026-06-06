@@ -1,10 +1,10 @@
 #!/usr/bin/env bash
-# Install Silero VAD into ~/.ii23/vad-env (Python venv).
+# Install Silero VAD into ~/.bizdrive/vad-env (Python venv).
 # ~437MB total (torch is the bulk). Idempotent — safe to re-run.
 
 set -e
 
-VENV="$HOME/.ii23/vad-env"
+VENV="$HOME/.bizdrive/vad-env"
 
 # Already installed? Done. (venv python is bin/python3 on macOS/Linux.)
 if [ -d "$VENV" ] && "$VENV/bin/python3" -c "from silero_vad import load_silero_vad" 2>/dev/null; then
@@ -55,7 +55,7 @@ if command -v df >/dev/null 2>&1; then
 fi
 
 echo "→ Creating venv at $VENV (~437MB, ~3-5 min) using $("$PY" --version 2>&1)"
-mkdir -p "$HOME/.ii23"
+mkdir -p "$HOME/.bizdrive"
 "$PY" -m venv "$VENV" || {
     echo "✗ venv creation failed. Common causes:" >&2
     echo "  - python3-venv missing (Linux): apt-get install python3-venv" >&2

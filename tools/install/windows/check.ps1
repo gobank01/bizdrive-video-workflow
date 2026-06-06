@@ -5,7 +5,7 @@
 # Read-only — it installs nothing.
 
 $RepoUrl = "https://github.com/gobank01/bizdrive-video-workflow"
-$VadEnv  = Join-Path $HOME ".ii23\vad-env"
+$VadEnv  = Join-Path $HOME ".bizdrive\vad-env"
 $Repo    = Join-Path $HOME "bizdrive-video-workflow"
 
 $pass = 0; $fail = 0

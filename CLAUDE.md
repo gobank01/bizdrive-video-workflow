@@ -58,10 +58,10 @@ If `git` is missing, install it first (macOS `brew install git`; Windows
   `nlpo3` (a Rust wheel) fails on Windows, the installer falls back to
   pythainlp's built-in tokenizer automatically — that is fine, continue.
 
-> The Silero VAD venv python differs by OS: `~/.ii23/vad-env/bin/python3` on
-> macOS/Linux, `~/.ii23/vad-env/Scripts/python.exe` on native Windows. The
+> The Silero VAD venv python differs by OS: `~/.bizdrive/vad-env/bin/python3` on
+> macOS/Linux, `~/.bizdrive/vad-env/Scripts/python.exe` on native Windows. The
 > mechanical runners already pick the right one — don't hardcode either. The
-> Windows installer also creates a `python3` shim at `~/.ii23/bin` because the
+> Windows installer also creates a `python3` shim at `~/.bizdrive/bin` because the
 > repo scripts use `python3`.
 
 **Step 2 — API keys — YOU must ask, because the script can't.** When YOU (Claude)
@@ -94,7 +94,7 @@ go back to Step 1 for that piece — don't proceed.
 On native Windows this runs through Git Bash (installed in Step 1), so the same
 `bash …/preflight.sh` works. If Git Bash is somehow unavailable, verify by hand
 instead: `ffmpeg -version`, `python --version`, and
-`~/.ii23/vad-env/Scripts/python.exe -c "from silero_vad import load_silero_vad"`.
+`~/.bizdrive/vad-env/Scripts/python.exe -c "from silero_vad import load_silero_vad"`.
 
 **Step 4 — Report ready + tell the user the next move.** When preflight is clean
 and the ElevenLabs key is in `.env`, tell the user setup is complete and how to

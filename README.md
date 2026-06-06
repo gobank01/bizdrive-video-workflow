@@ -22,15 +22,18 @@ bash tools/setup.sh                       # installs deps + Silero VAD + .env
 # then edit templates/_shared/env/.env — add your ElevenLabs + OpenRouter keys
 ```
 
+For non-technical users, double-click the OS installer instead:
+`tools/install/mac/1-INSTALL.command` or `tools/install/windows/1-INSTALL.bat`,
+then run the matching `2-CHECK` file.
+
 In a hurry? **[QUICKSTART.md](QUICKSTART.md)** is the one-page version.
 Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
 
-> **On Windows / non-technical?** See **[INSTALL.md](INSTALL.md)** — double-click
-> `tools/install/windows/1-INSTALL.bat`, then `2-CHECK.bat`. Installs everything
-> natively (Git, ffmpeg, Python, Node, Claude Code, deps) and asks for your API
-> keys. **No WSL, no reboot.** One-click installers live in `tools/install/`
-> (`windows/` and `mac/`); `tools/setup.sh` is the macOS/Linux engine.
+> **On Windows / Mac / non-technical?** See **[INSTALL.md](INSTALL.md)**. The
+> one-click installers ask for API keys, install Claude Code, and install the
+> tools. Windows uses native `winget`; Mac uses existing Homebrew if present,
+> otherwise user-level tools in `~/.bizdrive/bin`.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 

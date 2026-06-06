@@ -112,9 +112,9 @@ mkdir -p "$V88" "$TRANSCRIPT"
 # Resolve the Silero VAD venv python. Linux/macOS put it at bin/python3;
 # native Windows (Git Bash) puts it at Scripts/python.exe. Pick whichever
 # exists so Step 6 runs the same on every OS.
-VAD_PY="$HOME/.ii23/vad-env/bin/python3"
-if [ ! -x "$VAD_PY" ] && [ -x "$HOME/.ii23/vad-env/Scripts/python.exe" ]; then
-  VAD_PY="$HOME/.ii23/vad-env/Scripts/python.exe"
+VAD_PY="$HOME/.bizdrive/vad-env/bin/python3"
+if [ ! -x "$VAD_PY" ] && [ -x "$HOME/.bizdrive/vad-env/Scripts/python.exe" ]; then
+  VAD_PY="$HOME/.bizdrive/vad-env/Scripts/python.exe"
 fi
 
 # Caption builder choice based on template

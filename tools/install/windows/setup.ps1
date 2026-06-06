@@ -11,8 +11,8 @@
 
 $ErrorActionPreference = "Stop"
 $RepoUrl   = "https://github.com/gobank01/bizdrive-video-workflow"
-$VadEnv    = Join-Path $HOME ".ii23\vad-env"
-$BinDir    = Join-Path $HOME ".ii23\bin"
+$VadEnv    = Join-Path $HOME ".bizdrive\vad-env"
+$BinDir    = Join-Path $HOME ".bizdrive\bin"
 
 function Section($t) { Write-Host "`n=== $t ===" -ForegroundColor Cyan }
 function Ok($t)      { Write-Host "  [ok] $t"   -ForegroundColor Green }
