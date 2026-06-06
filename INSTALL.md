@@ -10,7 +10,8 @@ runs the pipeline by driving ffmpeg, Python, and Node directly.
 
 1. Download the repo as a ZIP from GitHub (green **Code → Download ZIP**) and
    unzip it — **or** open the folder a teacher handed you.
-2. Go into the `tools` folder and **double-click `INSTALL-WINDOWS-NO-WSL.bat`**.
+2. Open `tools\install\windows\` and **double-click `1-INSTALL.bat`**
+   (then `2-CHECK.bat` afterwards to verify).
 3. If a blue **"Windows protected your PC"** box appears, click
    **More info → Run anyway** (normal for any unsigned script).
 4. Wait ~10–15 min while it downloads ~500 MB. If a Windows **"Do you want to
@@ -24,7 +25,7 @@ runs the pipeline by driving ffmpeg, Python, and Node directly.
    Sign in, then paste your **ElevenLabs API key** when Claude asks
    (<https://elevenlabs.io/app/settings/api-keys>).
 
-That's it. The `.bat` file only launches `tools/setup-windows.ps1`; the
+That's it. The `.bat` file only launches `tools/install/windows/setup.ps1`; the
 PowerShell script does the real install. No WSL, no reboot, and no admin
 PowerShell required. Some installers may still show a UAC **Yes** popup.
 
@@ -40,12 +41,13 @@ PowerShell required. Some installers may still show a UAC **Yes** popup.
 | 6 | This repo | `git clone` / `git pull` | `~\bizdrive-video-workflow` |
 | 7 | `pythainlp`, `nlpo3`, `certifi` | `pip` | Thai captions and HTTPS |
 | 8 | Silero VAD env (`silero-vad`, `soundfile`, `numpy`, optional `torchcodec`) | `pip` venv | detect speech / silence |
-| 9 | `.env` | copied from template | API keys |
+| 9 | HyperFrames + skills (`npx hyperframes skills`) | `npx` | video renderer + Claude Code skills (restart Claude to load) |
+| 10 | `.env` | asked up front | API keys (ElevenLabs + OpenRouter) |
 
 > **Prefer to type one line instead of downloading?** Open PowerShell (normal,
 > not admin) and paste:
 > ```powershell
-> irm https://raw.githubusercontent.com/gobank01/bizdrive-video-workflow/main/tools/setup-windows.ps1 | iex
+> irm https://raw.githubusercontent.com/gobank01/bizdrive-video-workflow/main/tools/install/windows/setup.ps1 | iex
 > ```
 
 ### Requirements
@@ -89,7 +91,7 @@ Windows paths (e.g. `C:\Users\You\Desktop\top.mp4`).
 Just tell Claude the error — it can re-run the installer, install missing
 pieces, and diagnose live. If a single tool failed, you can also re-run:
 ```powershell
-powershell -NoProfile -ExecutionPolicy Bypass -File tools\setup-windows.ps1
+powershell -NoProfile -ExecutionPolicy Bypass -File tools\install\windows\setup.ps1
 ```
 The installer is idempotent — safe to run again; it skips what's already there.
 

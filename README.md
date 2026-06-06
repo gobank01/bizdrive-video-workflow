@@ -27,9 +27,10 @@ Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
 
 > **On Windows / non-technical?** See **[INSTALL.md](INSTALL.md)** — double-click
-> `tools/INSTALL-WINDOWS-NO-WSL.bat` and it installs everything natively (Git,
-> ffmpeg, Python, Node, Claude Code, deps). **No WSL, no reboot.** `tools/setup.sh`
-> covers macOS/Linux; `tools/setup-windows.ps1` covers native Windows.
+> `tools/install/windows/1-INSTALL.bat`, then `2-CHECK.bat`. Installs everything
+> natively (Git, ffmpeg, Python, Node, Claude Code, deps) and asks for your API
+> keys. **No WSL, no reboot.** One-click installers live in `tools/install/`
+> (`windows/` and `mac/`); `tools/setup.sh` is the macOS/Linux engine.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 

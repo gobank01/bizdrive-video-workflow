@@ -7,10 +7,23 @@ when to add a template. Every rule there applies to Claude Code.
 ## First-run setup — "install" / "setup" means do ALL of this, end to end
 
 When the user says anything like **"install"**, **"setup"**, **"set this up"**,
-**"ติดตั้ง"**, **"get this working"** — or when a pipeline command fails because a
-tool is missing — run the WHOLE sequence below without stopping between steps.
-Do not hand intermediate commands back to the user; you run them.
-Finish only when the project is fully ready to make a video.
+**"ติดตั้ง"**, **"get this working"**, **"clone this project"** — or when a
+pipeline command fails because a tool is missing — run the WHOLE sequence below
+without stopping between steps. Do not hand intermediate commands back to the
+user; you run them. Finish only when the project is fully ready to make a video.
+
+**Step 0 — Get the repo (if not already here).** Students open an empty folder
+(e.g. `all-ai/`) in VS Code and ask Claude to clone the project. If the current
+directory is not already this repo (no `CLAUDE.md`/`tools/setup.sh` present),
+clone it and `cd` in:
+
+```bash
+git clone https://github.com/gobank01/bizdrive-video-workflow.git
+cd bizdrive-video-workflow
+```
+
+If `git` is missing, install it first (macOS `brew install git`; Windows
+`winget install Git.Git`). Then continue with Step 1 from inside the repo.
 
 **Step 1 — Run the installer for the current OS.** Detect the platform first
 (`uname -s`; on native Windows the Bash tool reports `MINGW*`/`MSYS*`, and
@@ -30,13 +43,15 @@ Finish only when the project is fully ready to make a video.
 
 - **Native Windows (NO WSL)** — run the PowerShell installer instead. It uses
   `winget` to install Git + Git Bash, ffmpeg, Python, Node, plus the Thai NLP
-  libs and the Silero VAD venv, all natively — no WSL, no reboot:
+  libs and the Silero VAD venv, all natively — no WSL, no reboot. It also asks
+  for the user's API keys up front and writes them to `.env`:
 
   ```bash
-  powershell -NoProfile -ExecutionPolicy Bypass -File tools/setup-windows.ps1
+  powershell -NoProfile -ExecutionPolicy Bypass -File tools/install/windows/setup.ps1
   ```
 
-  (Students can also just double-click `tools/INSTALL-WINDOWS-NO-WSL.bat`.)
+  (Students can also just double-click `tools/install/windows/1-INSTALL.bat`,
+  then `2-CHECK.bat` to verify.)
   Some `winget` installs raise a Windows UAC prompt — you cannot click it for
   the user, so tell them to click **Yes** if it appears. If `winget` is missing,
   have them install "App Installer" from the Microsoft Store, then re-run. If
@@ -49,16 +64,22 @@ Finish only when the project is fully ready to make a video.
 > Windows installer also creates a `python3` shim at `~/.ii23/bin` because the
 > repo scripts use `python3`.
 
-**Step 2 — API keys.** The installer creates `templates/_shared/env/.env` from
-the example. Open it and ask the user to paste their keys (never invent them):
+**Step 2 — API keys — YOU must ask, because the script can't.** When YOU (Claude)
+run `setup.sh`, there is no terminal, so the script prints "No terminal detected"
+and leaves `.env` blank — it does NOT prompt. So after setup, check `.env`; if
+`ELEVENLABS_API_KEY=` (or `OPENROUTER_API_KEY=`) is empty, ask the user in chat
+for the value (never invent one) and write it into
+`templates/_shared/env/.env`:
 
 ```
 ELEVENLABS_API_KEY=...     # required  — https://elevenlabs.io/app/settings/api-keys
-OPENROUTER_API_KEY=...     # optional (B-roll) — https://openrouter.ai/keys
+OPENROUTER_API_KEY=...     # for B-roll — https://openrouter.ai/keys
 ```
 
-If the user only has the ElevenLabs key, that is enough to start — leave
-OpenRouter blank and skip B-roll later.
+Trim whitespace from a pasted key before saving. If the user only has the
+ElevenLabs key, that is enough to start — leave OpenRouter blank and skip B-roll
+later. (When a student double-clicks the installer instead, the script itself
+prompts for the keys, so this step is already done.)
 
 **Step 3 — Verify the environment is actually ready.** Run preflight and confirm
 every check is "yes":
@@ -79,7 +100,8 @@ instead: `ffmpeg -version`, `python --version`, and
 and the ElevenLabs key is in `.env`, tell the user setup is complete and how to
 start their first clip, e.g.:
 
-> ติดตั้งครบแล้ว ✅ วางคลิปของคุณ (top.mp4 = จอ, bottom.mp4 = หน้า, bg.png) แล้วบอกผม
+> ติดตั้งครบแล้ว ✅ ปิด-เปิด Claude Code ใหม่ 1 ครั้ง (เพื่อโหลด HyperFrames
+> skills) แล้ววางคลิปของคุณ (top.mp4 = จอ, bottom.mp4 = หน้า, bg.png) แล้วบอกผม
 > ว่า "ตัดต่อคลิปนี้ ใช้ Template 01" — ผมจะรันไปป์ไลน์ v88 ให้
 
 The 16-step production pipeline itself lives in
@@ -95,9 +117,12 @@ follow it when the user asks to edit a clip — that is a separate task from set
 
 ## Claude Code specifics
 
-- **Skills:** invoke `bizdrive-video` for editing/producing clips, and the
-  `hyperframes` family for HyperFrames composition authoring. The HyperFrames
-  skill table is in `templates/_shared/docs/CLAUDE.md`.
+- **Skills:** the installers run `npx hyperframes skills`, so the `hyperframes`
+  family (composition authoring, captions, TTS, render CLI) is installed for
+  Claude Code — restart the session once after setup to load them. The skill
+  table is in `templates/_shared/docs/CLAUDE.md`. Note: clip production via the 8
+  templates runs through `tools/v88-clip.sh` directly and does NOT require any
+  skill; skills matter when authoring/editing HyperFrames compositions.
 - **Template Manager sync (AGENTS.md RULE 1) is mechanical — never skip it.**
   After any Edit/Write to a `templates/**/manifest.json` or to
   `templates/_shared/manager-ui.json`, run:

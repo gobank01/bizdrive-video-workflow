@@ -61,3 +61,6 @@ sample-pack-v88.zip
 .sample-pack-stage/
 
 .claude/scheduled_tasks.lock
+.agents/
+.claude/skills/
+skills-lock.json

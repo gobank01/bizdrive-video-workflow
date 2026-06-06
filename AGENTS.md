@@ -90,6 +90,8 @@ explicitly sets `thumbnail: 0`.
 | `templates/_shared/docs/LONGFORM_PLAYBOOK.md` | longform → shorts user playbook (1 long video → N delivered shorts) |
 | `templates/_shared/docs/JOB_SPEC.md` | Job Spec format + feature→step gating table |
 | `templates/_shared/docs/SUBAGENT_PROMPTS.md` | the 3 load-bearing AI prompts (editorial, captions, shorts finder) |
+| `tools/install/` | **One-click installers** for students, by OS: `windows/` (`1-INSTALL.bat`, `2-CHECK.bat` → `setup.ps1`/`check.ps1`, native no-WSL) and `mac/` (`1-INSTALL.command`, `2-CHECK.command` → wrap `tools/setup.sh`). Both ask for API keys up front. See `tools/install/README.md` |
+| `tools/setup.sh` | canonical macOS/Linux install engine (Homebrew/apt + pip); the Windows `setup.ps1` is its native-Windows counterpart |
 | `tools/01-longform-shorts/` | **Tool 01 — Longform → Shorts**: prep + Shorts Finder + split + helpers (see its README) |
 | `tools/01-longform-shorts/shipit.sh <staging-or-source>` | one-command orchestrator: prep → Shorts Finder → split → v88-clip × N (resumable) |
 | `tools/02-rough-cut/` | **Tool 02 — Rough Cut**: single raw clip → one finished rough cut (condense, no caption/template); see its README + `docs/adr/0001-2` |

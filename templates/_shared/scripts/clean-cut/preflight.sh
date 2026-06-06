@@ -7,13 +7,22 @@ check() { command -v "$1" >/dev/null 2>&1 && echo yes || echo no; }
 
 FFMPEG=$(check ffmpeg)
 FFPROBE=$(check ffprobe)
-PYTHON3=$(check python3)
 BREW=$(check brew)
 
-# Python version (e.g. 3.9.6). Empty if python3 missing.
+# Report the best python >= 3.10 (the one the pipeline actually uses), not the
+# bare `python3` — on macOS that's the system 3.9, which would read as "too old"
+# even when a good Homebrew python is installed.
+PYBIN=""
+for c in python3.13 python3.12 python3.11 python3.10 python3 python; do
+    command -v "$c" >/dev/null 2>&1 || continue
+    if "$c" -c "import sys; sys.exit(0 if sys.version_info >= (3,10) else 1)" 2>/dev/null; then
+        PYBIN="$c"; break
+    fi
+done
+PYTHON3=$([ -n "$PYBIN" ] && echo yes || echo no)
 PYTHON3_VERSION=""
-if [ "$PYTHON3" = "yes" ]; then
-    PYTHON3_VERSION=$(python3 -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')" 2>/dev/null || echo "")
+if [ -n "$PYBIN" ]; then
+    PYTHON3_VERSION=$("$PYBIN" -c "import sys; print(f'{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}')" 2>/dev/null || echo "")
 fi
 
 # Platform detection
@@ -41,7 +50,7 @@ CONFIG="$HOME/.ii23/config.json"
 PREF="unset"
 if [ -f "$CONFIG" ]; then
     # naive JSON read — works as long as save_preference.sh writes the same shape
-    PREF_VAL=$(python3 -c "import json,sys; print(json.load(open('$CONFIG')).get('preferred_detector','unset'))" 2>/dev/null || echo "unset")
+    PREF_VAL=$("${PYBIN:-python3}" -c "import json,sys; print(json.load(open('$CONFIG')).get('preferred_detector','unset'))" 2>/dev/null || echo "unset")
     [ -n "$PREF_VAL" ] && PREF="$PREF_VAL"
 fi
 
