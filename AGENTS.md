@@ -75,6 +75,25 @@ new layout, new caption rendering). Color / BGM / feature on-off variations are
 - New feature: add it to the relevant manifest's `features[]` **and** a gating
   row in `JOB_SPEC.md` §3, then run `python3 tools/build-manager.py`.
 
+**Every template MUST have a `frame.md` (its "frame spec").** This is the
+design-system source of truth an agent reads BEFORE composing a clip — fixed
+tokens (aspect, color, type, layout, motion, audio), so the agent fills only the
+words from the script and never guesses scale or color. The name follows
+HeyGen HyperFrames' `frame.md` convention (a design system inverted for the
+camera); ours is **per-template** and lives next to its `manifest.json`.
+
+- Use the canonical section schema in
+  [`templates/_starter/frame.md`](_starter/frame.md). Keep the same headings, in
+  the same order, for every template.
+- `new-template.sh` copies the starter, so a new template gets `frame.md`
+  automatically — **fill every section before the template's first job.**
+- When you create or change a template's look, update its `frame.md` in the
+  **same edit**. A template without a filled `frame.md` is incomplete.
+- **The upstream HyperFrames skills do NOT read our `frame.md`** — they look for
+  a `design.md` / `DESIGN.md` (the google-labs-code spec). Don't rely on the
+  skill to auto-load `frame.md`; when composing for a template, read its
+  `frame.md` yourself and treat it as the design source of truth.
+
 ## RULE 5 — Thumbnail is default-on
 
 Every job builds and embeds a thumbnail (V88 **Step 16**) — unless a Job Spec

@@ -133,6 +133,12 @@ follow it when the user asks to edit a clip — that is a separate task from set
   an existing manifest, run it yourself. If you want it enforced automatically,
   it can be wired as a `PostToolUse` hook in `.claude/settings.json` (matcher
   `Edit|Write|MultiEdit`).
+- **Every template has a `frame.md` (AGENTS.md RULE 4).** It is the per-template
+  design/frame spec an agent reads before composing — aspect, colors, type,
+  layout, motion, audio. When you create a template (`new-template.sh` copies
+  `templates/_starter/frame.md`) or change its look, fill/update `frame.md` in
+  the same edit, keeping the starter's section schema. A template without a
+  filled `frame.md` is incomplete.
 - Per-clip work lives in `jobs/YYYY-MM-DD-<slug>/`; scaffold with
   `bash tools/new-job.sh <NN> <slug> --raw <raw-slug>`.
 

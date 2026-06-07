@@ -31,6 +31,22 @@ Particle burst colors (10 dots per gold token): `#FFD700, #FFC233, #FFD86A, #FFE
 
 `letter-spacing: 0.01em`, `line-height: 1.1`. Same as Template 01 / 02.
 
+## Layout layers (z-index)
+
+1. background (0) — fallback
+2. bottomVideo (1) — full-screen face
+3. B-roll top-insert card (5) — near the top, over the face video
+4. caption scrim (9) — lower-third gradient
+5. captions (10) — topmost
+
+**The top-insert card** (the distinctive frame of this template): a 16:9 rounded
+card, `984 × 554 px`, centred horizontally (48px side margins), `top: 24px` —
+near the top of the frame, clear of the captions and the speaker's face below.
+4px gold border + soft drop shadow so it reads as a distinct overlay card. B-roll
+fills it with `object-fit: cover`; clips are generated at **16:9** so there is no
+letterboxing inside the card. The card only exists while a B-roll clip is active —
+between clips the frame is just the full-screen face video.
+
 ## Caption render rules
 
 Identical to Template 01 / 02 — the `captions-burst.html` sub-composition is
@@ -40,17 +56,6 @@ burst.
 
 Captions sit on top of everything (`#captions-mount` z-index 10), so they stay
 readable over the face video and never collide with the upper-third insert.
-
-## The top-insert card
-
-- 16:9 rounded card, `984 × 554 px`, centred horizontally (48px side margins),
-  `top: 24px` — sits near the top of the frame, clear of the captions and
-  clear of the speaker's face below.
-- 4px gold border + soft drop shadow so it reads as a distinct overlay card.
-- B-roll fills it with `object-fit: cover`; clips are generated at **16:9** so
-  there is no letterboxing inside the card.
-- The card only exists while a B-roll clip is active — between clips the frame
-  is just the full-screen face video.
 
 ## Motion rules
 
@@ -68,16 +73,6 @@ readable over the face video and never collide with the upper-third insert.
   muted (`data-volume="0"`); the polished speech master is muxed back after the
   visual-only render (edit-first architecture).
 - BGM: 5% gain, barely-audible bed.
-
-## Layout layers (z-index)
-
-```
-z-index 10  captions (topmost)
-z-index 9   caption scrim (lower-third gradient)
-z-index 5   B-roll top-insert card (near the top, over the face video)
-z-index 1   bottomVideo (full-screen face)
-z-index 0   background (fallback)
-```
 
 ## What this template is — and is NOT
 

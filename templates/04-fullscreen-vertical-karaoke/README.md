@@ -41,7 +41,7 @@ Generated per job by `scripts/build-highlight-captions.py` from the standard
 - marks gold tokens (`token.gold`) → gold box; the rest → red box
 - white text, flipping to dark `#1c1206` while a gold box is active (contrast)
 
-See [DESIGN.md](DESIGN.md) for the full caption spec.
+See [frame.md](frame.md) for the full caption spec.
 
 ## How to start a new clip
 
@@ -81,7 +81,7 @@ post-process subagent, BGM, QA — is the same v88 pipeline as Templates 01-03.
 ```
 manifest.json    machine-readable spec
 README.md        this file
-DESIGN.md        karaoke caption / layout / colors / motion
+frame.md        karaoke caption / layout / colors / motion
 index.html       composition source-of-truth (generic per-job paths)
 hyperframes.json / meta.json / package.json
 compositions/    captions-highlight.html is generated per job;

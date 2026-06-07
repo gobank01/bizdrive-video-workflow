@@ -77,7 +77,7 @@ bash tools/new-template.sh 02 horizontal-talking-head
 # Customize templates/02-horizontal-talking-head/:
 #   - manifest.json  (aspect, fps, caption style, gold rule, features[])
 #   - index.html     (composition layout)
-#   - DESIGN.md      (colors, fonts, position)
+#   - frame.md      (colors, fonts, position)
 #   - prompts/       (subagent slot defaults specific to this template)
 ```
 

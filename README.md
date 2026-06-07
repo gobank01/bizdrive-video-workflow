@@ -31,9 +31,9 @@ Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
 
 > **On Windows / Mac / non-technical?** See **[INSTALL.md](INSTALL.md)**. The
-> one-click installers ask for API keys, install Claude Code, and install the
-> tools. Windows uses native `winget`; Mac uses existing Homebrew if present,
-> otherwise user-level tools in `~/.bizdrive/bin`.
+> one-click installers ask for API keys and install the tools. Windows uses
+> native `winget`; Mac uses existing Homebrew if present, otherwise user-level
+> tools in `~/.bizdrive/bin`. Then use the Claude Code VS Code extension.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -60,7 +60,7 @@ Video V3/
 │   ├── 01-stacked-vertical-burst/      ⭐ Template 1: v88 stacked vertical + burst captions
 │   │   ├── README.md                   เมื่อไหร่ใช้, output spec
 │   │   ├── manifest.json               machine-readable spec
-│   │   ├── DESIGN.md                   colors/fonts/position
+│   │   ├── frame.md                   colors/fonts/position
 │   │   ├── index.html                  composition source-of-truth
 │   │   ├── compositions/               sub-compositions (captions-burst.html)
 │   │   ├── scripts/                    per-template build scripts
@@ -124,7 +124,7 @@ bash tools/new-job.sh 01 my-slug
 ```bash
 bash tools/new-template.sh 02 horizontal-talking-head
 # Clones templates/_starter/ → templates/02-horizontal-talking-head/
-# Customize manifest.json, index.html, DESIGN.md before first job
+# Customize manifest.json, index.html, frame.md before first job
 ```
 
 ---
