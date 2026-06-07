@@ -19,7 +19,7 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "=================================================="
-echo " BIZDRIVE Video — กำลังติดตั้งเครื่องมือทั้งหมด"
+echo " BIZDRIVE Video — installing all tools"
 echo "=================================================="
 echo ""
 
@@ -53,33 +53,33 @@ key_filled() {
 
 # --- API keys FIRST, before the long installs, so the user pastes them up
 # front and can walk away while everything downloads. ---
-echo "→ ใส่ API key (วางตรงนี้ก่อนเลย แล้วระบบจะติดตั้งให้ระหว่างที่คุณรอ)..."
-[ -f "$ENV_FILE" ] || { cp "$ENV_EXAMPLE" "$ENV_FILE"; echo "  ✓ สร้างไฟล์เก็บ key แล้ว"; }
+echo "→ API keys (paste them now — the install runs while you wait)..."
+[ -f "$ENV_FILE" ] || { cp "$ENV_EXAMPLE" "$ENV_FILE"; echo "  ✓ created the API-key file"; }
 
 NEED_EL=1; key_filled "ELEVENLABS_API_KEY" && NEED_EL=0
 NEED_OR=1; key_filled "OPENROUTER_API_KEY" && NEED_OR=0
 
 if [ "$NEED_EL" = 0 ] && [ "$NEED_OR" = 0 ]; then
-  echo "  ✓ ใส่ key ครบแล้ว (ข้ามขั้นตอนนี้)"
+  echo "  ✓ API keys already in .env — not asking again"
 elif [ -t 0 ]; then
-  echo "    ElevenLabs (จำเป็น — ใช้ถอดเสียงเป็นข้อความ): https://elevenlabs.io/app/settings/api-keys"
-  echo "    OpenRouter (ใช้สร้าง B-roll ด้วย AI)      : https://openrouter.ai/keys"
+  echo "    ElevenLabs (required — speech to text): https://elevenlabs.io/app/settings/api-keys"
+  echo "    OpenRouter (for AI B-roll)            : https://openrouter.ai/keys"
   if [ "$NEED_EL" = 1 ]; then
-    printf "  วาง ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
+    printf "  Paste your ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
     while [ -z "$EL_KEY" ]; do
-      printf "  (จำเป็น ห้ามเว้นว่าง) ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
+      printf "  (required, cannot be blank) ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
     done
     set_env_line "$ENV_FILE" "ELEVENLABS_API_KEY" "$EL_KEY"
   fi
   if [ "$NEED_OR" = 1 ]; then
-    printf "  วาง OpenRouter API key (ถ้ายังไม่มี กด Enter ข้ามได้): "; read -r OR_KEY; OR_KEY=$(trim "$OR_KEY")
+    printf "  Paste your OpenRouter API key (press Enter to skip): "; read -r OR_KEY; OR_KEY=$(trim "$OR_KEY")
     [ -n "$OR_KEY" ] && set_env_line "$ENV_FILE" "OPENROUTER_API_KEY" "$OR_KEY"
   fi
-  echo "  ✓ บันทึก key เรียบร้อย — เริ่มติดตั้งต่อเลย"
+  echo "  ✓ keys saved — starting the install"
 else
-  echo "  ⚠ ยังไม่ได้ใส่ key — ก่อนทำวิดีโอ ให้ใส่ key ลงในไฟล์ $ENV_FILE :"
-  [ "$NEED_EL" = 1 ] && echo "      ELEVENLABS_API_KEY=  (จำเป็น)"
-  [ "$NEED_OR" = 1 ] && echo "      OPENROUTER_API_KEY=  (สำหรับ B-roll)"
+  echo "  ⚠ No interactive console — add your keys to $ENV_FILE before making a video:"
+  [ "$NEED_EL" = 1 ] && echo "      ELEVENLABS_API_KEY=  (required)"
+  [ "$NEED_OR" = 1 ] && echo "      OPENROUTER_API_KEY=  (for B-roll)"
 fi
 echo ""
 
@@ -178,17 +178,9 @@ ensure_local_bin_on_path() {
   done
 }
 
-install_claude_code() {
-  ensure_local_bin_on_path
-  command -v claude >/dev/null 2>&1 && { echo "  ✓ Claude Code พร้อมแล้ว"; return 0; }
-  case "$OS" in macos|linux) : ;; *) return 0 ;; esac
-  echo "→ กำลังลง Claude Code..."
-  if curl -fsSL https://claude.ai/install.sh | bash >/dev/null 2>&1; then
-    ensure_local_bin_on_path
-    command -v claude >/dev/null 2>&1 && echo "  ✓ ลง Claude Code แล้ว" && return 0
-  fi
-  echo "  ⚠ ลง Claude Code อัตโนมัติไม่สำเร็จ — ลงทีหลังด้วย: curl -fsSL https://claude.ai/install.sh | bash"
-}
+# NOTE: We do NOT install the Claude Code CLI. Students use the Claude Code
+# VS Code extension (installed separately), which drives this setup. This
+# mirrors the Windows installer.
 
 # auto_install <tool> — try to install a missing system tool for the current OS.
 # Returns 0 if installed (or already adequate), 1 if it could not.
@@ -203,13 +195,13 @@ auto_install() {
     node)    node_ok && return 0 ;;
     *)       command -v "$tool" >/dev/null 2>&1 && return 0 ;;
   esac
-  echo "  → กำลังลง $tool..."
+  echo "  → installing $tool..."
   case "$OS" in
     macos)
       if command -v brew >/dev/null 2>&1 && macos_brew_install "$tool"; then
         :
       elif macos_nobrew_install "$tool"; then
-        echo "    ✓ ลง $tool แบบไม่ต้องใช้รหัสเครื่อง (เก็บที่ ~/.bizdrive/bin)"
+        echo "    ✓ installed $tool without a password (in ~/.bizdrive/bin)"
       else
         return 1
       fi ;;
@@ -286,7 +278,7 @@ pick_python() {
 python_stack_ok() { pick_python >/dev/null 2>&1; }
 
 # --- 1. System tools (auto-install what's missing) ---
-echo "→ กำลังตรวจเครื่องมือพื้นฐาน (ขาดตัวไหนจะลงให้อัตโนมัติ)..."
+echo "→ Checking system tools (will auto-install any that are missing)..."
 STILL_MISSING=""
 auto_install git     || STILL_MISSING="$STILL_MISSING git"
 auto_install curl    || STILL_MISSING="$STILL_MISSING curl"
@@ -307,9 +299,9 @@ fi
 node_ok || STILL_MISSING="$STILL_MISSING node(>=18)"
 
 if [ -n "$STILL_MISSING" ]; then
-  echo "✗ ลงเครื่องมือบางตัวให้อัตโนมัติไม่ได้:$STILL_MISSING" >&2
-  echo "  ลองลงเองด้วยคำสั่งนี้ แล้วเปิดติดตั้งใหม่:" >&2
-  echo "    macOS:        เช็กอินเทอร์เน็ตแล้วเปิด 1-INSTALL.command ใหม่ หรือ brew install ffmpeg python node" >&2
+  echo "✗ Could not auto-install:$STILL_MISSING" >&2
+  echo "  Install them, then re-run:" >&2
+  echo "    macOS:        check your internet and re-open 1-INSTALL.command, or: brew install ffmpeg python node" >&2
   echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-pip python3-venv" >&2
   echo "                  Node 18+: https://github.com/nodesource/distributions" >&2
   exit 1
@@ -318,17 +310,15 @@ fi
 # has run, so a good one should exist; if not, fail with a clear message.
 PY=$(pick_python || true)
 if [ -z "$PY" ]; then
-  echo "✗ ต้องใช้ Python 3.10 ขึ้นไป (พร้อม pip+venv) แต่หาไม่เจอในเครื่อง" >&2
-  echo "  ตอนนี้ python3 คือ '$(command -v python3 >/dev/null 2>&1 && python3 --version 2>&1 || echo ไม่มี)'" >&2
-  echo "  ลง Python ใหม่แล้วเปิดติดตั้งอีกครั้ง:" >&2
-  echo "    macOS:        เปิด 1-INSTALL.command ใหม่ หรือ brew install python@3.12" >&2
+  echo "✗ Python 3.10+ (with pip+venv) is required but was not found." >&2
+  echo "  Current python3: '$(command -v python3 >/dev/null 2>&1 && python3 --version 2>&1 || echo none)'" >&2
+  echo "  Install Python, then re-run:" >&2
+  echo "    macOS:        re-open 1-INSTALL.command, or: brew install python@3.12" >&2
   echo "    Linux / WSL:  sudo apt-get install -y python3 python3-pip python3-venv" >&2
   exit 1
 fi
-echo "  ✓ ติดตั้ง ffmpeg, ffprobe, Python ($("$PY" --version | cut -d' ' -f2)), Node เรียบร้อย"
+echo "  ✓ ffmpeg, ffprobe, Python ($("$PY" --version | cut -d' ' -f2)), Node installed"
 export BIZDRIVE_PYTHON="$PY"   # so child scripts (install_vad.sh) reuse it
-
-install_claude_code
 
 # python3 shim — the pipeline (v88-clip.sh etc.) calls `python3` ~20 times. On
 # macOS that resolves to /usr/bin/python3 = 3.9, which does NOT have the deps we
@@ -348,67 +338,47 @@ if [ "$(command -v python3 2>/dev/null)" != "$PY" ] && ! py_ge_310 "$(command -v
     [ -f "$rc" ] || continue
     grep -qF '.bizdrive/bin' "$rc" 2>/dev/null || printf '\n%s\n' "export PATH=\"\$HOME/.bizdrive/bin:\$PATH\"" >> "$rc"
   done
-  echo "  ✓ ตั้งค่าให้ใช้ Python ตัวที่ถูกต้องแล้ว ($PY_ABS)"
+  echo "  ✓ python3 now points at the right interpreter ($PY_ABS)"
 fi
 
 # --- 2. Python deps ---
 echo ""
-echo "→ กำลังลงไลบรารีตัดคำไทย (pythainlp, nlpo3, certifi)..."
+echo "→ Installing Thai NLP libraries (pythainlp, nlpo3, certifi)..."
 # --user fails on PEP 668 "externally-managed" Python (common on Ubuntu/WSL);
 # fall back to --break-system-packages, which is safe for these pure-Python libs.
 "$PY" -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi 2>/dev/null \
   || "$PY" -m pip install --user --break-system-packages --quiet --upgrade pythainlp nlpo3 certifi
-echo "  ✓ ลงไลบรารีตัดคำไทยเรียบร้อย"
+echo "  ✓ Thai NLP libs installed"
 
 # --- 3. Silero VAD venv ---
 echo ""
-echo "→ กำลังลงตัวตรวจจับเสียงพูด/เงียบ (Silero VAD, ~437 MB ลงครั้งเดียว)..."
+echo "→ Installing Silero VAD (voice detection, ~437 MB — one time)..."
 if [ -d "$HOME/.bizdrive/vad-env" ] && "$HOME/.bizdrive/vad-env/bin/python3" -c "from silero_vad import load_silero_vad" 2>/dev/null; then
-  echo "  ✓ ลง Silero VAD ไว้แล้ว"
+  echo "  ✓ Silero VAD already installed"
 else
   bash templates/_shared/scripts/clean-cut/install_vad.sh
   # torchaudio 2.11+ needs torchcodec for audio I/O
   "$HOME/.bizdrive/vad-env/bin/pip" install --quiet torchcodec 2>/dev/null || true
-  echo "  ✓ ลง Silero VAD เรียบร้อย"
+  echo "  ✓ Silero VAD installed"
 fi
 
-# --- 4. HyperFrames + its skills ---
-# Warm the pinned hyperframes (so the first render doesn't pause to download it)
-# and install the HyperFrames skill family for the user's AI tool (Claude Code).
-# Skills teach the agent the composition patterns; without them, caption/VFX
-# authoring produces broken output. `npx hyperframes skills` is idempotent.
+# --- 4. Preflight ---
 echo ""
-echo "→ กำลังลงตัวเรนเดอร์วิดีโอ HyperFrames + skills (ใช้ Node)..."
-if command -v npx >/dev/null 2>&1; then
-  npx --yes hyperframes@0.6.25 --version >/dev/null 2>&1 \
-    && echo "  ✓ เตรียม hyperframes@0.6.25 พร้อมแล้ว (โหลดเก็บไว้ใช้ตอนเรนเดอร์)" \
-    || echo "  ⚠ เตรียม hyperframes ล่วงหน้าไม่ได้ — เดี๋ยวจะโหลดเองตอนเรนเดอร์ครั้งแรก"
-  if npx --yes hyperframes@0.6.25 skills >/dev/null 2>&1; then
-    echo "  ✓ ลง HyperFrames skills แล้ว (ปิด-เปิด Claude Code ใหม่ 1 ครั้งเพื่อโหลด)"
-  else
-    echo "  ⚠ ยังไม่ได้ลง skills — ลงทีหลังด้วยคำสั่ง: npx hyperframes skills"
-  fi
-else
-  echo "  ⚠ ไม่พบ npx (Node อาจยังไม่ได้ลง) — ข้ามการลง HyperFrames skills"
-fi
-
-# --- 5. Preflight ---
-echo ""
-echo "→ กำลังตรวจสอบขั้นสุดท้ายว่าพร้อมจริงไหม..."
+echo "→ Running the final readiness check..."
 bash templates/_shared/scripts/clean-cut/preflight.sh
 
 echo ""
 echo "=================================================="
-echo " ✅ ติดตั้งครบแล้ว — พร้อมทำวิดีโอ"
+echo " Setup complete — ready to make videos."
 echo "=================================================="
 echo ""
-echo " ขั้นต่อไป:"
+echo " Next steps:"
 if ! key_filled "ELEVENLABS_API_KEY"; then
-  echo "   1. ใส่ ElevenLabs API key ลงในไฟล์ templates/_shared/env/.env"
-  echo "      ขอ key ได้ที่ https://elevenlabs.io/app/settings/api-keys"
+  echo "   1. Add your ElevenLabs API key to templates/_shared/env/.env"
+  echo "      Get one at https://elevenlabs.io/app/settings/api-keys"
 else
-  echo "   1. (ใส่ API key เรียบร้อยแล้ว ✓)"
+  echo "   1. (API key already set)"
 fi
-echo "   2. ปิด-เปิด Claude Code ใหม่ 1 ครั้ง (เพื่อโหลด HyperFrames skills)"
-echo "   3. วางคลิปของคุณ แล้วบอก Claude เช่น \"ตัดต่อคลิปนี้ ใช้ Template 01\""
+echo "   2. Open this folder in VS Code and use the Claude Code panel."
+echo "   3. Drop in your clips and tell Claude, e.g. \"edit this clip with Template 01\""
 echo "=================================================="

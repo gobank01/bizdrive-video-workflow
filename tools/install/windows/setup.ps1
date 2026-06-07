@@ -443,7 +443,7 @@ Next steps:
        $Target\templates\_shared\env\.env
        (get one at https://elevenlabs.io/app/settings/api-keys)
   2. Open this project folder in VS Code, then open the Claude Code panel
-     (the Claude Code extension). Tell Claude: "ตัดต่อคลิปนี้ ใช้ Template 01"
+     (the Claude Code extension). Tell Claude: "edit this clip with Template 01"
 
 "@
 if ($Interactive) { Read-Host "Press Enter to close" }
