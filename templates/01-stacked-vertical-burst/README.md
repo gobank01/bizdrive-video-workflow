@@ -75,7 +75,7 @@ duration / captions / B-roll are per-job — Step 11's three scripts handle them
 ```
 manifest.json                  machine-readable spec (output dims, caption rules, golden test)
 README.md                      this file
-DESIGN.md                      colors / fonts / position details
+frame.md                      colors / fonts / position details
 index.html                     composition source-of-truth (generic per-job paths, no inline B-roll)
 hyperframes.json               HyperFrames registry config
 meta.json                      project metadata

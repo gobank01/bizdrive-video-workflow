@@ -10,7 +10,8 @@ inserts AI B-roll, mixes BGM.
 
 ## 0. Prerequisites
 
-`python3` 3.10+ · `node` 18+ · `ffmpeg` + `ffprobe` · `git`
+`tools/setup.sh` installs `python3` 3.10+ · `node` 18+ · `ffmpeg` + `ffprobe`
+automatically.
 Plus your own API keys: **ElevenLabs** (required), **OpenRouter** (optional, B-roll).
 
 ## 1. Clone & set up — once
@@ -21,7 +22,9 @@ cd bizdrive-video-workflow
 bash tools/setup.sh                      # deps + Silero VAD + .env  (~5-10 min)
 ```
 
-Add keys to `templates/_shared/env/.env`:
+Or double-click `tools/install/mac/1-INSTALL.command` / `tools/install/windows/1-INSTALL.bat`.
+
+Add keys to `templates/_shared/env/.env` if setup did not ask for them:
 
 ```
 ELEVENLABS_API_KEY=sk_...                # elevenlabs.io/app/settings/api-keys

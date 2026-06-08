@@ -1,11 +1,11 @@
 #!/usr/bin/env python3
 """Detect speech segments using Silero VAD.
 
-Runs inside ~/.ii23/vad-env (sibling venv created by install_vad.sh).
+Runs inside ~/.bizdrive/vad-env (sibling venv created by install_vad.sh).
 Outputs JSON list of speech ranges [{start, end}, ...] in seconds.
 
 Usage:
-  ~/.ii23/vad-env/bin/python3 vad_detect.py <input.wav> [options]
+  ~/.bizdrive/vad-env/bin/python3 vad_detect.py <input.wav> [options]
 
 Options:
   --min-silence-ms N   Gaps shorter than this are NOT cut (default 300)

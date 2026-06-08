@@ -32,6 +32,14 @@ Particle burst colors (10 dots per gold token): `#FFD700, #FFC233, #FFD86A, #FFE
 
 `letter-spacing: 0.01em`, `line-height: 1.1`.
 
+## Layout layers (z-index)
+
+1. background (0) — from `bg.png`
+2. top + bottom media (1) — screen recording + face
+3. video frames (2) — gold borders (top rounded rect + bottom circle)
+4. B-roll (4) — inside the top frame, covers the screen recording while active
+5. captions-burst (10) — topmost (particle-burst captions)
+
 ## Caption render rules
 
 1. Each caption GROUP holds 1-3 tokens displayed on screen simultaneously.
@@ -54,10 +62,10 @@ Particle burst colors (10 dots per gold token): `#FFD700, #FFC233, #FFD86A, #FFE
 - BGM: 5% gain, never higher. Intent = "barely audible ambient bed", not noticeable song.
 - BGM mix uses `amix=normalize=0 + alimiter` (never `-shortest` — frame lock rule).
 
-## What this design is NOT
+## What this template is — and is NOT
 
 This template is the **brand layout**. It is not:
 
 - A different aspect (1920×1080, 1080×1080) → make Template 02/03
-- A different caption animation style (karaoke, slam, scatter, 3D) → still 01 if layout matches, but document in DESIGN.md as a variant
+- A different caption animation style (karaoke, slam, scatter, 3D) → still 01 if layout matches, but document in frame.md as a variant
 - A different speaker arrangement (split-screen, PiP overlay, no face) → new template

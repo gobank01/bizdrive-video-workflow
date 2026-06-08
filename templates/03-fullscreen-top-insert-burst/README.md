@@ -76,7 +76,7 @@ upper third while the face stays visible around it.
 ```
 manifest.json    machine-readable spec
 README.md        this file
-DESIGN.md        full-screen + top-insert layout / colors / motion
+frame.md        full-screen + top-insert layout / colors / motion
 index.html       composition source-of-truth (generic per-job paths)
 hyperframes.json / meta.json / package.json
 compositions/    captions-burst.html is generated per job; components/ = reference block

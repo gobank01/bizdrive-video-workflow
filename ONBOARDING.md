@@ -13,9 +13,9 @@ generates kinetic Thai captions, inserts AI B-roll, and mixes BGM.
 
 | Tool | Version | Install |
 |------|---------|---------|
-| Python | 3.10+ | `brew install python` / `apt-get install python3` |
-| Node.js | 18+ | `brew install node` / `apt-get install nodejs` |
-| ffmpeg + ffprobe | any modern | `brew install ffmpeg` / `apt-get install ffmpeg` |
+| Python | 3.10+ | installed by `tools/setup.sh` |
+| Node.js | 18+ | installed by `tools/setup.sh` |
+| ffmpeg + ffprobe | any modern | installed by `tools/setup.sh` |
 | git | any | — |
 
 You also need (paid, your own accounts):
@@ -45,8 +45,10 @@ cd bizdrive-video-workflow
 bash tools/setup.sh
 ```
 
-This installs Python deps (pythainlp, nlpo3, certifi), the Silero VAD venv
-(~437 MB into `~/.ii23/vad-env`), and creates the `.env` file.
+This installs ffmpeg/ffprobe, Python, Node, Claude Code, Python deps
+(pythainlp, nlpo3, certifi), the Silero VAD venv (~437 MB into
+`~/.bizdrive/vad-env`), and creates the `.env` file. On macOS it uses existing
+Homebrew if present; otherwise it downloads user-level tools into `~/.bizdrive/bin`.
 
 Then add your API keys:
 

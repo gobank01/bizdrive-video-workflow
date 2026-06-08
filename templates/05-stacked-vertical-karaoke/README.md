@@ -47,7 +47,7 @@ The same `caption-groups.json` feeds both Template 01 (particle-burst) and
 Template 05 (karaoke) — switching templates does not require re-running the
 post-process subagent.
 
-See [DESIGN.md](DESIGN.md) for the full caption spec.
+See [frame.md](frame.md) for the full caption spec.
 
 ## How to start a new clip
 
@@ -89,7 +89,7 @@ post-process subagent, BGM, SFX, QA — is the same v88 pipeline as Templates 01
 ```
 manifest.json    machine-readable spec
 README.md        this file
-DESIGN.md        karaoke caption / stacked layout / colors / motion
+frame.md        karaoke caption / stacked layout / colors / motion
 index.html       composition source-of-truth (generic per-job paths)
 hyperframes.json / meta.json / package.json
 compositions/    captions-highlight.html is generated per job;
