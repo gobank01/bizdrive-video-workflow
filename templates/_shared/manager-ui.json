@@ -15,7 +15,8 @@
     "fullscreen": "เต็มจอ",
     "top-insert": "เต็มจอ + การ์ด B-roll ลอย",
     "corner-cam": "จอบันทึกหน้าจอเต็มจอ + กล้องมุม",
-    "horizontal-talking-head": "เต็มจอ 16:9 แนวนอน (YouTube)"
+    "horizontal-talking-head": "เต็มจอ 16:9 แนวนอน (YouTube)",
+    "side-by-side": "2 คนข้างกัน (ซ้าย/ขวา)"
   },
 
   "captions": {

@@ -16,6 +16,8 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 05 | stacked-vertical-karaoke    | 1080×1920    | talking-head + screen recording + B-roll (stacked) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-21) |
 | 06 | screencast-corner-cam       | 1080×1920    | full-screen screen recording + face as a corner-cam + full-screen B-roll | particle burst + gold | ✅ ready (2026-05-21) |
 | 07 | fullscreen-horizontal-karaoke | **1920×1080** | **YouTube long-form** talking-head + full-screen B-roll (~1 per 2 min) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-22) |
+| 08 | split-vertical-burst        | 1080×1920    | top/bottom split — screen (top) + person as full-width rectangle (bottom) | **karaoke** highlight, centered over seam | ✅ ready (2026-06-08) |
+| 09 | sidebyside-vertical-burst   | 1080×1920    | **2-person side-by-side** (left + right cams) — interview / conversation / 2-cam podcast | particle burst + gold (centered below cams) | ✅ ready (2026-06-08) |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
 ### Which to pick
@@ -43,6 +45,13 @@ Two axes: **layout** (do you have a screen recording?) and **caption style**
   **karaoke** captions. B-roll is long-form cadence (≥120s spacing, 4s each,
   ~1 per 2 minutes) instead of the 9:16 sparse-4/60s rule. Thumbnail default OFF
   (use a separate 1280×720 YouTube cover).
+- **Template 08** — TWO videos in a clean top/bottom **split**: screen recording
+  on top, person as a full-width **rectangle** (no circle) on the bottom.
+  **Karaoke** captions centered over the seam.
+- **Template 09** — TWO cams **side by side** (left + right rectangles) for a
+  **2-person interview / conversation / podcast**. **Particle-burst** captions
+  (Template 01 colors) centered below the cams. Assumes ONE combined audio track
+  on `bottom.mp4` (the right cam = audio master); `top.mp4` is the muted left cam.
 
 > **Same layout, different captions:** 01 ↔ 05 (stacked) and 02 ↔ 04
 > (full-screen). Particle-burst = premium/calm; karaoke box sweep = punchy/viral.
@@ -58,7 +67,7 @@ Examples that warrant new templates:
 - 1920×1080 horizontal talking-head with side caption strip
 - 1080×1080 square quote card with no video, only text + bg
 - 9:16 full-screen kinetic typography (no talking head)
-- Split-screen interview (two faces stacked)
+- ~~Split-screen interview (two faces)~~ → built as **Template 09** (side-by-side)
 
 Examples that do NOT need new templates:
 

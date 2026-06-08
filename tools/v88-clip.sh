@@ -111,9 +111,9 @@ mkdir -p "$V88" "$TRANSCRIPT"
 
 # Caption builder choice based on template
 case "$TEMPLATE_NUM" in
-  01|03) CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
+  01|03|09) CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
   02)    CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
-  04|05) CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
+  04|05|08) CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
   06)    CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
   07)    CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
   *)
@@ -125,6 +125,7 @@ esac
 case "$TEMPLATE_NUM" in
   04|02) CAPTION_BOTTOM=330 ;;
   05|01) CAPTION_BOTTOM=360 ;;
+  08|09) CAPTION_BOTTOM=910 ;;
   *)     CAPTION_BOTTOM=330 ;;
 esac
 
@@ -391,7 +392,7 @@ Write to: $TRANSCRIPT/caption-groups.json
 }
 \`\`\`
 
-Rules: ≤22 visible Thai chars/group · 1-3 tokens · timing from raw.words[] (don't invent) · break at ครับ/นะ/ค่ะ/แต่/ก็/และ/ที่/หรือ/เพราะ/แล้ว · Latin loanwords stay Latin · numbers → digits where natural · particles KEPT, standalone fillers (เออ/อ่ะ/อืม) DROPPED · no overlaps · last end ≤ duration.
+Rules: ≤14 visible Thai chars/group · 1-2 tokens (keep captions SHORT) · timing from raw.words[] (don't invent) · break at ครับ/นะ/ค่ะ/แต่/ก็/และ/ที่/หรือ/เพราะ/แล้ว · Latin loanwords stay Latin · numbers → digits where natural · trailing politeness particles (นะครับ/นะคับ/นะคะ/นะค่ะ/นะ/ครับ/คับ/ค่ะ/คะ at phrase end) DROPPED · standalone fillers (เออ/อ่ะ/อืม) DROPPED ·no overlaps · last end ≤ duration.
 
 After writing, report briefly: counts, top fixes, merges/splits, ambiguities, first 3 + last 2 groups.
 EOF

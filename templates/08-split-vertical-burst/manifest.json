@@ -1,0 +1,193 @@
+{
+  "id": "08-split-vertical-burst",
+  "version": "v88",
+  "lockedAt": "2026-06-08",
+  "name": "Split Vertical (Rectangle) with Karaoke Highlight Captions",
+  "description": "BIZDRIVE-style vertical talking-head: clean top/bottom split — top frame is the screen recording, bottom frame is the person as a full-width RECTANGLE (no circle crop) — with BIZDRIVE Karaoke captions (caption-highlight word-sweep) placed CENTERED over the seam, and optional B-roll inserts. Layout cousin of Template 01/05; caption system = caption-highlight (same word-sweep as Template 04/05).",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "full-frame bg.png image",
+    "split": "top/bottom 50-50 (both full-width rectangles)",
+    "topFrame": { "shape": "rectangle", "left": 0, "top": 40, "width": 1080, "height": 900, "radius": 30, "border": "4px gold gradient", "content": "screen recording (top.mp4)" },
+    "bottomFrame": { "shape": "rectangle", "left": 0, "top": 980, "width": 1080, "height": 900, "radius": 30, "border": "4px gold gradient", "content": "person face-cam (bottom.mp4), object-fit cover, NO circle crop" },
+    "seam": "40px gap at y=960 (frame edges 940 / 980)",
+    "captionPosition": "centered over the seam, bottom: 910px (passed as CAPTION_BOTTOM for T08 in tools/v88-clip.sh → build-highlight-captions.py argv[4])"
+  },
+
+  "captions": {
+    "system": "caption-highlight",
+    "style": "BIZDRIVE Karaoke word-sweep (coloured box sweeps in left-to-right per spoken word; same system as Template 04/05)",
+    "subComposition": "compositions/captions-highlight.html",
+    "builder": "scripts/build-highlight-captions.py",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 800,
+    "fontSize": 70,
+    "fontSizeFit": "auto-shrinks to fit 1820px group width",
+    "colors": {
+      "wordText": "#ffffff",
+      "normalBox": "linear-gradient(135deg, #ff2d55 0%, #d11138 100%)",
+      "goldBox": "linear-gradient(135deg, #ffd93d 0%, #f4c20f 55%, #d99a06 100%)",
+      "goldWordText": "#1c1206"
+    },
+    "tokensPerGroup": "wraps as needed (flex-wrap); one box per word",
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline tickers"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": true,
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "minTopFootageBetweenInserts": 3,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "seedance-1-5-pro chosen 2026-05-20: ~$0.02 per 3-5s clip at 720p, ~10x cheaper than seedance-2.0-fast at equivalent quality. Tested on the robot job. Use resolution 720p, 16:9, generate_audio false.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on (whoosh on transitions, ding on CTA/follow-card, punch on punchlines, riser before reveals). mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+  },
+
+  "features": [
+    {
+      "id": "dead_air_cut",
+      "label": { "th": "ตัดช่วงเงียบ (dead air)", "en": "Dead-air jump cut" },
+      "section": "edit",
+      "step": "6",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+    },
+    {
+      "id": "audio_polish",
+      "label": { "th": "ปรับแต่งเสียงพูด (polish)", "en": "Audio polish" },
+      "section": "audio",
+      "step": "8",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+    },
+    {
+      "id": "captions",
+      "label": { "th": "ซับ / คำบรรยายไทย", "en": "Thai captions" },
+      "section": "captions",
+      "step": "9-11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+    },
+    {
+      "id": "broll",
+      "label": { "th": "B-roll แทรกภาพ", "en": "B-roll inserts" },
+      "section": "broll",
+      "step": "11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
+      "options": [
+        { "id": "mode", "type": "enum", "label": { "th": "แหล่ง B-roll", "en": "Source" }, "values": ["ai-gen", "stock"], "default": "ai-gen" },
+        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 4, "min": 0, "max": 8 }
+      ]
+    },
+    {
+      "id": "bgm",
+      "label": { "th": "เพลงประกอบ (BGM)", "en": "Background music" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+      "options": [
+        { "id": "gain", "type": "number", "label": { "th": "ระดับเสียง", "en": "Gain" }, "default": 5, "min": 0, "max": 20, "unit": "%" }
+      ]
+    },
+    {
+      "id": "sfx",
+      "label": { "th": "เอฟเฟกต์เสียง (SFX)", "en": "Sound effects" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+    },
+    {
+      "id": "thumbnail",
+      "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
+      "section": "extras",
+      "step": "16",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+      "options": [
+        { "id": "main", "type": "text", "label": { "th": "บรรทัดบน (ขาว)", "en": "Main line" }, "default": "" },
+        { "id": "hero", "type": "text", "label": { "th": "บรรทัดเด่น (ทอง)", "en": "Hero line" }, "default": "" },
+        { "id": "sub", "type": "text", "label": { "th": "บรรทัดล่าง (ฟ้า)", "en": "Sub line" }, "default": "" }
+      ]
+    }
+  ],
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "note": "New template created 2026-06-08; no locked golden-reference clip yet. Layout + centered captions validated via a preview render reusing the 2026-06-08-claude-what-can-do masters (lint: 0 errors / 0 layout issues; captions centered at bottom 910).",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true,
+      "captionGroupTolerance": 5,
+      "goldTokenRange": [18, 26],
+      "loudnessRange": [-18, -14]
+    }
+  }
+}

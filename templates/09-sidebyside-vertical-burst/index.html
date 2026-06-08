@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@800;900&family=Inter:wght@800;900&display=swap" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      Template 09 — side-by-side two-person (vertical).
+      Two talking-head cams placed SIDE BY SIDE (left + right rectangles) in a
+      1080×1920 frame — an interview / conversation / 2-cam podcast layout.
+      Captions use the BIZDRIVE particle-burst style (same word-pop + gold
+      #FFD700 system as Template 01), centered over the seam between the two cams
+      (bottom: 910px, hardcoded in scripts/build-burst-captions.py). All caption
+      styling lives in the captions-burst sub-composition; this file only mounts it.
+
+      Pipeline contract is identical to Template 08 (so the locked v88 flow is
+      unchanged) — the element ids/classes are kept as topVideo / bottomVideo /
+      top-frame-shell / top-media / bottom-frame so scripts/add-broll.py keeps
+      working unmodified (it injects B-roll after #topVideo, into the LEFT frame).
+      Only the CSS geometry (left/right) and caption position differ:
+        - LEFT  frame  = cam A (top.mp4)    — muted video; B-roll insert host
+        - RIGHT frame  = cam B (bottom.mp4) — audio master, muted in composition
+      Paths are per-job generic:
+        assets/input/bg.png                           (job background)
+        assets/intermediates/top_visual_master.mp4    (job cam A master = left)
+        assets/intermediates/bottom_visual_master.mp4 (job cam B master = right)
+        assets/intermediates/broll/broll-NN.mp4       (job B-roll, added by scripts/add-broll.py)
+      Per-job build (V88_PLAYBOOK Step 11):
+        python3 scripts/set-duration.py <seconds>
+        python3 scripts/build-burst-captions.py   (reads caption-groups.json + duration from fixed paths; caption position bottom 910 is hardcoded in the script)
+      Duration below is the v88 reference value; set-duration.py rewrites all spots.
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      .clip { position: absolute; }
+      .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+      .video-frame { overflow: hidden; background: #000; border: 4px solid transparent; background: linear-gradient(#02040d, #02040d) padding-box, linear-gradient(135deg, #ffec7a 0%, #ffd93d 28%, rgba(244,194,15,.95) 56%, rgba(184,134,11,.9) 78%, #ffec7a 100%) border-box; box-shadow: 0 10px 26px rgba(0,0,0,.38), 0 0 22px rgba(244,194,15,.28), inset 0 0 14px rgba(255,217,61,.12); z-index: 2; }
+      /* LEFT frame (cam A / top.mp4) — also the B-roll insert host */
+      .top-frame-shell { position: absolute; left: 15px; top: 360px; width: 510px; height: 1020px; border-radius: 30px; }
+      .top-media { position: absolute; left: 4px; top: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 26px; background: #000; object-fit: cover; object-position: 50% 30%; transform-origin: center center; will-change: transform, object-position, opacity, filter; z-index: 1; }
+      /* RIGHT frame (cam B / bottom.mp4 = audio master) */
+      .bottom-frame { left: 555px; top: 360px; width: 510px; height: 1020px; border-radius: 30px; object-fit: cover; object-position: 50% 30%; }
+      .broll-frame { object-fit: cover; object-position: 50% 50%; opacity: 0; visibility: hidden; filter: brightness(.98) contrast(1.02) saturate(1.02); z-index: 4; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
+      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="103.561333" data-track-index="0" />
+      <div id="topFrameShell" class="video-frame top-frame-shell">
+        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-volume="0" muted playsinline></video>
+
+        <!-- B-roll clips are inserted here per job by scripts/add-broll.py
+             (each becomes a timed .broll-frame clip on tracks 4+, hosted in the LEFT frame). -->
+
+      </div>
+      <video id="bottomVideo" class="clip video-frame bottom-frame" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="2" data-volume="0" muted playsinline></video>
+
+      <div id="captions-mount" class="clip" style="z-index: 10;" data-composition-id="captions-burst" data-composition-src="compositions/captions-burst.html" data-start="0" data-duration="103.561333" data-track-index="3" data-width="1080" data-height="1920"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const compositionDuration = 103.561333;
+
+      // Both cams are FACES — never animate scale/position while visible
+      // (lip-sync zero tolerance, see MISTAKES.md v68/v69). Only a brief
+      // opacity fade-in on the LEFT cam at t=0; the RIGHT cam (audio master)
+      // stays fully static.
+      tl.from("#topVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+
+      document.querySelectorAll(".broll-frame").forEach((clip) => {
+        const start = Number(clip.dataset.start || 0);
+        const duration = Number(clip.dataset.duration || 0);
+        const mode = clip.dataset.transitionMode || "soft";
+        const fallbackDuration = mode === "bridge" ? 0.26 : 0.22;
+        const inDuration = Math.min(Number(clip.dataset.transitionIn || fallbackDuration), duration / 3);
+        const outDuration = Math.min(Number(clip.dataset.transitionOut || fallbackDuration), duration / 3);
+        const exitStart = Math.max(start + duration - outDuration, start + inDuration);
+        const panFrom = clip.dataset.panFrom || "50% 50%";
+        const panTo = clip.dataset.panTo || "50% 50%";
+        const enterEase = mode === "bridge" ? "power3.out" : "power2.out";
+        const exitEase = mode === "bridge" ? "power2.inOut" : "power2.out";
+        tl.set(clip, { autoAlpha: 0, scale: 1.006, objectPosition: panFrom, transformOrigin: "center center", filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
+        tl.fromTo(clip, { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, { autoAlpha: 1, filter: "brightness(1) contrast(1.03) saturate(1.04)", duration: inDuration, ease: enterEase, immediateRender: false }, start);
+        tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { scale: 1.022, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase }, exitStart);
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

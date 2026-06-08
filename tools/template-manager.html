@@ -359,6 +359,54 @@
   .tool-card-copy:hover { background: #ffe34d; }
   .tool-card-copy:disabled { opacity: .5; cursor: not-allowed; }
   .tool-card-copymsg { font-size: 12px; color: var(--on); min-width: 0; }
+
+  /* ============ HOW AI EDITS (explainer) ============ */
+  .how {
+    max-width: 1240px; margin: 0 auto 22px;
+    background: linear-gradient(135deg, #131722 0%, #10141f 100%);
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--gold);
+    border-radius: var(--radius);
+    padding: 16px 20px;
+  }
+  .how > summary {
+    display: flex; align-items: baseline; gap: 12px;
+    cursor: pointer; list-style: none;
+  }
+  .how > summary::-webkit-details-marker { display: none; }
+  .how > summary:hover .how-sub { color: var(--text); }
+  .how-title {
+    font-size: 13px; font-weight: 800; text-transform: uppercase;
+    letter-spacing: 1.6px; color: var(--gold);
+  }
+  .how-sub { font-size: 12px; color: var(--muted); transition: .12s; }
+  .how-lead {
+    font-size: 13px; color: var(--text); margin: 14px 0;
+    padding-top: 12px; border-top: 1px dashed #3a3424;
+  }
+  .how-lead b { color: var(--gold); }
+  .how-steps {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(225px, 1fr));
+    gap: 10px;
+  }
+  .how-step {
+    background: var(--panel-2); border: 1px solid var(--line);
+    border-radius: 10px; padding: 11px 13px;
+  }
+  .how-step .t { font-size: 13px; font-weight: 700; }
+  .how-step .n {
+    display: inline-grid; place-items: center;
+    width: 20px; height: 20px; border-radius: 50%;
+    background: var(--gold); color: #1a1206; font-size: 11px;
+    font-weight: 900; margin-right: 7px; vertical-align: 1px;
+  }
+  .how-step .d { font-size: 12px; color: var(--muted); margin-top: 5px; line-height: 1.5; }
+  .how-step .d b { color: #dfe8ff; font-weight: 600; }
+  .how-note {
+    font-size: 12px; color: var(--muted); margin-top: 13px;
+    padding-top: 11px; border-top: 1px dashed #3a3424;
+  }
+  .how-note b { color: var(--gold); }
 </style>
 </head>
 <body>
@@ -367,6 +415,64 @@
   <h1>BIZDRIVE Template Manager <span class="dot">●</span></h1>
   <p>เลือกเทมเพลต → เปิด/ปิดฟีเจอร์ที่ต้องการ → คัดลอก Job Spec ไปสั่ง AI ทำคลิปให้</p>
 </header>
+
+<!-- ว่า AI ตัดต่อได้ยังไง — explainer (มือใหม่อ่านได้ คนรีบกดย่อ) -->
+<details class="how" open>
+  <summary>
+    <span class="how-title">🤖 AI ตัดต่อได้ยังไง</span>
+    <span class="how-sub">9 ขั้น จากคลิปดิบ → คลิปพร้อมโพสต์ &nbsp;·&nbsp; กดเพื่อย่อ/ขยาย</span>
+  </summary>
+
+  <p class="how-lead">
+    AI ทำงานเหมือน <b>คนตัดต่อมืออาชีพ</b> แต่เร็วกว่ามาก — มัน <b>ฟัง</b> คลิปจนเข้าใจว่าพูดอะไร
+    แล้ว <b>คิด</b> ว่าตรงไหนน่าเก็บ ตรงไหนน่าตัด จากนั้นลงมือ <b>ตัด · ใส่ caption · ใส่ภาพ · ใส่เสียง</b>
+    แล้วเรนเดอร์ออกมาให้พร้อมโพสต์ คุณแค่ตั้งค่าใน Job Spec ด้านล่างว่าจะเอาขั้นไหนบ้าง
+  </p>
+
+  <div class="how-steps">
+    <div class="how-step">
+      <div class="t"><span class="n">1</span>ฟังคลิป (ถอดเสียง)</div>
+      <div class="d">ถอดเสียงไทยเป็นตัวหนังสือทุกคำ พร้อม <b>จับเวลาแต่ละคำ</b> (ElevenLabs Scribe) — เป็นพื้นฐานของทุกขั้นที่ตามมา</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">2</span>อ่านแล้วคิดเหมือนคนตัด</div>
+      <div class="d">AI อ่านสคริปต์ หา <b>ช่วงพูดผิด พูดวน น้ำเยอะ เงียบยาว</b> แล้วตัดสินใจว่าจะเก็บ–จะตัดตรงไหน</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">3</span>ตัดจริง</div>
+      <div class="d">ตัดตามที่คิดไว้ + <b>jump-cut ช่วงเงียบ</b> (VAD) ให้คลิปกระชับ ไหลลื่น ไม่มีช่วงน่าเบื่อ</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">4</span>แต่งเสียง</div>
+      <div class="d">ปรับ <b>ระดับเสียงให้สม่ำเสมอ</b> (loudnorm + limiter) ฟังสบาย ดังเท่ากันทั้งคลิป</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">5</span>ใส่ caption</div>
+      <div class="d">ขึ้นคำบรรยายแบบ <b>คาราโอเกะ / particle-burst</b> sync ตรงเสียงราย word (ชดเชย −120ms ให้ตรงเป๊ะ)</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">6</span>ใส่ภาพประกอบ (B-roll)</div>
+      <div class="d">AI <b>สร้าง/เลือกภาพประกอบ</b> ตามธีมคลิป มาแทรกช่วงที่ควรมีภาพ ให้ไม่จำเจ</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">7</span>ใส่ดนตรี + เอฟเฟกต์</div>
+      <div class="d">วาง <b>BGM + SFX</b> เสริมจังหวะ เน้นจุดสำคัญ ให้คลิปมีพลังขึ้น</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">8</span>ปิดท้าย + thumbnail</div>
+      <div class="d">ต่อ <b>end slate / CTA</b> ชวนติดตาม แล้วสร้าง <b>thumbnail</b> ฝังเป็นปกคลิปให้อัตโนมัติ</div>
+    </div>
+    <div class="how-step">
+      <div class="t"><span class="n">9</span>เรนเดอร์ออก</div>
+      <div class="d">ส่งออกไฟล์ตามสัดส่วนที่ใช้ (<b>9:16 / 1:1 / 16:9</b>) พร้อมโพสต์ลง social ได้ทันที</div>
+    </div>
+  </div>
+
+  <p class="how-note">
+    💡 ทุกขั้นด้านบน <b>เปิด/ปิดได้</b> — เลือกในขั้นที่ 3 “เปิด/ปิดฟีเจอร์” ด้านล่าง
+    ฟีเจอร์ที่ปิด (ค่า 0) AI จะข้าม step นั้นไปเลย
+  </p>
+</details>
 
 <!-- Tools bar — เครื่องมือเสริม ไม่ใช่ template -->
 <section class="tools-bar">
@@ -630,7 +736,8 @@ window.HF_DATA = {
       "fullscreen": "เต็มจอ",
       "top-insert": "เต็มจอ + การ์ด B-roll ลอย",
       "corner-cam": "จอบันทึกหน้าจอเต็มจอ + กล้องมุม",
-      "horizontal-talking-head": "เต็มจอ 16:9 แนวนอน (YouTube)"
+      "horizontal-talking-head": "เต็มจอ 16:9 แนวนอน (YouTube)",
+      "side-by-side": "2 คนข้างกัน (ซ้าย/ขวา)"
     },
     "captions": {
       "particle-burst": "ซับ particle-burst (พรีเมียม)",
@@ -1855,6 +1962,332 @@ window.HF_DATA = {
                 "strict"
               ],
               "default": "soft"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "num": "08",
+      "id": "08-split-vertical-burst",
+      "name": "Split Vertical (Rectangle) with Karaoke Highlight Captions",
+      "desc": "BIZDRIVE-style vertical talking-head: clean top/bottom split — top frame is the screen recording, bottom frame is the person as a full-width RECTANGLE (no circle crop) — with BIZDRIVE Karaoke captions (caption-highlight word-sweep) placed CENTERED over the seam, and optional B-roll inserts. Layout cousin of Template 01/05; caption system = caption-highlight (same word-sweep as Template 04/05).",
+      "layout": "fullscreen",
+      "captionSystem": "caption-highlight",
+      "features": [
+        {
+          "id": "dead_air_cut",
+          "label": {
+            "th": "ตัดช่วงเงียบ (dead air)",
+            "en": "Dead-air jump cut"
+          },
+          "section": "edit",
+          "step": "6",
+          "default": true,
+          "advanced": true,
+          "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+        },
+        {
+          "id": "audio_polish",
+          "label": {
+            "th": "ปรับแต่งเสียงพูด (polish)",
+            "en": "Audio polish"
+          },
+          "section": "audio",
+          "step": "8",
+          "default": true,
+          "advanced": true,
+          "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+        },
+        {
+          "id": "captions",
+          "label": {
+            "th": "ซับ / คำบรรยายไทย",
+            "en": "Thai captions"
+          },
+          "section": "captions",
+          "step": "9-11",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+        },
+        {
+          "id": "broll",
+          "label": {
+            "th": "B-roll แทรกภาพ",
+            "en": "B-roll inserts"
+          },
+          "section": "broll",
+          "step": "11",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
+          "options": [
+            {
+              "id": "mode",
+              "type": "enum",
+              "label": {
+                "th": "แหล่ง B-roll",
+                "en": "Source"
+              },
+              "values": [
+                "ai-gen",
+                "stock"
+              ],
+              "default": "ai-gen"
+            },
+            {
+              "id": "max",
+              "type": "number",
+              "label": {
+                "th": "จำนวนสูงสุด",
+                "en": "Max inserts"
+              },
+              "default": 4,
+              "min": 0,
+              "max": 8
+            }
+          ]
+        },
+        {
+          "id": "bgm",
+          "label": {
+            "th": "เพลงประกอบ (BGM)",
+            "en": "Background music"
+          },
+          "section": "audio",
+          "step": "14",
+          "default": true,
+          "advanced": false,
+          "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+          "options": [
+            {
+              "id": "gain",
+              "type": "number",
+              "label": {
+                "th": "ระดับเสียง",
+                "en": "Gain"
+              },
+              "default": 5,
+              "min": 0,
+              "max": 20,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "id": "sfx",
+          "label": {
+            "th": "เอฟเฟกต์เสียง (SFX)",
+            "en": "Sound effects"
+          },
+          "section": "audio",
+          "step": "14",
+          "default": true,
+          "advanced": false,
+          "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+        },
+        {
+          "id": "thumbnail",
+          "label": {
+            "th": "ภาพปก (thumbnail)",
+            "en": "Thumbnail + cover art"
+          },
+          "section": "extras",
+          "step": "16",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+          "options": [
+            {
+              "id": "main",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดบน (ขาว)",
+                "en": "Main line"
+              },
+              "default": ""
+            },
+            {
+              "id": "hero",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดเด่น (ทอง)",
+                "en": "Hero line"
+              },
+              "default": ""
+            },
+            {
+              "id": "sub",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดล่าง (ฟ้า)",
+                "en": "Sub line"
+              },
+              "default": ""
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "num": "09",
+      "id": "09-sidebyside-vertical-burst",
+      "name": "Side-by-Side Two-Person (Vertical) with Particle-Burst Captions",
+      "desc": "BIZDRIVE-style vertical 2-person format: two talking-head cams placed SIDE BY SIDE (left + right rectangles) in a 1080×1920 frame — an interview / conversation / 2-cam podcast layout — with centered particle-burst captions (same word-pop + gold #FFD700 system as Template 01) sitting centered over the seam between the two cams. Audio master is a single combined track (bottom.mp4 = the room/interview audio carrying both voices); the second cam (top.mp4) is muted video only. Layout is a new family (side-by-side); caption system = particle-burst (Template 01 colors).",
+      "layout": "side-by-side",
+      "captionSystem": "particle-burst",
+      "features": [
+        {
+          "id": "dead_air_cut",
+          "label": {
+            "th": "ตัดช่วงเงียบ (dead air)",
+            "en": "Dead-air jump cut"
+          },
+          "section": "edit",
+          "step": "6",
+          "default": true,
+          "advanced": true,
+          "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+        },
+        {
+          "id": "audio_polish",
+          "label": {
+            "th": "ปรับแต่งเสียงพูด (polish)",
+            "en": "Audio polish"
+          },
+          "section": "audio",
+          "step": "8",
+          "default": true,
+          "advanced": true,
+          "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+        },
+        {
+          "id": "captions",
+          "label": {
+            "th": "ซับ / คำบรรยายไทย",
+            "en": "Thai captions"
+          },
+          "section": "captions",
+          "step": "9-11",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+        },
+        {
+          "id": "broll",
+          "label": {
+            "th": "B-roll แทรกภาพ",
+            "en": "B-roll inserts"
+          },
+          "section": "broll",
+          "step": "11",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
+          "options": [
+            {
+              "id": "mode",
+              "type": "enum",
+              "label": {
+                "th": "แหล่ง B-roll",
+                "en": "Source"
+              },
+              "values": [
+                "ai-gen",
+                "stock"
+              ],
+              "default": "ai-gen"
+            },
+            {
+              "id": "max",
+              "type": "number",
+              "label": {
+                "th": "จำนวนสูงสุด",
+                "en": "Max inserts"
+              },
+              "default": 4,
+              "min": 0,
+              "max": 8
+            }
+          ]
+        },
+        {
+          "id": "bgm",
+          "label": {
+            "th": "เพลงประกอบ (BGM)",
+            "en": "Background music"
+          },
+          "section": "audio",
+          "step": "14",
+          "default": true,
+          "advanced": false,
+          "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+          "options": [
+            {
+              "id": "gain",
+              "type": "number",
+              "label": {
+                "th": "ระดับเสียง",
+                "en": "Gain"
+              },
+              "default": 5,
+              "min": 0,
+              "max": 20,
+              "unit": "%"
+            }
+          ]
+        },
+        {
+          "id": "sfx",
+          "label": {
+            "th": "เอฟเฟกต์เสียง (SFX)",
+            "en": "Sound effects"
+          },
+          "section": "audio",
+          "step": "14",
+          "default": true,
+          "advanced": false,
+          "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+        },
+        {
+          "id": "thumbnail",
+          "label": {
+            "th": "ภาพปก (thumbnail)",
+            "en": "Thumbnail + cover art"
+          },
+          "section": "extras",
+          "step": "16",
+          "default": true,
+          "advanced": false,
+          "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+          "options": [
+            {
+              "id": "main",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดบน (ขาว)",
+                "en": "Main line"
+              },
+              "default": ""
+            },
+            {
+              "id": "hero",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดเด่น (ทอง)",
+                "en": "Hero line"
+              },
+              "default": ""
+            },
+            {
+              "id": "sub",
+              "type": "text",
+              "label": {
+                "th": "บรรทัดล่าง (ฟ้า)",
+                "en": "Sub line"
+              },
+              "default": ""
             }
           ]
         }
