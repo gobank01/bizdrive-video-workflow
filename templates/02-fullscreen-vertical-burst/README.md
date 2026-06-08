@@ -70,7 +70,7 @@ python3 scripts/add-broll.py 12 32 52 70       # full-screen B-roll inserts
 ```
 manifest.json    machine-readable spec
 README.md        this file
-DESIGN.md        full-screen layout / colors / motion
+frame.md        full-screen layout / colors / motion
 index.html       composition source-of-truth (generic per-job paths)
 hyperframes.json / meta.json / package.json
 compositions/    captions-burst.html is generated per job; components/ = reference block

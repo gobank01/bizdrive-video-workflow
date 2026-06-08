@@ -12,7 +12,7 @@
 # After scaffolding, customize:
 #   - manifest.json   (aspect, fps, caption style, gold rule)
 #   - index.html      (composition layout)
-#   - DESIGN.md       (colors, fonts, position)
+#   - frame.md       (colors, fonts, position)
 #   - prompts/        (subagent slot defaults)
 
 set -e
@@ -72,7 +72,7 @@ echo ""
 echo "Next:"
 echo "  1. Edit templates/${NUM}-${SLUG}/manifest.json  (aspect, fps, caption style,"
 echo "     and the features[] block — the toggles the Template Manager will show)"
-echo "  2. Edit templates/${NUM}-${SLUG}/DESIGN.md      (colors, fonts, position)"
+echo "  2. Edit templates/${NUM}-${SLUG}/frame.md      (colors, fonts, position)"
 echo "  3. Edit templates/${NUM}-${SLUG}/index.html     (composition layout)"
 echo "  4. Edit templates/${NUM}-${SLUG}/prompts/       (subagent slot defaults)"
 echo "  5. Add to templates/README.md comparison table"

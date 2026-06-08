@@ -30,4 +30,4 @@ _Last built: 2026-06-02 22:17_
 - **Layout** — `stacked` (screen recording on top + face circle) · `fullscreen` (single talking-head) · `top-insert` (full-screen + floating B-roll card)
 - **Captions** — `particle-burst` (white/gold text + dot burst, calmer premium) · `caption-highlight` / Karaoke (red/gold box sweep, punchy CapCut style)
 
-See each template's `DESIGN.md` for the full spec.
+See each template's `frame.md` for the full spec.

@@ -27,6 +27,13 @@ Particle burst colors (10 dots per gold token): `#FFD700, #FFC233, #FFD86A, #FFE
 
 `letter-spacing: 0.01em`, `line-height: 1.1`. Same as Template 01.
 
+## Layout layers (z-index)
+
+1. background (0) — fallback
+2. bottomVideo (1) — full-screen face
+3. B-roll (4) — full-screen, covers the face video while active
+4. captions (10) — topmost
+
 ## Caption render rules
 
 Identical to Template 01 — the `captions-burst.html` sub-composition is shared.
@@ -50,15 +57,6 @@ readable over both the face video and full-screen B-roll.
   muted (`data-volume="0"`); the polished speech master is muxed back after the
   visual-only render (edit-first architecture).
 - BGM: 5% gain, barely-audible bed.
-
-## Layout layers (z-index)
-
-```
-z-index 10  captions (topmost)
-z-index 4   B-roll (full-screen, covers the face video while active)
-z-index 1   bottomVideo (full-screen face)
-z-index 0   background (fallback)
-```
 
 ## What this template is — and is NOT
 

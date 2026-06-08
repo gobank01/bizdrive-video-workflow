@@ -109,6 +109,14 @@ V88="$WS/assets/intermediates/v88-test"
 TRANSCRIPT="$WS/assets/intermediates/transcript"
 mkdir -p "$V88" "$TRANSCRIPT"
 
+# Resolve the Silero VAD venv python. Linux/macOS put it at bin/python3;
+# native Windows (Git Bash) puts it at Scripts/python.exe. Pick whichever
+# exists so Step 6 runs the same on every OS.
+VAD_PY="$HOME/.bizdrive/vad-env/bin/python3"
+if [ ! -x "$VAD_PY" ] && [ -x "$HOME/.bizdrive/vad-env/Scripts/python.exe" ]; then
+  VAD_PY="$HOME/.bizdrive/vad-env/Scripts/python.exe"
+fi
+
 # Caption builder choice based on template
 case "$TEMPLATE_NUM" in
   01|03) CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
@@ -264,7 +272,7 @@ if [ ! -f "$V88/edl-jump.json" ]; then
   mkdir -p "$V88/.tmp"
   ffmpeg -hide_banner -loglevel error -nostdin -y \
     -i "$V88/cleaned-rough.mp4" -ac 1 -ar 16000 "$V88/.tmp/post-rough.wav"
-  $HOME/.ii23/vad-env/bin/python3 "$WS/scripts/clean-cut/vad_detect.py" \
+  "$VAD_PY" "$WS/scripts/clean-cut/vad_detect.py" \
     "$V88/.tmp/post-rough.wav" \
     --min-silence-ms 300 --pad-ms 200 \
     --output "$V88/.tmp/speech.json" 2>&1 | tail -1

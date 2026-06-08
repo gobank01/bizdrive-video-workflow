@@ -70,7 +70,7 @@ The #captions-mount div had no z-index, so it fell behind bottomVideo...
 bash tools/new-template.sh 02 horizontal-talking-head
 ```
 
-Then fill in `manifest.json`, `DESIGN.md`, `index.html`, and `prompts/`. Add a
+Then fill in `manifest.json`, `frame.md`, `index.html`, and `prompts/`. Add a
 row to `templates/README.md`. Validate it against a real clip before relying on it.
 
 ## Testing a change
