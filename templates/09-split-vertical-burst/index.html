@@ -8,26 +8,22 @@
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@800;900&family=Inter:wght@800;900&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <!--
-      Template 09 — side-by-side two-person (vertical).
-      Two talking-head cams placed SIDE BY SIDE (left + right rectangles) in a
-      1080×1920 frame — an interview / conversation / 2-cam podcast layout.
+      Template 09 — split-vertical (top/bottom split, screen + person).
+      Clean top/bottom split: top frame is the screen recording (top.mp4),
+      bottom frame is the person as a full-width RECTANGLE (bottom.mp4).
       Captions use the BIZDRIVE particle-burst style (same word-pop + gold
-      #FFD700 system as Template 01), centered over the seam between the two cams
-      (bottom: 910px, hardcoded in scripts/build-burst-captions.py). All caption
-      styling lives in the captions-burst sub-composition; this file only mounts it.
+      #FFD700 system as Template 01), centered over the seam (bottom: 910px,
+      hardcoded in scripts/build-burst-captions.py). All caption styling lives
+      in the captions-burst sub-composition; this file only mounts it.
 
-      Pipeline contract is identical to Template 08 (so the locked v88 flow is
-      unchanged) — the element ids/classes are kept as topVideo / bottomVideo /
-      top-frame-shell / top-media / bottom-frame so scripts/add-broll.py keeps
-      working unmodified (it injects B-roll after #topVideo, into the LEFT frame).
-      Only the CSS geometry (left/right) and caption position differ:
-        - LEFT  frame  = cam A (top.mp4)    — muted video; B-roll insert host
-        - RIGHT frame  = cam B (bottom.mp4) — audio master, muted in composition
+      Particle-burst sibling of Template 08 (same split layout; T08 = karaoke
+      word-sweep, T09 = particle-burst). Single-presenter audio: bottom.mp4 is
+      the master, top.mp4 (screen) is muted.
       Paths are per-job generic:
         assets/input/bg.png                           (job background)
-        assets/intermediates/top_visual_master.mp4    (job cam A master = left)
-        assets/intermediates/bottom_visual_master.mp4 (job cam B master = right)
-        assets/intermediates/broll/broll-NN.mp4       (job B-roll, added by scripts/add-broll.py)
+        assets/intermediates/top_visual_master.mp4    (job screen master = top)
+        assets/intermediates/bottom_visual_master.mp4 (job person master = bottom)
+        assets/intermediates/broll/broll-NN.mp4       (job B-roll, added by scripts/add-broll.py — lands in the TOP frame)
       Per-job build (V88_PLAYBOOK Step 11):
         python3 scripts/set-duration.py <seconds>
         python3 scripts/build-burst-captions.py   (reads caption-groups.json + duration from fixed paths; caption position bottom 910 is hardcoded in the script)
@@ -40,11 +36,11 @@
       .clip { position: absolute; }
       .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
       .video-frame { overflow: hidden; background: #000; border: 4px solid transparent; background: linear-gradient(#02040d, #02040d) padding-box, linear-gradient(135deg, #ffec7a 0%, #ffd93d 28%, rgba(244,194,15,.95) 56%, rgba(184,134,11,.9) 78%, #ffec7a 100%) border-box; box-shadow: 0 10px 26px rgba(0,0,0,.38), 0 0 22px rgba(244,194,15,.28), inset 0 0 14px rgba(255,217,61,.12); z-index: 2; }
-      /* LEFT frame (cam A / top.mp4) — also the B-roll insert host */
-      .top-frame-shell { position: absolute; left: 15px; top: 360px; width: 510px; height: 1020px; border-radius: 30px; }
-      .top-media { position: absolute; left: 4px; top: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 26px; background: #000; object-fit: cover; object-position: 50% 30%; transform-origin: center center; will-change: transform, object-position, opacity, filter; z-index: 1; }
-      /* RIGHT frame (cam B / bottom.mp4 = audio master) */
-      .bottom-frame { left: 555px; top: 360px; width: 510px; height: 1020px; border-radius: 30px; object-fit: cover; object-position: 50% 30%; }
+      /* TOP frame (screen / top.mp4) — also the B-roll insert host */
+      .top-frame-shell { position: absolute; left: 0; top: 40px; width: 1080px; height: 900px; border-radius: 30px; }
+      .top-media { position: absolute; left: 4px; top: 4px; width: calc(100% - 8px); height: calc(100% - 8px); border-radius: 26px; background: #000; object-fit: contain; object-position: 50% 50%; transform-origin: center center; will-change: transform, object-position, opacity, filter; z-index: 1; }
+      /* BOTTOM frame (person / bottom.mp4 = audio master) */
+      .bottom-frame { left: 0; top: 980px; width: 1080px; height: 900px; border-radius: 30px; object-fit: cover; object-position: 50% 50%; }
       .broll-frame { object-fit: cover; object-position: 50% 50%; opacity: 0; visibility: hidden; filter: brightness(.98) contrast(1.02) saturate(1.02); z-index: 4; }
     </style>
   </head>
@@ -52,10 +48,10 @@
     <div id="root" data-composition-id="main" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
       <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="103.561333" data-track-index="0" />
       <div id="topFrameShell" class="video-frame top-frame-shell">
-        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-volume="0" muted playsinline></video>
+        <video id="topVideo" class="clip top-media" data-layout-allow-overflow="true" src="assets/intermediates/top_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-motion-kind="slow-top-inner-zoom" data-motion-duration="103.561333" data-volume="0" muted playsinline></video>
 
         <!-- B-roll clips are inserted here per job by scripts/add-broll.py
-             (each becomes a timed .broll-frame clip on tracks 4+, hosted in the LEFT frame). -->
+             (each becomes a timed .broll-frame clip on tracks 4+, hosted in the TOP frame). -->
 
       </div>
       <video id="bottomVideo" class="clip video-frame bottom-frame" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="2" data-volume="0" muted playsinline></video>
@@ -68,11 +64,12 @@
       const tl = gsap.timeline({ paused: true });
       const compositionDuration = 103.561333;
 
-      // Both cams are FACES — never animate scale/position while visible
-      // (lip-sync zero tolerance, see MISTAKES.md v68/v69). Only a brief
-      // opacity fade-in on the LEFT cam at t=0; the RIGHT cam (audio master)
-      // stays fully static.
+      // Top frame = screen recording → slow inner zoom (frame shell stays still).
       tl.from("#topVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.set("#topVideo", { scale: 1, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
+      tl.to("#topVideo", { scale: 1.018, duration: compositionDuration / 2, ease: "sine.inOut" }, 0);
+      tl.to("#topVideo", { scale: 1.006, duration: compositionDuration / 2, ease: "sine.inOut" }, compositionDuration / 2);
+      // Bottom face = NEVER animate (lip-sync zero tolerance, see MISTAKES.md v68/v69).
 
       document.querySelectorAll(".broll-frame").forEach((clip) => {
         const start = Number(clip.dataset.start || 0);

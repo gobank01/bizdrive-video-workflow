@@ -1,10 +1,10 @@
 {
-  "id": "09-sidebyside-vertical-burst",
+  "id": "09-split-vertical-burst",
   "version": "v88",
   "lockedAt": "2026-06-08",
-  "layoutType": "side-by-side",
-  "name": "Side-by-Side Two-Person (Vertical) with Particle-Burst Captions",
-  "description": "BIZDRIVE-style vertical 2-person format: two talking-head cams placed SIDE BY SIDE (left + right rectangles) in a 1080×1920 frame — an interview / conversation / 2-cam podcast layout — with centered particle-burst captions (same word-pop + gold #FFD700 system as Template 01) sitting centered over the seam between the two cams. Audio master is a single combined track (bottom.mp4 = the room/interview audio carrying both voices); the second cam (top.mp4) is muted video only. Layout is a new family (side-by-side); caption system = particle-burst (Template 01 colors).",
+  "layoutType": "split",
+  "name": "Split Vertical (Screen + Person) with Particle-Burst Captions",
+  "description": "BIZDRIVE-style vertical talking-head: clean top/bottom split — top frame is the screen recording (top.mp4), bottom frame is the person as a full-width rectangle (bottom.mp4) — with BIZDRIVE particle-burst captions (same word-pop + gold #FFD700 system as Template 01) placed CENTERED over the seam. The particle-burst sibling of Template 08 (identical split layout; T08 = karaoke word-sweep, T09 = particle-burst). Single-presenter audio: bottom.mp4 is the master, top.mp4 (screen) is muted.",
 
   "output": {
     "width": 1080,
@@ -19,16 +19,16 @@
 
   "layout": {
     "background": "full-frame bg.png image",
-    "split": "left/right side-by-side (two full-height portrait rectangles)",
-    "leftFrame": { "shape": "rectangle", "left": 15, "top": 360, "width": 510, "height": 1020, "radius": 30, "border": "4px gold gradient", "content": "cam A (top.mp4) — muted video; also the B-roll insert host", "objectFit": "cover" },
-    "rightFrame": { "shape": "rectangle", "left": 555, "top": 360, "width": 510, "height": 1020, "radius": 30, "border": "4px gold gradient", "content": "cam B (bottom.mp4) — audio master, muted in composition", "objectFit": "cover" },
-    "seam": "30px gap at x=525 (frame edges 525 / 555), symmetric 15px outer margins",
-    "captionPosition": "centered horizontally AND vertically over the seam between the two cams, bottom: 910px. This position is HARDCODED in scripts/build-burst-captions.py (the burst builder reads paths + duration from fixed locations and does NOT read argv). tools/v88-clip.sh sets CAPTION_BOTTOM=910 for T09 to match (informational — the burst builder ignores it; only the highlight builder reads it)."
+    "split": "top/bottom 50-50 (both full-width rectangles)",
+    "topFrame": { "shape": "rectangle", "left": 0, "top": 40, "width": 1080, "height": 900, "radius": 30, "border": "4px gold gradient", "content": "screen recording (top.mp4)", "objectFit": "contain" },
+    "bottomFrame": { "shape": "rectangle", "left": 0, "top": 980, "width": 1080, "height": 900, "radius": 30, "border": "4px gold gradient", "content": "person face-cam (bottom.mp4), object-fit cover, NO circle crop" },
+    "seam": "40px gap at y=960 (frame edges 940 / 980)",
+    "captionPosition": "centered over the seam, bottom: 910px. This position is HARDCODED in scripts/build-burst-captions.py (lines `bottom: 910px` / particle `bottom: 970px`); the burst builder reads the groups JSON + duration from fixed paths and does NOT read argv. tools/v88-clip.sh sets CAPTION_BOTTOM=910 for T09 to match (the burst builder ignores it; only the highlight builder reads it)."
   },
 
   "captions": {
     "system": "particle-burst",
-    "style": "BIZDRIVE particle-burst — each caption group pops word-by-word with a 10-particle burst; brand/number/tech tokens render gold (#FFD700). Same system + colors as Template 01. Positioned centered over the seam between the two cams (bottom 910).",
+    "style": "BIZDRIVE particle-burst — each caption group pops word-by-word with a 10-particle burst; brand/number/tech tokens render gold (#FFD700). Same system + colors as Template 01. Positioned centered over the seam between the two frames (bottom 910).",
     "subComposition": "compositions/captions-burst.html",
     "builder": "scripts/build-burst-captions.py",
     "font": "IBM Plex Sans Thai",
@@ -48,7 +48,7 @@
   "audio": {
     "master": "bottom",
     "topMuted": true,
-    "note": "bottom.mp4 carries the combined interview audio (both speakers). For a 2-person recording captured on one device/room mic this is a single track; both video divs are muted in the composition and final audio is the polished speech_polished.wav derived from bottom_visual_master.mp4.",
+    "note": "Single-presenter: bottom.mp4 (person) is the audio master; top.mp4 (screen recording) is muted. Both video divs are muted in the composition; final audio is the polished speech_polished.wav derived from bottom_visual_master.mp4.",
     "targetLoudness": -16,
     "loudnessTolerance": [-18, -14],
     "truePeakMax": -1.5,
@@ -69,7 +69,7 @@
     "minSpacingSeconds": 6,
     "minTopFootageBetweenInserts": 3,
     "transitionMode": { "soft": 0.22, "bridge": 0.26 },
-    "host": "left frame (cam A) — B-roll inserts cover cam A while cam B keeps talking",
+    "host": "top frame (screen) — B-roll inserts cover the screen recording while the person keeps talking",
     "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
     "aiGenNote": "seedance-1-5-pro chosen 2026-05-20: ~$0.02 per 3-5s clip at 720p, ~10x cheaper than seedance-2.0-fast at equivalent quality. Use resolution 720p, 16:9, generate_audio false.",
     "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
@@ -184,7 +184,7 @@
   },
 
   "reference": {
-    "note": "New template created 2026-06-08; no locked golden-reference clip yet. Layout is a new side-by-side family (cousin of the stacked/split templates). Caption system + colors reuse Template 01 (particle-burst, gold #FFD700) via scripts/build-burst-captions.py. Pipeline contract is identical to Template 08 (bottom.mp4 = audio master, top.mp4 = muted second cam) so the locked v88 16-step flow is unchanged — only the composition geometry (left/right) and caption position differ. Validate on a real 2-cam job before locking a golden reference.",
+    "note": "New template created 2026-06-08; no locked golden-reference clip yet. Same split layout as Template 08 (screen top + person rectangle bottom); the only difference is the caption system — T09 uses particle-burst (gold #FFD700, like Template 01) via scripts/build-burst-captions.py, T08 uses karaoke highlight. Pipeline contract is identical to T08/T01 (bottom.mp4 = audio master, top.mp4 = muted screen) so the locked v88 16-step flow is unchanged — only the caption renderer differs. Validate + render confirmed on a reused clip (Claude Code ยากไหม): lint 0 errors/0 layout issues, final.mp4 -16.4 LUFS. Lock a golden reference after a purpose-built clip.",
     "goldenTest": {
       "durationTolerance": 0.05,
       "frameCountExact": true,
