@@ -87,14 +87,27 @@ SUB_TEMPLATE = '''<!doctype html>
         bottom: 910px;
         width: 100%;
         display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0 60px;
+        opacity: 0;
+        visibility: hidden;
+      }
+      /* translucent light-grey backing so captions stay readable over busy video */
+      .bs-pill {
+        display: inline-flex;
         flex-wrap: wrap;
         align-items: center;
         justify-content: center;
         column-gap: 18px;
         row-gap: 8px;
-        padding: 0 60px;
-        opacity: 0;
-        visibility: hidden;
+        max-width: 960px;
+        padding: 14px 36px;
+        border-radius: 26px;
+        border: 2px solid rgba(244, 194, 15, 0.5);
+        background: linear-gradient(180deg, rgba(10,22,64,.82), rgba(8,16,50,.92));
+        backdrop-filter: blur(8px);
+        -webkit-backdrop-filter: blur(8px);
       }
       .bs-word {
         font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
@@ -154,6 +167,9 @@ SUB_TEMPLATE = '''<!doctype html>
           var grp = document.createElement("div");
           grp.className = "bs-group";
           grp.id = "bs-grp-" + ci;
+          var pill = document.createElement("div");
+          pill.className = "bs-pill";
+          grp.appendChild(pill);
           container.appendChild(grp);
 
           cue.tokens.forEach(function (tok, ti) {
@@ -161,7 +177,7 @@ SUB_TEMPLATE = '''<!doctype html>
             span.className = "bs-word";
             span.id = "bs-w-" + ci + "-" + ti;
             span.textContent = tok.text;
-            grp.appendChild(span);
+            pill.appendChild(span);
           });
 
           // Group enter / hold / exit

@@ -42,8 +42,9 @@ Gold gradient (frame borders): `linear-gradient(135deg, #ffec7a 0%, #ffd93d 28%,
 1. Each caption GROUP holds 1–3 tokens (≤ 22 visible Thai chars).
 2. Group fades/pops up at `group.start`; each word pops in with a 10-particle burst as it is spoken.
 3. Normal word = white; gold token = `#FFD700` (numbers, brands, tech).
-4. Captions are centered horizontally (container full-width, `justify-content: center`) and anchored at `bottom: 910px` — vertically centered over the seam between the screen (top) and the person (bottom). The dark text-shadow carries readability; very bright frames may emit an occasional WCAG-contrast warning (acceptable, same as Template 08).
-5. Gold spacing: a highlighted token MUST be visually separated from adjacent normal text. Validated via `npm run check:caption-gold`.
+4. Captions are centered horizontally (container full-width, `justify-content: center`) and anchored at `bottom: 910px` — vertically centered over the seam between the screen (top) and the person (bottom).
+5. **Caption backing (`.bs-pill`):** the words sit inside a rounded pill — BIZDRIVE-blue gradient `linear-gradient(180deg, rgba(10,22,64,.82), rgba(8,16,50,.92))` with a 2 px gold border `rgba(244,194,15,.5)` and `backdrop-filter: blur(8px)` — so white/gold text stays readable over busy video. The pill is an inner wrapper so GSAP's group transform (opacity/scale/y pop) animates pill + text together. (Chosen from a 6-variant readability comparison, 2026-06-08.)
+6. Gold spacing: a highlighted token MUST be visually separated from adjacent normal text. Validated via `npm run check:caption-gold`.
 
 ## Motion rules
 

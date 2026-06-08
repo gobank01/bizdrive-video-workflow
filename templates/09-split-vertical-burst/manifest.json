@@ -28,7 +28,7 @@
 
   "captions": {
     "system": "particle-burst",
-    "style": "BIZDRIVE particle-burst — each caption group pops word-by-word with a 10-particle burst; brand/number/tech tokens render gold (#FFD700). Same system + colors as Template 01. Positioned centered over the seam between the two frames (bottom 910).",
+    "style": "BIZDRIVE particle-burst — each caption group pops word-by-word with a 10-particle burst; brand/number/tech tokens render gold (#FFD700). Same system + colors as Template 01. Positioned centered over the seam between the two frames (bottom 910), sitting on a rounded BIZDRIVE-blue pill (.bs-pill) with a gold border + backdrop blur for readability over video.",
     "subComposition": "compositions/captions-burst.html",
     "builder": "scripts/build-burst-captions.py",
     "font": "IBM Plex Sans Thai",
