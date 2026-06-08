@@ -112,7 +112,7 @@ SUB_TEMPLATE = '''<!doctype html>
       .bs-word {
         font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
         font-weight: 900;
-        font-size: 77px;
+        font-size: 110px;
         color: rgba(255, 255, 255, 0.45);
         text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 28px rgba(0,0,0,.7);
         letter-spacing: 0.01em;

@@ -33,7 +33,7 @@
     "builder": "scripts/build-burst-captions.py",
     "font": "IBM Plex Sans Thai",
     "fontWeight": 900,
-    "fontSize": 64,
+    "fontSize": 110,
     "colors": {
       "active": "#ffffff",
       "highlight": "#FFD700",

@@ -35,7 +35,7 @@ Gold gradient (frame borders): `linear-gradient(135deg, #ffec7a 0%, #ffd93d 28%,
 
 | Element  | Font family        | Weight | Size                        |
 | -------- | ------------------ | ------ | --------------------------- |
-| Captions | IBM Plex Sans Thai | 900    | 64 px (burst default)       |
+| Captions | IBM Plex Sans Thai | 900    | 110 px (enlarged for legibility) |
 
 ## Caption render rules (particle-burst)
 
