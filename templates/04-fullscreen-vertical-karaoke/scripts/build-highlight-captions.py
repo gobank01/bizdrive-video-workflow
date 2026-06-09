@@ -57,7 +57,7 @@ html = f"""<!doctype html>
       }}
       .hl-word {{
         font-family: "IBM Plex Sans Thai", sans-serif; font-weight: 800;
-        font-size: 70px; color: #ffffff; display: inline-block;
+        font-size: 84px; color: #ffffff; display: inline-block;
         letter-spacing: 0; line-height: 1.12; position: relative;
         padding: 10px 20px 16px;
         text-shadow: 0 4px 16px rgba(0,0,0,.55), 0 2px 5px rgba(0,0,0,.6);
@@ -118,7 +118,7 @@ html = f"""<!doctype html>
           grp.id = "hl-grp-" + gi;
 
           var groupText = groupWords.map(function (w) {{ return w.text; }}).join(" ");
-          var computedSize = fitFontSize(groupText, 70, "800", "IBM Plex Sans Thai", 1820);
+          var computedSize = fitFontSize(groupText, 84, "800", "IBM Plex Sans Thai", 1820);
 
           groupWords.forEach(function (w, i) {{
             var wi = g.wordStart + i;

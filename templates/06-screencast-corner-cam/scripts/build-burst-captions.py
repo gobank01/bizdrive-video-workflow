@@ -23,6 +23,7 @@ Visual behavior per group:
 
 import json
 import re
+import sys
 from pathlib import Path
 from datetime import datetime
 
@@ -84,7 +85,7 @@ SUB_TEMPLATE = '''<!doctype html>
       .bs-group {
         position: absolute;
         left: 0;
-        bottom: 360px;
+        bottom: __BOTTOM__px;
         width: 100%;
         display: flex;
         flex-wrap: wrap;
@@ -99,7 +100,7 @@ SUB_TEMPLATE = '''<!doctype html>
       .bs-word {
         font-family: "IBM Plex Sans Thai", "Inter", sans-serif;
         font-weight: 900;
-        font-size: 64px;
+        font-size: 77px;
         color: rgba(255, 255, 255, 0.45);
         text-shadow: 0 4px 16px rgba(0,0,0,.85), 0 0 28px rgba(0,0,0,.7);
         letter-spacing: 0.01em;
@@ -114,7 +115,7 @@ SUB_TEMPLATE = '''<!doctype html>
         opacity: 0;
         pointer-events: none;
         z-index: 20;
-        left: 540px; bottom: 420px;
+        left: 540px; bottom: __PARTICLE_BOTTOM__px;
       }
     </style>
   </head>
@@ -219,11 +220,13 @@ SUB_TEMPLATE = '''<!doctype html>
 '''
 
 
-def emit_sub(cues, composition_duration):
+def emit_sub(cues, composition_duration, bottom=360):
     return (
         SUB_TEMPLATE
         .replace("__DURATION__", f"{composition_duration:.6f}")
         .replace("__CUES_JSON__", json.dumps(cues, ensure_ascii=False))
+        .replace("__BOTTOM__", str(bottom))
+        .replace("__PARTICLE_BOTTOM__", str(bottom + 60))
     )
 
 
@@ -266,12 +269,22 @@ def ensure_mount(html: str, composition_duration: float) -> str:
 
 
 def main():
-    data = json.loads(GROUPS_JSON.read_text(encoding="utf-8"))
-    composition_duration = float(data.get("duration", 103.561333))
+    # Step 11 contract: argv = <groups.json> <out.html> <duration> <bottom_px>
+    # (same shape as build-highlight-captions.py). Honoring argv[1] is what lets
+    # v88-clip.sh hand us the OFFSET-SHIFTED groups file; without it we silently
+    # read the unshifted caption-groups.json and drop the -120ms caption offset.
+    # Output path stays SUB because ensure_mount() references it by name.
+    groups_path = Path(sys.argv[1]) if len(sys.argv) > 1 else GROUPS_JSON
+    if not groups_path.is_absolute():
+        groups_path = ROOT / groups_path
+    bottom = int(float(sys.argv[4])) if len(sys.argv) > 4 else 360
+
+    data = json.loads(groups_path.read_text(encoding="utf-8"))
+    composition_duration = float(sys.argv[3]) if len(sys.argv) > 3 else float(data.get("duration", 103.561333))
     cues = build_cues(data)
 
     SUB_DIR.mkdir(parents=True, exist_ok=True)
-    SUB.write_text(emit_sub(cues, composition_duration), encoding="utf-8")
+    SUB.write_text(emit_sub(cues, composition_duration, bottom), encoding="utf-8")
 
     html = INDEX.read_text(encoding="utf-8")
     new_html = ensure_mount(html, composition_duration)
