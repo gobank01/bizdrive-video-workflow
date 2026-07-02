@@ -1,0 +1,10 @@
+{
+  "_rule": "The ONLY mutable prompt fields. Growth is told through the SET (text-to-video can hold a set), never the face (it cannot). Update after every posted episode.",
+  "lastPostedEpisode": 0,
+  "debtRemaining": 2000000,
+  "setExtra": "",
+  "_planned": {
+    "ep3+": ", a single open laptop on the counter",
+    "ep8+": ", a single open laptop on the counter, neat shelf labels and a small glowing dashboard screen"
+  }
+}

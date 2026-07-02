@@ -1,0 +1,62 @@
+{
+  "episode": 1,
+  "title": "ลูกน้องคนสุดท้ายลาออก",
+  "outputDir": "takes",
+  "aspect_ratio": "9:16",
+  "shots": [
+    {
+      "id": "s1",
+      "beat": "HOOK 0-3s: ฝ้ายวางผ้ากันเปื้อนบนเก้าอี้",
+      "prompt": "[CHAR-FAI], gently laying her beige apron down on an empty wooden chair, close-up on the apron and the chair, [SET], [STYLE]",
+      "trim": 3,
+      "takes": 1
+    },
+    {
+      "id": "s2",
+      "beat": "RECAP 3-7s: ฉากร้าน + VO ประโยคเหล็ก",
+      "file": "../../anchors/anchor-shop.mp4",
+      "trim": 4
+    },
+    {
+      "id": "s3",
+      "beat": "ESCALATION 7-11s: ประตูปิดช้าๆ ฝ้ายออกไปแล้ว",
+      "prompt": "the glass front door of a small Thai shop slowly swinging closed at night, seen from inside the dim shop, [SET], [STYLE]",
+      "trim": 4,
+      "takes": 1
+    },
+    {
+      "id": "s4",
+      "beat": "CONFLICT 11-15s: ภูมิ + สมุดบัญชีปกแดง (take1 = spike-person)",
+      "prompt": "[CHAR-PHUM], seen directly from behind, hands gripping [LEDGER] on the counter, knuckles tense, [SET], [STYLE]",
+      "trim": 4,
+      "takes": 2,
+      "take": 2
+    },
+    {
+      "id": "s5",
+      "beat": "LOW POINT 15-19s: นั่งคนเดียวในร้านมืด",
+      "prompt": "[CHAR-PHUM], sitting alone on a low stool in the dark shop, wide shot seen directly from behind, only one warm lamp still glowing, [SET], [STYLE]",
+      "trim": 4,
+      "takes": 1
+    },
+    {
+      "id": "s6",
+      "beat": "TURN 19-23s: หยิบมือถือ (จอ = HTML overlay)",
+      "prompt": "[CHAR-PHUM], close-up of his hands picking up a glowing smartphone from the wooden counter in the dark, screen light spilling onto his hands, [SET], [STYLE]",
+      "trim": 4,
+      "takes": 1
+    },
+    {
+      "id": "s7",
+      "beat": "TWIST 23-27s: anchor-phone + caller-ID เสี่ยหมง + sting@26 freeze@26.8",
+      "file": "../../anchors/anchor-phone.mp4",
+      "trim": 4
+    },
+    {
+      "id": "s8",
+      "beat": "LESSON CARD 27-30s (HTML ใน composition)",
+      "html": true,
+      "trim": 3
+    }
+  ]
+}

@@ -1,0 +1,12 @@
+{
+  "episode": 1,
+  "events": [
+    { "t": 23.6, "type": "notification", "title": "เสี่ยหมง", "subtitle": "7 สายที่ไม่ได้รับ" },
+    { "t": 25.0, "type": "typing", "from": "เสี่ยหมง" },
+    { "t": 26.0, "type": "message", "from": "เสี่ยหมง", "text": "คืนนี้ครบกำหนดแล้วนะ ถ้าพรุ่งนี้ยังไม่มี ผมจะ…", "cutoff": true },
+    { "t": 26.0, "type": "sfx", "name": "dramatic-sting" },
+    { "t": 26.8, "type": "freeze" }
+  ],
+  "payoffNextEpisode": "…ให้เวลาอีก 30 วัน ครั้งสุดท้าย หลังจากนั้นผมจะมายึดร้าน",
+  "lessonCard": { "line": "ระบบที่พึ่งคนคนเดียว ไม่ใช่ระบบ", "next": "EP.2 — เส้นตาย 30 วัน" }
+}

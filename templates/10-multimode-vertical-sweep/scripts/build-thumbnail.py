@@ -1,23 +1,28 @@
 #!/usr/bin/env python3
 """V88 Step 16 — BIZDRIVE thumbnail (BG + 3-line headline) + embed as cover.
-HORIZONTAL 1920x1080 variant for T07 (YouTube cut).
 
-Run from a job workspace, after the final render/mux:
+MANDATORY for every clip. Shared across all templates (01-05). Run from a job
+workspace, after the final render/mux:
 
-    python3 scripts/build-thumbnail.py "<main>" "<hero>" "<sub>" [--bg path]
+    python3 scripts/build-thumbnail.py "<main>" "<hero>" "<sub>"
 
 Example:
-    python3 scripts/build-thumbnail.py "Email ค้าง 2 แสน" "เหลือ ZERO" "ในคืนเดียว ด้วย AI"
+    python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใช้อยู่ระดับไหน?"
 
 What it does:
-  1. Reads a background (default assets/input/bg.png; pass --bg to use a real
-     video frame) and composites a 1920x1080 headline (white MAIN /
-     gold-gradient HERO / soft SUB, auto-fit to width) over a dark scrim,
-     snapshotted via `hyperframes snapshot`.
+  1. Reads the job background  assets/input/bg.png  and composites a
+     1080x1920 headline (white MAIN / gold-gradient HERO / soft SUB,
+     auto-fit to width), snapshotted via `hyperframes snapshot`.
   2. Writes the thumbnail PNG to  output/finals/<clip>.png
-  3. If  output/finals/final.mp4  exists, prepends the PNG as the first 0.1s
-     (3 frames) so Finder / QuickLook / FB / YouTube read it as the poster,
-     writes  output/finals/<clip>.mp4 , and removes final.mp4.
+  3. If  output/finals/final.mp4  exists, **prepends the PNG as the first
+     0.1s (3 frames) of the video** and writes  output/finals/<clip>.mp4 ,
+     then removes final.mp4. The clip-named file is the deliverable.
+
+     Why prepend, not attached_pic: macOS Finder / QuickLook (and FB / YouTube
+     uploaders) read the first video frame as the poster icon for `.mp4`
+     files — the iTunes-style `attached_pic` mjpeg stream is ignored on the
+     `isom` brand container we produce. CapCut does the same thing (verified
+     against a working reference 2026-05-24).
 
 <clip> = the job id (from ../manifest.json) or the job folder name.
 """
@@ -45,57 +50,50 @@ TEMPLATE = """<!doctype html>
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1920, height=1080" />
+    <meta name="viewport" content="width=1080, height=1920" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;800;900&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       * { margin: 0; padding: 0; box-sizing: border-box; }
-      html, body { width: 1920px; height: 1080px; margin: 0; overflow: hidden; background: #0a1640; }
-      #root { position: relative; width: 1920px; height: 1080px; overflow: hidden; }
+      html, body { width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: #0a1640; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; }
       .clip { position: absolute; }
       .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
-      .scrim {
-        inset: 0; width: 100%; height: 100%; z-index: 1;
-        background:
-          linear-gradient(180deg, rgba(6,14,40,.28) 0%, rgba(6,14,40,.42) 45%, rgba(6,14,40,.82) 100%),
-          radial-gradient(120% 70% at 50% 62%, rgba(6,14,40,.55) 0%, rgba(6,14,40,0) 60%);
-      }
       .title-wrap {
-        left: 80px; right: 80px; top: 0; bottom: 0;
+        left: 50px; right: 50px; top: 470px; height: 980px;
         display: flex; flex-direction: column;
         align-items: center; justify-content: center;
         text-align: center; z-index: 2;
         font-family: "IBM Plex Sans Thai", sans-serif;
       }
       .t-main {
-        font-weight: 900; font-size: 110px; line-height: 1.04; color: #ffffff;
-        text-shadow: 0 8px 34px rgba(0,0,0,.85), 0 0 44px rgba(0,0,0,.6);
+        font-weight: 900; font-size: 132px; line-height: 1.04; color: #ffffff;
+        text-shadow: 0 8px 34px rgba(0,0,0,.75), 0 0 44px rgba(0,0,0,.55);
         white-space: nowrap;
       }
       .t-hero {
-        font-weight: 900; font-size: 210px; line-height: 1.0;
-        margin: 4px 0 6px;
+        font-weight: 900; font-size: 232px; line-height: 1.0;
+        margin: 6px 0 4px;
         background: linear-gradient(180deg, #ffe87a 0%, #ffd93d 42%, #f4c20f 70%, #b8860b 100%);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;
-        filter: drop-shadow(0 12px 30px rgba(0,0,0,.7));
+        filter: drop-shadow(0 10px 26px rgba(0,0,0,.6));
         white-space: nowrap;
       }
       .t-sub {
-        font-weight: 800; font-size: 76px; line-height: 1.12; color: #cdd8f2;
-        margin-top: 14px;
-        text-shadow: 0 4px 20px rgba(0,0,0,.85);
+        font-weight: 800; font-size: 78px; line-height: 1.12; color: #cdd8f2;
+        margin-top: 18px;
+        text-shadow: 0 4px 18px rgba(0,0,0,.7);
         white-space: nowrap;
       }
     </style>
   </head>
   <body>
-    <div id="root" data-composition-id="main" data-start="0" data-duration="1" data-width="1920" data-height="1080">
+    <div id="root" data-composition-id="main" data-start="0" data-duration="1" data-width="1080" data-height="1920">
       <img id="background" class="clip background" src="bg.png" alt="" data-start="0" data-duration="1" data-track-index="0" />
-      <div class="clip scrim" data-start="0" data-duration="1" data-track-index="1"></div>
-      <div id="title" class="clip title-wrap" data-start="0" data-duration="1" data-track-index="2">
+      <div id="title" class="clip title-wrap" data-start="0" data-duration="1" data-track-index="1">
         <div class="t-main">__MAIN__</div>
         <div class="t-hero">__HERO__</div>
         <div class="t-sub">__SUB__</div>
@@ -105,8 +103,8 @@ TEMPLATE = """<!doctype html>
       window.__timelines = window.__timelines || {};
       window.__timelines["main"] = gsap.timeline({ paused: true });
       function fitThumb() {
-        var maxW = 1740;
-        [["t-main", 110], ["t-hero", 210], ["t-sub", 76]].forEach(function (p) {
+        var maxW = 980;
+        [["t-main", 132], ["t-hero", 232], ["t-sub", 78]].forEach(function (p) {
           var el = document.querySelector("." + p[0]);
           if (!el) return;
           var fs = p[1];
@@ -196,7 +194,7 @@ def main():
         try:
             vw, vh = (int(x) for x in probe.split("x"))
         except Exception:
-            vw, vh = 1920, 1080
+            vw, vh = 1080, 1920
 
         subprocess.run(
             ["ffmpeg", "-y", "-v", "error",

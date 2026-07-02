@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=1080, height=1920" />
+    <!-- No font link here: all caption text + fonts live in the captions-sweep sub-composition. -->
+    <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
+    <!--
+      Template 10 — multimode-vertical-sweep.
+      ONE full-screen face master (bottom_visual_master.mp4) that CUTS between
+      two display states, driven per-insert by scripts/add-broll.py:
+        - full       : B-roll fills the whole frame (face hidden, same as T04)
+        - split-top  : B-roll fills the TOP half; the face animates DOWN to a
+                       full-bleed bottom rectangle for the insert's duration,
+                       then back to full-screen
+      Captions = BIZDRIVE blue word-sweep (compositions/captions-sweep.html),
+      centered over the seam (bottom 910). Single-presenter audio: the face is
+      the master; every B-roll insert is muted.
+      Paths are per-job generic:
+        assets/input/bg.png                            (fallback background)
+        assets/intermediates/bottom_visual_master.mp4  (job face master, full-screen)
+        assets/intermediates/broll/broll-NN.mp4        (job B-roll, added by scripts/add-broll.py)
+      Per-job build (V88_PLAYBOOK Step 11):
+        python3 scripts/set-duration.py <seconds>
+        python3 scripts/build-sweep-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-sweep.html <seconds> 910
+    -->
+    <style>
+      * { margin: 0; padding: 0; box-sizing: border-box; }
+      html, body { margin: 0; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      #root { position: relative; width: 1080px; height: 1920px; overflow: hidden; background: #000; }
+      .clip { position: absolute; }
+      .background { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+      /* Face master — full-screen by default; JS drives it to the bottom rectangle during split-top inserts. */
+      #bottomVideo { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; object-position: 50% 50%; transform-origin: center center; will-change: transform, object-position, top, height, opacity; z-index: 1; }
+      /* B-roll insert base (fade handled in JS). Geometry comes from the per-mode class below. */
+      .broll-frame { object-fit: cover; object-position: 50% 50%; opacity: 0; visibility: hidden; filter: brightness(.98) contrast(1.02) saturate(1.02); transform-origin: center center; will-change: transform, object-position, opacity, filter; }
+      /* full — replaces the whole frame */
+      .broll-full { left: 0; top: 0; width: 1080px; height: 1920px; z-index: 4; }
+      /* split-top — top half; the face drops to the bottom half (driven in JS) */
+      .broll-split { left: 0; top: 0; width: 1080px; height: 960px; object-position: 50% 45%; z-index: 4; }
+    </style>
+  </head>
+  <body>
+    <div id="root" data-composition-id="main" data-start="0" data-duration="103.561333" data-width="1080" data-height="1920">
+      <img id="background" class="clip background" src="assets/input/bg.png" alt="" data-start="0" data-duration="103.561333" data-track-index="0" />
+
+      <video id="bottomVideo" class="clip" data-layout-allow-overflow="true" src="assets/intermediates/bottom_visual_master.mp4" data-start="0" data-duration="103.561333" data-track-index="1" data-motion-kind="slow-fullscreen-inner-zoom" data-motion-duration="103.561333" data-volume="0" muted playsinline></video>
+
+      <!-- B-roll clips are inserted here per job by scripts/add-broll.py
+           (each becomes a timed clip on tracks 4+, with class broll-<mode>). -->
+
+      <div id="captions-mount" class="clip" style="z-index: 10;" data-composition-id="captions-sweep" data-composition-src="compositions/captions-sweep.html" data-start="0" data-duration="103.561333" data-track-index="3" data-width="1080" data-height="1920"></div>
+    </div>
+
+    <script>
+      window.__timelines = window.__timelines || {};
+      const tl = gsap.timeline({ paused: true });
+      const compositionDuration = 103.561333;
+
+      // Full-screen face — explicit px geometry so split-top can tween top/height,
+      // plus a gentle continuous inner zoom. (Box moves spatially only — playback
+      // timing is never touched, so lip-sync is preserved.)
+      tl.set("#bottomVideo", { top: 0, left: 0, width: 1080, height: 1920, objectPosition: "50% 50%", transformOrigin: "center center" }, 0);
+      tl.from("#bottomVideo", { opacity: 0, duration: 0.35, ease: "power2.out" }, 0);
+      tl.to("#bottomVideo", { scale: 1.05, duration: compositionDuration, ease: "sine.inOut" }, 0);
+
+      // B-roll inserts — fade + slow inner pan; split-top also drives the face to the bottom rectangle.
+      document.querySelectorAll(".broll-frame").forEach((clip) => {
+        const start = Number(clip.dataset.start || 0);
+        const duration = Number(clip.dataset.duration || 0);
+        const mode = clip.dataset.displayMode || "full";
+        const tMode = clip.dataset.transitionMode || "soft";
+        const fallbackDuration = tMode === "bridge" ? 0.26 : 0.22;
+        const inDuration = Math.min(Number(clip.dataset.transitionIn || fallbackDuration), duration / 3);
+        const outDuration = Math.min(Number(clip.dataset.transitionOut || fallbackDuration), duration / 3);
+        const exitStart = Math.max(start + duration - outDuration, start + inDuration);
+        const panFrom = clip.dataset.panFrom || clip.style.objectPosition || "50% 50%";
+        const panTo = clip.dataset.panTo || panFrom;
+        const enterEase = tMode === "bridge" ? "power3.out" : "power2.out";
+        const exitEase = tMode === "bridge" ? "power2.inOut" : "power2.out";
+        const zoomTo = 1.06;
+
+        tl.set(clip, { autoAlpha: 0, scale: 1.02, objectPosition: panFrom, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, start - 0.001);
+        tl.fromTo(clip, { autoAlpha: 0, filter: "brightness(0.98) contrast(1.02) saturate(1.02)" }, { autoAlpha: 1, filter: "brightness(1) contrast(1.03) saturate(1.04)", duration: inDuration, ease: enterEase, immediateRender: false }, start);
+        tl.to(clip, { objectPosition: panTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { scale: zoomTo, duration, ease: "sine.inOut" }, start);
+        tl.to(clip, { autoAlpha: 0, filter: "brightness(0.96) contrast(1.01) saturate(1.01)", duration: outDuration, ease: exitEase }, exitStart);
+
+        // split-top: push the face into the bottom rectangle while this insert is on screen.
+        if (mode === "split-top") {
+          tl.to("#bottomVideo", { top: 960, height: 960, objectPosition: "50% 30%", duration: inDuration, ease: enterEase }, start);
+          tl.to("#bottomVideo", { top: 0, height: 1920, objectPosition: "50% 50%", duration: outDuration, ease: exitEase }, exitStart);
+        }
+      });
+
+      window.__timelines["main"] = tl;
+    </script>
+  </body>
+</html>

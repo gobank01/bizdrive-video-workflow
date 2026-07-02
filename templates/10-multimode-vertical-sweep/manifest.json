@@ -1,0 +1,203 @@
+{
+  "id": "10-multimode-vertical-sweep",
+  "version": "v88",
+  "createdAt": "2026-06-24",
+  "lockedAt": "2026-06-25",
+  "layoutType": "multimode",
+  "name": "Multi-mode Vertical (Full + Split) with Blue Word-Sweep Captions",
+  "description": "Single-presenter vertical talking-head that CUTS between two display states over one full-screen face master (bottom_visual_master.mp4): (1) full-screen face, (2) split — B-roll/screen fills the top half, the face drops to a full-width bottom rectangle. The layout switch is driven entirely by the per-insert display mode chosen at the B-roll step, so the locked v88 16-step pipeline is unchanged (single face = audio master, B-roll inserts as usual). Captions are a clean BLUE WORD-SWEEP — every word white, the spoken word pops to blue, no box, no particles — centered over the seam for easy reading.",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "fallback bg.png (rarely visible — the face video covers it)",
+    "mainVideo": "bottom_visual_master.mp4 full-screen, object-fit cover, gentle inner zoom 1.0 -> 1.05",
+    "displayModes": {
+      "full": "B-roll fills the whole 1080x1920 frame, replacing the face (same as Template 02/04).",
+      "split-top": "B-roll fills the TOP half (0..960), the face animates down to a full-bleed BOTTOM rectangle (960..1920, object-position 50% 30% to frame the head). Reverts to full-screen when the insert ends. Edge-to-edge 50/50, no frames — caption sits on the seam."
+    },
+    "captionPosition": "centered over the seam, bottom: 910px (build-sweep-captions.py arg 4; v88-clip.sh passes CAPTION_BOTTOM=910 for T10). Sits at the split seam in split mode and mid-low over the face in full mode."
+  },
+
+  "captions": {
+    "system": "word-sweep",
+    "style": "BIZDRIVE Blue Word-Sweep — every word in the group is solid white from the moment the group appears; the currently-spoken word pops to BLUE (#2EA8FF) with a small scale bump, then settles back to white. No coloured box, no particles, no backing pill — bare bold text with a heavy shadow for readability over video. Centered over the seam.",
+    "subComposition": "compositions/captions-sweep.html",
+    "builder": "scripts/build-sweep-captions.py",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": 900,
+    "fontSize": 100,
+    "colors": {
+      "active": "#2EA8FF",
+      "base": "#ffffff",
+      "highlight": "#2EA8FF"
+    },
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 22,
+    "goldTokenRules": "the caption-groups.json 'gold' flag is still parsed (numbers / money / brand / tech) but in this template it only adds a slightly stronger scale pop — the active colour is always blue, per the white+blue spec.",
+    "perWordTiming": "interpolated inside each group by character weight (caption-groups.json carries group start/end + token text+gold only) — same schema as Template 04/09."
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": "n/a — single full-screen face master; B-roll inserts are muted",
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "mixNote": "mix BGM with ffmpeg amix normalize=0 so the voice keeps its polished level",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "displayModes": ["full", "split-top"],
+    "defaultDisplay": "mixed",
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "host": "full-screen (full) or top half (split-top) — chosen per insert by add-broll.py",
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "Generate B-roll at aspect_ratio 9:16, resolution 720p, generate_audio false. split-top crops to its box via object-fit cover, so 9:16 source works for both modes.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "At most 5, each context-matched (whoosh on layout switches, ding on CTA, punch on punchlines)."
+  },
+
+  "features": [
+    {
+      "id": "dead_air_cut",
+      "label": { "th": "ตัดช่วงเงียบ (dead air)", "en": "Dead-air jump cut" },
+      "section": "edit",
+      "step": "6",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+    },
+    {
+      "id": "audio_polish",
+      "label": { "th": "ปรับแต่งเสียงพูด (polish)", "en": "Audio polish" },
+      "section": "audio",
+      "step": "8",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+    },
+    {
+      "id": "captions",
+      "label": { "th": "ซับ / คำบรรยายไทย", "en": "Thai captions" },
+      "section": "captions",
+      "step": "9-11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-sweep-captions.py); ไม่ mount caption track"
+    },
+    {
+      "id": "broll",
+      "label": { "th": "B-roll แทรกภาพ", "en": "B-roll inserts" },
+      "section": "broll",
+      "step": "11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก (หน้าเต็มตลอด)",
+      "options": [
+        { "id": "mode", "type": "enum", "label": { "th": "แหล่ง B-roll", "en": "Source" }, "values": ["ai-gen", "stock"], "default": "ai-gen" },
+        { "id": "display", "type": "enum", "label": { "th": "โหมดแสดงภาพแทรก", "en": "Insert display" }, "values": ["mixed", "full", "split-top"], "default": "mixed" },
+        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 4, "min": 0, "max": 8 }
+      ]
+    },
+    {
+      "id": "bgm",
+      "label": { "th": "เพลงประกอบ (BGM)", "en": "Background music" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+      "options": [
+        { "id": "gain", "type": "number", "label": { "th": "ระดับเสียง", "en": "Gain" }, "default": 5, "min": 0, "max": 20, "unit": "%" }
+      ]
+    },
+    {
+      "id": "sfx",
+      "label": { "th": "เอฟเฟกต์เสียง (SFX)", "en": "Sound effects" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+    },
+    {
+      "id": "thumbnail",
+      "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
+      "section": "extras",
+      "step": "16",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+      "options": [
+        { "id": "main", "type": "text", "label": { "th": "บรรทัดบน (ขาว)", "en": "Main line" }, "default": "" },
+        { "id": "hero", "type": "text", "label": { "th": "บรรทัดเด่น (ทอง)", "en": "Hero line" }, "default": "" },
+        { "id": "sub", "type": "text", "label": { "th": "บรรทัดล่าง (ฟ้า)", "en": "Sub line" }, "default": "" }
+      ]
+    }
+  ],
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate04": "Same single-face full-screen base + identical v88 pipeline. Two changes: (1) Step 11 captions use scripts/build-sweep-captions.py (blue word-sweep) instead of build-highlight-captions.py (red/gold box). (2) scripts/add-broll.py stamps each insert with a data-display-mode (full / split-top); index.html positions each insert into its box and, for split-top, animates the face into the bottom rectangle for the insert's duration.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-sweep-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-sweep.html <DURATION> 910"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "note": "LOCKED 2026-06-25. Created from Top1% / อาจารย์อริน screenshots; validated end-to-end on the 'Claude models' clip (out-of-studio slides+face). 3 beats: full-face ↔ split-top slides (~67%) ↔ full-screen OpenRouter AI insert; blue word-sweep captions; face-first framing (RULE). Full reproducible playbook: templates/10-multimode-vertical-sweep/RECIPE.md. Pipeline = identical to Template 04 (single face = audio master); B-roll/slide inserts injected by hand between caption-build and render (v88-clip.sh has no B-roll step).",
+    "input": "jobs/2026-06-24-claude-model-t10 (Bottom02.mp4 face master + top.mp4 slides) — note jobs/ is ephemeral; recipe regenerates it",
+    "output": "jobs/2026-06-24-claude-model-t10/output/finals/2026-06-24-claude-model-t10.mp4 — 1080×1920, 115.5s, -16.0 LUFS, 3467 frames, lint 0/0",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true,
+      "captionGroupTolerance": 5,
+      "loudnessRange": [-18, -14]
+    }
+  }
+}

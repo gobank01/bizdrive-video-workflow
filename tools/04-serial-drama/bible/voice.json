@@ -1,0 +1,14 @@
+{
+  "_rule": "THE NARRATOR VOICE IS THE SERIES' FACE — never change mid-season. Archive every episode's WAV. Recast window closes once EP1 is posted.",
+  "voice_id": "JBFqnCBsd6RMkjVDRZzb",
+  "name": "George - Warm, Captivating Storyteller",
+  "model_id": "eleven_v3",
+  "voice_settings": { "stability": 0.5 },
+  "casting": {
+    "date": "2026-06-11",
+    "method": "4 male middle_aged candidates x eleven_v3 Thai sample -> Scribe v2 round-trip QA (voice-design API unavailable on this plan)",
+    "result": "george only candidate to render proper noun เสี่ยหมง exactly; adam/daniel -> เสี่ยหงส์, brian -> เสี่ยหม่อง; pacing 2.9 Thai words/s fits 70-word VO in ~24s",
+    "samples": "tools/04-serial-drama/casting/sample-*.mp3 (keep for พี่แบงค์ veto before EP1 posts)"
+  },
+  "notes": "eleven_v3 supports inline audio tags for drama delivery: [whispers] [sighs] [pause] etc. Use sparingly in vo-script.txt."
+}

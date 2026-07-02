@@ -1,0 +1,24 @@
+{
+  "outputDir": "takes",
+  "aspect_ratio": "9:16",
+  "shots": [
+    {
+      "id": "spike-set",
+      "prompt": "[SET], empty shop, camera slowly pushing in down the center aisle, vertical composition, [STYLE]",
+      "duration": 5,
+      "takes": 1
+    },
+    {
+      "id": "spike-person",
+      "prompt": "[CHAR-PHUM], standing at the shop counter at night looking down at [LEDGER], medium shot from behind, [SET], [STYLE]",
+      "duration": 5,
+      "takes": 1
+    },
+    {
+      "id": "spike-phone",
+      "prompt": "[PHONE], extreme close-up, [SET], [STYLE]",
+      "duration": 5,
+      "takes": 1
+    }
+  ]
+}

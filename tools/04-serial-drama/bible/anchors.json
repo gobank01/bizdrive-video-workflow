@@ -1,0 +1,12 @@
+{
+  "_note": "Series anchor shots — generated once, reused free every episode via shots.json 'file' refs. anchor-shop + anchor-phone were promoted from the 2026-06-11 spike.",
+  "outputDir": "../anchors",
+  "aspect_ratio": "9:16",
+  "shots": [
+    {
+      "id": "anchor-dark",
+      "prompt": "[SET], all lights off except one warm tungsten lamp, long deep shadows down the aisle between shelves, slow camera push forward, [STYLE]",
+      "takes": 1
+    }
+  ]
+}

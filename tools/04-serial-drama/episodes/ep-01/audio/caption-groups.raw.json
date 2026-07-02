@@ -1,0 +1,288 @@
+{
+  "groups": [
+    {
+      "start": 0.14,
+      "end": 0.798,
+      "tokens": [
+        {
+          "text": "ผมเป็นหนี้",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 0.798,
+      "end": 1.259,
+      "tokens": [
+        {
+          "text": "สองล้าน",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 1.839,
+      "end": 2.821,
+      "tokens": [
+        {
+          "text": "และคืนนี้",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 2.821,
+      "end": 3.585,
+      "tokens": [
+        {
+          "text": "ลูกน้อง",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 3.585,
+      "end": 4.568,
+      "tokens": [
+        {
+          "text": "คนสุดท้าย",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 4.568,
+      "end": 5.659,
+      "tokens": [
+        {
+          "text": "เพิ่งลาออก",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 5.799,
+      "end": 6.203,
+      "tokens": [
+        {
+          "text": "ฝ้าย",
+          "gold": false
+        },
+        {
+          "text": "วาง",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 6.203,
+      "end": 6.896,
+      "tokens": [
+        {
+          "text": "ผ้ากันเปื้อน",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 6.896,
+      "end": 7.415,
+      "tokens": [
+        {
+          "text": "บนเก้าอี้",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 7.415,
+      "end": 7.819,
+      "tokens": [
+        {
+          "text": "ตัวเดิม",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 8.26,
+      "end": 8.903,
+      "tokens": [
+        {
+          "text": "เดินออกไป",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 8.903,
+      "end": 9.76,
+      "tokens": [
+        {
+          "text": "โดยไม่มี",
+          "gold": false
+        },
+        {
+          "text": "คำลา",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 10.76,
+      "end": 11.802,
+      "tokens": [
+        {
+          "text": "ร้านที่เคย",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 11.802,
+      "end": 12.74,
+      "tokens": [
+        {
+          "text": "มีคนสี่คน",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 12.74,
+      "end": 14.199,
+      "tokens": [
+        {
+          "text": "เหลือผม",
+          "gold": false
+        },
+        {
+          "text": "คนเดียว",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 14.279,
+      "end": 15.259,
+      "tokens": [
+        {
+          "text": "สมุดบัญชี",
+          "gold": false
+        },
+        {
+          "text": "ปกแดง",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 15.259,
+      "end": 15.96,
+      "tokens": [
+        {
+          "text": "จ้องกลับมา",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 15.96,
+      "end": 16.94,
+      "tokens": [
+        {
+          "text": "เหมือน",
+          "gold": false
+        },
+        {
+          "text": "เยาะเย้ย",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 18.0,
+      "end": 18.755,
+      "tokens": [
+        {
+          "text": "ยี่สิบปี",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 18.755,
+      "end": 19.699,
+      "tokens": [
+        {
+          "text": "กำลังจะพัง",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 20.199,
+      "end": 21.633,
+      "tokens": [
+        {
+          "text": "เพราะผม",
+          "gold": false
+        },
+        {
+          "text": "พึ่งคน",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 21.633,
+      "end": 22.626,
+      "tokens": [
+        {
+          "text": "แต่ไม่เคย",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 22.626,
+      "end": 23.619,
+      "tokens": [
+        {
+          "text": "สร้างระบบ",
+          "gold": true
+        }
+      ]
+    },
+    {
+      "start": 23.659,
+      "end": 24.869,
+      "tokens": [
+        {
+          "text": "แล้วคืนนั้น",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 24.869,
+      "end": 25.53,
+      "tokens": [
+        {
+          "text": "มือถือ",
+          "gold": false
+        }
+      ]
+    },
+    {
+      "start": 25.53,
+      "end": 26.52,
+      "tokens": [
+        {
+          "text": "ก็ดังขึ้น",
+          "gold": true
+        }
+      ]
+    }
+  ]
+}

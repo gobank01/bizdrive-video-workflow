@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
-"""BIZDRIVE Karaoke Caption — designed caption-highlight v2.
-caption-groups.json -> vertical Thai karaoke captions with brand 2-colour system:
+"""BIZDRIVE Karaoke Caption — designed caption-highlight v2 (HORIZONTAL 1920x1080).
+caption-groups.json -> Thai karaoke captions with brand 2-colour system:
   normal word  -> red box
   gold token   -> gold box (numbers / brands, from token.gold)
 Per-word timing interpolated inside each group (weighted by character count).
-Usage: build-highlight-v2.py <caption-groups.json> <out.html> <duration> [bottom_px]
+Usage: build-highlight-captions.py <caption-groups.json> <out.html> <duration> [bottom_px]
+
+T07 is the 16:9 YouTube cut: canvas 1920x1080, font 80px, lower-third captions
+(bottom 120px to sit inside the 400px scrim). Same karaoke mechanic as T04/T05.
 """
 import json, sys
 
 src = sys.argv[1]
 out = sys.argv[2]
 duration = float(sys.argv[3])
-bottom = sys.argv[4] if len(sys.argv) > 4 else "330"
+bottom = sys.argv[4] if len(sys.argv) > 4 else "120"
 
 data = json.load(open(src))
 groups_in = data["groups"]
@@ -40,24 +43,24 @@ html = f"""<!doctype html>
 <html lang="th">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=1080, height=1920" />
+    <meta name="viewport" content="width=1920, height=1080" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@700;800&display=swap" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/gsap@3.14.2/dist/gsap.min.js"></script>
     <style>
       *, *::before, *::after {{ box-sizing: border-box; }}
-      html, body {{ width: 1080px; height: 1920px; margin: 0; overflow: hidden; background: transparent; }}
-      #highlight {{ position: relative; width: 1080px; height: 1920px; overflow: hidden; background: transparent; pointer-events: none; }}
+      html, body {{ width: 1920px; height: 1080px; margin: 0; overflow: hidden; background: transparent; }}
+      #highlight {{ position: relative; width: 1920px; height: 1080px; overflow: hidden; background: transparent; pointer-events: none; }}
       #hl-container {{ position: absolute; inset: 0; z-index: 10; pointer-events: none; }}
       .hl-group {{
         position: absolute; bottom: {bottom}px; left: 0; width: 100%;
         display: flex; flex-wrap: wrap; align-items: flex-end; justify-content: center;
-        gap: 16px 10px; padding: 0 56px; opacity: 0; visibility: hidden;
+        gap: 16px 12px; padding: 0 100px; opacity: 0; visibility: hidden;
       }}
       .hl-word {{
         font-family: "IBM Plex Sans Thai", sans-serif; font-weight: 800;
-        font-size: 84px; color: #ffffff; display: inline-block;
+        font-size: 80px; color: #ffffff; display: inline-block;
         letter-spacing: 0; line-height: 1.12; position: relative;
         padding: 10px 20px 16px;
         text-shadow: 0 4px 16px rgba(0,0,0,.55), 0 2px 5px rgba(0,0,0,.6);
@@ -78,7 +81,7 @@ html = f"""<!doctype html>
   </head>
   <body>
     <div id="highlight" data-composition-id="captions-highlight" data-timeline-locked
-         data-start="0" data-duration="{duration}" data-fps="30" data-width="1080" data-height="1920">
+         data-start="0" data-duration="{duration}" data-fps="30" data-width="1920" data-height="1080">
       <div id="hl-container"></div>
     </div>
     <script>
@@ -118,7 +121,7 @@ html = f"""<!doctype html>
           grp.id = "hl-grp-" + gi;
 
           var groupText = groupWords.map(function (w) {{ return w.text; }}).join(" ");
-          var computedSize = fitFontSize(groupText, 84, "800", "IBM Plex Sans Thai", 1820);
+          var computedSize = fitFontSize(groupText, 80, "800", "IBM Plex Sans Thai", 1720);
 
           groupWords.forEach(function (w, i) {{
             var wi = g.wordStart + i;

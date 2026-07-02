@@ -1,0 +1,12 @@
+{
+  "_rule": "FROZEN PROMPT BLOCKS — gen-shots.js injects these into every prompt via [KEY] placeholders. Never hand-type or paraphrase character/set/style text in a shots.json. EP12 must use the exact bytes of EP1.",
+  "blocks": {
+    "CHAR-PHUM": "a Thai man in his 40s, medium build, short black hair, wearing a navy blue polo shirt and a gold wristwatch, seen from behind or in close-up on his hands, face never visible",
+    "CHAR-FAI": "a young Thai woman in her early 20s, hair in a ponytail, wearing a beige apron over a white t-shirt, seen from behind, face never visible",
+    "CHAR-MONG-HAND": "an older heavyset Thai-Chinese man's hand with a large gold ring tapping a smartphone screen, extreme close-up, face never visible",
+    "SET": "small Thai wholesale shop interior at night, stacked cardboard boxes, shelves of household goods, warm tungsten lamp with blue and gold accent lighting",
+    "PHONE": "a smartphone lying face-down on a wooden shop counter vibrating, screen glow spilling in the dark",
+    "LEDGER": "a worn red-cover accounting ledger book on a wooden shop counter",
+    "STYLE": "cinematic Thai TV drama, tense suspenseful mood, shallow depth of field, warm tungsten and teal color grade, smooth camera movement, no readable text, no signage, no logos"
+  }
+}

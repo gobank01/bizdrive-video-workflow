@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  html,body {
+    margin:0; width:1200px; height:980px; overflow:hidden;
+    background:
+      radial-gradient(1100px 680px at 50% -10%, #0d1c4d 0%, rgba(13,28,77,0) 60%),
+      linear-gradient(160deg, #02040d 0%, #050a22 45%, #0a1640 100%);
+    font-family:"Inter","Helvetica Neue",sans-serif; color:#eaf0ff; -webkit-font-smoothing:antialiased;
+  }
+  .thai { font-family:"Sukhumvit Set","Thonburi","IBM Plex Sans Thai",sans-serif; }
+
+  .header { position:absolute; top:0; left:0; right:0; height:118px; display:flex; align-items:center; justify-content:space-between; padding:0 52px; }
+  .brandmark { display:flex; align-items:center; gap:16px; }
+  .logo-dot { width:46px; height:46px; border-radius:13px; background:linear-gradient(135deg,#2EA8FF 0%, #1567d6 100%); box-shadow:0 6px 20px rgba(46,168,255,.45), inset 0 1px 0 rgba(255,255,255,.4); display:flex; align-items:center; justify-content:center; font-weight:800; font-size:22px; color:#fff; }
+  .title-main { font-size:27px; font-weight:800; letter-spacing:.2px; color:#fff; }
+  .title-main .blue { color:#2EA8FF; }
+  .title-sub { font-size:13px; font-weight:500; letter-spacing:.5px; color:#7e8db8; margin-top:3px; }
+  .header-right { display:flex; align-items:center; gap:14px; }
+  .ratio-chip { font-size:12px; font-weight:700; letter-spacing:1.2px; color:#aebcdf; border:1px solid rgba(120,140,200,.32); border-radius:999px; padding:8px 16px; background:rgba(255,255,255,.03); }
+  .ratio-chip .gold { color:#FFD27A; }
+  .hairline { position:absolute; top:118px; left:52px; right:52px; height:1px; background:linear-gradient(90deg, rgba(46,168,255,0) 0%, rgba(46,168,255,.45) 20%, rgba(46,168,255,.45) 80%, rgba(46,168,255,0) 100%); }
+
+  .stage { position:absolute; top:118px; left:0; right:0; bottom:0; display:flex; align-items:center; justify-content:center; gap:150px; }
+  .col { display:flex; flex-direction:column; align-items:center; }
+  .phone { position:relative; width:356px; height:633px; border-radius:32px; overflow:hidden; background:#05070f;
+    box-shadow:0 26px 60px rgba(0,0,0,.55), 0 0 0 1px rgba(255,255,255,.05), 0 0 0 7px rgba(8,14,34,.9), 0 0 0 8px rgba(120,140,200,.16); }
+  .phone::after { content:""; position:absolute; inset:0; border-radius:32px; box-shadow:inset 0 1px 0 rgba(255,255,255,.06); pointer-events:none; }
+
+  .studio { position:absolute; inset:0; background:radial-gradient(120% 80% at 50% 6%, #2a3766 0%, #161e3c 46%, #0a1024 100%); }
+  .studio::before { content:""; position:absolute; inset:0; background:repeating-linear-gradient(90deg, rgba(255,255,255,.045) 0 4px, rgba(255,255,255,0) 4px 26px); -webkit-mask-image:linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 55%); mask-image:linear-gradient(180deg, rgba(0,0,0,.55) 0%, rgba(0,0,0,0) 55%); opacity:.6; }
+  .studio::after { content:""; position:absolute; inset:0; background:radial-gradient(64% 46% at 50% 70%, rgba(255,182,120,.14) 0%, rgba(255,182,120,0) 64%); }
+
+  .person { position:absolute; inset:0; overflow:hidden; }
+  .person::before { content:""; position:absolute; left:50%; transform:translateX(-50%); bottom:26%; width:270px; height:350px; background:radial-gradient(50% 50% at 50% 50%, rgba(120,162,255,.12), rgba(120,162,255,0) 70%); }
+  .figure { position:absolute; left:50%; bottom:0; transform:translateX(-50%) scale(1.1); transform-origin:bottom center; width:288px; height:372px; }
+  .figure.sm { transform:translateX(-50%) scale(.66); transform-origin:bottom center; }
+  .figure>div { position:absolute; left:50%; transform:translateX(-50%); }
+  .jacket { bottom:0; width:288px; height:152px; border-radius:178px 178px 0 0; background:linear-gradient(180deg,#3c4a78 0%, #232d56 58%, #18203e 100%); box-shadow:inset 0 2px 0 rgba(255,255,255,.08), 0 -1px 10px rgba(0,0,0,.35); }
+  .shirt { bottom:0; width:122px; height:130px; background:linear-gradient(180deg,#161d3e 0%, #0d1430 100%); clip-path:polygon(7% 0, 93% 0, 50% 72%); }
+  .neck { bottom:118px; width:58px; height:66px; background:linear-gradient(180deg,#cda57a 0%, #a9744f 100%); border-radius:9px 9px 30px 30px; box-shadow:inset 0 -11px 15px rgba(0,0,0,.32); }
+  .head { bottom:150px; width:118px; height:140px; border-radius:50% 50% 47% 47% / 55% 55% 45% 45%; background:radial-gradient(56% 50% at 43% 38%, #f3c69e 0%, #d89c73 50%, #b27a53 100%); box-shadow:0 12px 30px rgba(0,0,0,.45), inset -14px 0 22px rgba(0,0,0,.22), inset 12px 2px 16px rgba(255,255,255,.07); }
+  .hair { bottom:226px; width:128px; height:92px; border-radius:58% 58% 44% 44% / 76% 76% 24% 24%; background:linear-gradient(170deg,#2c2119 0%, #120e0a 100%); box-shadow:inset 0 3px 0 rgba(255,255,255,.05); }
+
+  .broll { position:absolute; background:radial-gradient(80% 70% at 70% 22%, rgba(255,214,150,.55) 0%, rgba(255,214,150,0) 55%), linear-gradient(165deg, #0d6b6e 0%, #138f86 38%, #4cc0a0 70%, #f0c478 100%); }
+  .broll::before { content:""; position:absolute; inset:0; background:linear-gradient(0deg, rgba(0,0,0,.20) 0%, rgba(0,0,0,0) 32%), repeating-linear-gradient(115deg, rgba(255,255,255,.05) 0 2px, rgba(255,255,255,0) 2px 16px); }
+  .broll-chip { position:absolute; top:13px; left:13px; font-size:11px; font-weight:800; letter-spacing:1.4px; color:#06302c; background:rgba(255,255,255,.85); border-radius:7px; padding:4px 10px; box-shadow:0 3px 10px rgba(0,0,0,.3); z-index:5; }
+
+  .seam { position:absolute; left:0; right:0; top:50%; height:3px; background:linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,.7), rgba(255,255,255,0)); box-shadow:0 0 16px rgba(0,0,0,.6); z-index:6; }
+
+  .caption { position:absolute; left:0; right:0; text-align:center; padding:0 24px; z-index:8; font-family:"Sukhumvit Set","Thonburi","IBM Plex Sans Thai",sans-serif; font-weight:800; font-size:35px; line-height:1.18; color:#ffffff; letter-spacing:.2px; text-shadow:0 4px 18px rgba(0,0,0,.92), 0 0 32px rgba(0,0,0,.78), 0 2px 4px rgba(0,0,0,.95); }
+  .caption .blue { color:#2EA8FF; }
+  .cap-center { top:55%; transform:translateY(-50%); }
+  .cap-seam   { top:50%; transform:translateY(-50%); }
+
+  .state-label { margin-top:24px; display:flex; flex-direction:column; align-items:center; gap:8px; }
+  .chip { font-size:14px; font-weight:800; letter-spacing:1.7px; text-transform:uppercase; color:#cfe0ff; border:1px solid rgba(46,168,255,.4); background:linear-gradient(180deg, rgba(46,168,255,.14), rgba(46,168,255,.04)); border-radius:999px; padding:10px 22px; box-shadow:0 4px 14px rgba(0,0,0,.3); }
+  .chip .num { color:#2EA8FF; margin-right:7px; }
+  .chip-th { font-size:13.5px; color:#8493bd; font-weight:500; letter-spacing:.3px; }
+
+  .footnote { position:absolute; left:52px; bottom:24px; font-size:12.5px; color:#6b7aa6; letter-spacing:.3px; }
+  .footnote .tag { color:#2EA8FF; font-weight:700; }
+  .legend { position:absolute; right:52px; bottom:24px; display:flex; gap:22px; align-items:center; font-size:12.5px; color:#8493bd; font-weight:500; }
+  .legend .sw { display:inline-flex; align-items:center; gap:7px; }
+  .legend .box { width:14px; height:14px; border-radius:4px; box-shadow:0 0 0 1px rgba(255,255,255,.12); }
+</style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="brandmark">
+      <div class="logo-dot">B</div>
+      <div>
+        <div class="title-main">Template <span class="blue">10</span> · Vertical <span class="blue">Full + Split</span> · Blue Word-Sweep</div>
+        <div class="title-sub thai">วิดีโอแนวตั้ง สลับ 2 โหมด — เต็มจอ ↔ ครึ่งบน(B-roll) · ซับขาว+ฟ้ากวาดทีละคำ</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="ratio-chip">9 : 16 · <span class="gold">1080×1920</span></div>
+      <div class="ratio-chip thai">BIZDRIVE</div>
+    </div>
+  </div>
+  <div class="hairline"></div>
+
+  <div class="stage">
+
+    <!-- FULL -->
+    <div class="col">
+      <div class="phone">
+        <div class="studio"><div class="person">
+          <div class="figure"><div class="jacket"></div><div class="shirt"></div><div class="neck"></div><div class="head"></div><div class="hair"></div></div>
+        </div></div>
+        <div class="caption cap-center thai"><span>ซึ่งมัน</span><span class="blue">ช่วย</span></div>
+      </div>
+      <div class="state-label"><div class="chip"><span class="num">01</span>เต็มจอ · FULL</div><div class="chip-th thai">หน้าเต็มเฟรม · ซับกลางจอ</div></div>
+    </div>
+
+    <!-- SPLIT -->
+    <div class="col">
+      <div class="phone">
+        <div class="broll" style="top:0; left:0; right:0; height:50%;"><div class="broll-chip">B-ROLL</div></div>
+        <div class="studio" style="top:50%; height:50%;"><div class="person">
+          <div class="figure sm"><div class="jacket"></div><div class="shirt"></div><div class="neck"></div><div class="head"></div><div class="hair"></div></div>
+        </div></div>
+        <div class="seam"></div>
+        <div class="caption cap-seam thai" style="font-size:31px;"><span>เทคโนโลยีที่</span><span class="blue">สร้าง</span></div>
+      </div>
+      <div class="state-label"><div class="chip"><span class="num">02</span>ครึ่งบน · SPLIT</div><div class="chip-th thai">B-roll บนครึ่งจอ / หน้า ล่างครึ่งจอ · ซับบนเส้นแบ่ง</div></div>
+    </div>
+
+  </div>
+
+  <div class="footnote thai"><span class="tag">CAPTION RULE</span> &nbsp;ทุกคำขาวล้วน · ฟ้า #2EA8FF เฉพาะคำที่กำลังพูด · bold 800–900 · ไม่มีกล่อง ไม่มี particle · กลางจอ</div>
+  <div class="legend">
+    <span class="sw"><span class="box" style="background:#ffffff;"></span> ขาว (คำทั่วไป)</span>
+    <span class="sw"><span class="box" style="background:#2EA8FF;"></span> ฟ้า (คำที่พูด)</span>
+    <span class="sw"><span class="box" style="background:linear-gradient(135deg,#138f86,#f0c478);"></span> B-roll</span>
+  </div>
+
+</body>
+</html>
