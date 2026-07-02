@@ -8,7 +8,7 @@ Rules for any AI agent (Claude Code, Codex, Cursor, …) working in this repo.
 A BIZDRIVE short-video production pipeline. Source talking-head clips become
 1080×1920 vertical videos with Thai kinetic captions, B-roll, BGM/SFX and a
 thumbnail. The pipeline is the **v88 locked workflow** — 16 steps, documented in
-`templates/_shared/docs/V88_PLAYBOOK.md`. There are 5 templates under
+`templates/_shared/docs/V88_PLAYBOOK.md`. There are 10 templates under
 `templates/NN-*/`; per-clip work happens in `jobs/YYYY-MM-DD-<slug>/`.
 
 ---
@@ -96,5 +96,9 @@ explicitly sets `thumbnail: 0`.
 | `tools/02-rough-cut/roughcut.sh <raw.mp4> [slug] [--target <sec>] [--context "..."]` | one-command: transcribe → editorial (invisible + water cuts; content cuts in `--target`) → VAD jump-cut → loudnorm → `staging/roughcut/<date>-<slug>/rough-cut.mp4` (pauses once at Step 3) |
 | `tools/v88-clip.sh <job-dir>` | run all 16 v88 steps mechanically for ONE child job (pauses at Steps 3 + 10 for subagent) |
 | `templates/_shared/docs/MISTAKES.md` | incident log — read before debugging |
-| `templates/README.md` | the 5 templates + when to add one |
+| `templates/README.md` | the 10 templates + when to add one |
 | `tools/template-manager.html` | the Job Spec builder (open in a browser) |
+| `tools/03-deprompter/` | **Tool 03 — Deprompter**: remove the prompter's voice from repeat-after recordings (ElevenLabs diarize; see its README) |
+| `tools/04-serial-drama/` | **Tool 04 — Serial Drama**: 30s AI short-drama series (seedance t2v + VO; see its README) |
+| `tools/clean-job.sh <job-dir>` | strip a finished job to `<job>.mp4` + `<job>.png` only (keep-only-finals rule; auto-run as v88-clip Step 17) |
+| `tools/inbox-sync.py` / `tools/inbox-dashboard.py` | sync the "ออกจาก Studio" inbox status to the online dashboard (bizdrive-social-poster.vercel.app/inbox.html) |

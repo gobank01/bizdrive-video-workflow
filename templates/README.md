@@ -18,6 +18,7 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 07 | fullscreen-horizontal-karaoke | **1920×1080** | **YouTube long-form** talking-head + full-screen B-roll (~1 per 2 min) | **karaoke** highlight (red/gold box sweep) | ✅ ready (2026-05-22) |
 | 08 | split-vertical-burst        | 1080×1920    | top/bottom split — screen (top) + person as full-width rectangle (bottom) | **karaoke** highlight, centered over seam | ✅ ready (2026-06-08) |
 | 09 | split-vertical-burst        | 1080×1920    | top/bottom split — screen (top) + person as full-width rectangle (bottom) | particle burst + gold, centered over seam | ✅ ready (2026-06-08) |
+| 10 | multimode-vertical-sweep    | 1080×1920    | single face that **cuts** between full-screen and split-top (B-roll on top half, face on bottom) | **blue word-sweep** (white→blue, no box, centered) | ✅ ready · locked (2026-06-25) |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
 ### Which to pick
@@ -53,6 +54,16 @@ Two axes: **layout** (do you have a screen recording?) and **caption style**
   colors) centered over the seam, instead of karaoke. The burst↔karaoke pair, like
   01 ↔ 05. (Note: Template 08's folder is named `…-burst` but it is the *karaoke*
   one — historical mislabel; T09 is the actual particle-burst split.)
+
+- **Template 10** — one full-screen face that **cuts between two display
+  states** within a single clip: full-screen, and **split-top** (B-roll/screen
+  fills the top half, face drops to a full-bleed bottom rectangle). The mode is
+  chosen per B-roll insert, so the locked v88 pipeline is unchanged (single face =
+  audio master). Captions are a clean **blue word-sweep** — every word white, the
+  spoken word pops to blue, no box / no particles, centered over the seam. Built
+  from the Top1% / อาจารย์อริน reference look. **Locked 2026-06-25** — full
+  production playbook in [10-multimode-vertical-sweep/RECIPE.md](10-multimode-vertical-sweep/RECIPE.md)
+  (out-of-studio slides+face → 3-beat clip; face-first framing; OpenRouter AI inserts).
 
 > **Same layout, different captions:** 01 ↔ 05 (stacked circle) · 08 ↔ 09
 > (split screen+person) · 02 ↔ 04 (full-screen).
@@ -100,7 +111,7 @@ Every template inherits these. Do NOT duplicate per-template:
 
 - `scripts/transcribe/` — ElevenLabs Scribe v2 + nlpo3 word-segmentation
 - `scripts/clean-cut/` — Silero VAD + editorial pad-bleed
-- `docs/V88_PLAYBOOK.md` — 15-step pipeline
+- `docs/V88_PLAYBOOK.md` — 16-step pipeline (+ Step 17 cleanup in `tools/v88-clip.sh`)
 - `docs/SUBAGENT_PROMPTS.md` — verbatim editorial + post-process prompts
 - `docs/MISTAKES.md` — incidents log shared across all templates
 - `references/editorial-rules.md` — editorial subagent rules

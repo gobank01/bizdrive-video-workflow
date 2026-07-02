@@ -467,6 +467,17 @@ python3 scripts/build-thumbnail.py "AI มี" "3 ระดับ" "คุณใ
 - A re-snapshottable `thumbnail/` project + `thumbnail/thumbnail.json` (the 3
   lines on record) are left in the workspace (gitignored).
 
+### Step 17 — Clean intermediates (housekeeping, `v88-clip.sh` only)
+
+Disk-hygiene rule (2026-06-10): a finished clip keeps ONLY
+`output/finals/<clip>.mp4` + `<clip>.png`. `tools/v88-clip.sh` runs
+`tools/clean-job.sh <job-dir>` automatically after Step 16; the cleaner
+self-guards on the canonical final, so a failed render is left untouched.
+Debugging a render? Pass `--keep-intermediates`. Running the playbook by hand,
+run `bash tools/clean-job.sh <job-dir>` yourself when the deliverable is
+verified. **Archive the transcript to `content-brain/` BEFORE cleaning** — the
+clean deletes `caption-groups.json` / `raw-elevenlabs.json`.
+
 ---
 
 ## 5. File map (every artifact, by Phase)

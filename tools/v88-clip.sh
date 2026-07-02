@@ -41,6 +41,7 @@ TH_MAIN=""
 TH_HERO=""
 TH_SUB=""
 SKIP_THUMB=0
+KEEP_INTERMEDIATES=0
 CAPTION_OFFSET_MS=120
 POSITIONAL=()
 
@@ -51,6 +52,7 @@ while [ $# -gt 0 ]; do
     --hero) TH_HERO="$2"; shift 2 ;;
     --sub) TH_SUB="$2"; shift 2 ;;
     --skip-thumbnail) SKIP_THUMB=1; shift ;;
+    --keep-intermediates) KEEP_INTERMEDIATES=1; shift ;;
     --caption-offset-ms) CAPTION_OFFSET_MS="$2"; shift 2 ;;
     -h|--help)
       sed -n '2,38p' "${BASH_SOURCE[0]}" | sed 's/^# \{0,1\}//'
@@ -116,6 +118,7 @@ case "$TEMPLATE_NUM" in
   04|05|08) CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
   06)    CAPTION_SCRIPT="build-burst-captions.py" ; CAPTION_HTML="captions-burst.html" ;;
   07)    CAPTION_SCRIPT="build-highlight-captions.py" ; CAPTION_HTML="captions-highlight.html" ;;
+  10)    CAPTION_SCRIPT="build-sweep-captions.py" ; CAPTION_HTML="captions-sweep.html" ;;
   *)
     echo "✗ Unknown template number: $TEMPLATE_NUM" >&2
     exit 1 ;;
@@ -125,7 +128,9 @@ esac
 case "$TEMPLATE_NUM" in
   04|02) CAPTION_BOTTOM=330 ;;
   05|01) CAPTION_BOTTOM=360 ;;
+  07)    CAPTION_BOTTOM=120 ;;  # horizontal 1920x1080 lower-third (inside 400px scrim)
   08|09) CAPTION_BOTTOM=910 ;;
+  10)    CAPTION_BOTTOM=910 ;;  # centered over the seam (split mode) / mid-low over the face
   *)     CAPTION_BOTTOM=330 ;;
 esac
 
@@ -285,6 +290,41 @@ if [ ! -f "$WS/assets/intermediates/bottom_visual_master.mp4" ]; then
 fi
 MASTER_DUR=$(ffprobe -v error -show_entries format=duration -of default=nw=1:nk=1 "$WS/assets/intermediates/bottom_visual_master.mp4")
 echo "    bottom_visual_master.mp4 = ${MASTER_DUR}s"
+
+# ─────────────────────────────────────────────
+# Step 7b — apply the SAME EDLs to top.mp4 → top_visual_master.mp4
+# Templates with a top frame (stacked/split/corner-cam) need it; skipping
+# this used to be a manual 2-command chore every job (see MISTAKES.md).
+# ponytail: assumes top.mp4 is 30fps like bottom (Step 1 only normalizes
+# bottom); the master proof below fails loudly if frames drift.
+# ─────────────────────────────────────────────
+case "$TEMPLATE_NUM" in
+  01|05|06|08|09)
+    if [ ! -f "$JOB_DIR/input/top.mp4" ]; then
+      echo "✗ template T$TEMPLATE_NUM needs input/top.mp4 (top frame) but none found" >&2
+      exit 1
+    fi
+    if [ ! -f "$WS/assets/intermediates/top_visual_master.mp4" ]; then
+      echo "─── Step 7b — apply rough+jump EDLs to top.mp4 → top_visual_master.mp4"
+      (cd "$WS" && npm run apply:edits -- \
+        assets/input/top.mp4 \
+        assets/intermediates/v88-test/edl-rough-safe.json \
+        -o assets/intermediates/v88-test/top_rough.mp4 2>&1 | tail -2)
+      (cd "$WS" && npm run apply:edits -- \
+        assets/intermediates/v88-test/top_rough.mp4 \
+        assets/intermediates/v88-test/edl-jump.json \
+        -o assets/intermediates/top_visual_master.mp4 2>&1 | tail -2)
+    fi
+    # Master proof — lip-sync zero tolerance: frame counts MUST be identical
+    TOP_FRAMES=$(ffprobe -v error -select_streams v -show_entries stream=nb_frames -of default=nw=1:nk=1 "$WS/assets/intermediates/top_visual_master.mp4")
+    BOT_FRAMES=$(ffprobe -v error -select_streams v -show_entries stream=nb_frames -of default=nw=1:nk=1 "$WS/assets/intermediates/bottom_visual_master.mp4")
+    if [ "$TOP_FRAMES" != "$BOT_FRAMES" ]; then
+      echo "✗ master proof FAILED: top=$TOP_FRAMES vs bottom=$BOT_FRAMES frames — do NOT render" >&2
+      exit 1
+    fi
+    echo "    ✓ master proof: top = bottom = $TOP_FRAMES frames"
+  ;;
+esac
 
 # ─────────────────────────────────────────────
 # Step 8 — polish bottom audio (2-pass + corrective)
@@ -510,6 +550,17 @@ PY
     TH_SUB=$(echo "$SPLIT"  | sed -n '3p')
   fi
   (cd "$WS" && python3 scripts/build-thumbnail.py "$TH_MAIN" "$TH_HERO" "$TH_SUB" 2>&1 | tail -3)
+fi
+
+# ─────────────────────────────────────────────
+# Step 17 — strip to deliverables (keep only <job>.mp4 + <job>.png)
+# Disk-hygiene rule: a finished clip keeps ONLY its final.mp4 + thumbnail.
+# clean-job.sh self-guards on the canonical final, so a failed render is left
+# untouched. Override with --keep-intermediates when debugging a render.
+# ─────────────────────────────────────────────
+if [ "$KEEP_INTERMEDIATES" != "1" ] && [ -f "$JOB_DIR/output/finals/$JOB_NAME.mp4" ]; then
+  echo "─── Step 17 — clean intermediates"
+  bash "$REPO_ROOT/tools/clean-job.sh" "$JOB_DIR" 2>&1 | sed 's/^/    /'
 fi
 
 # ─────────────────────────────────────────────

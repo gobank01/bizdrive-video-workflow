@@ -475,3 +475,25 @@ speech audio duration เท่ากับ frame count / fps
 final visual-only render ไม่มี audio
 final mux stream start_time video/audio = 0 หรือมี offset ที่วัดและ log แล้ว
 ```
+
+## v88-clip.sh Omitted the Top Visual Master (2026-06-21 → fixed 2026-07-02)
+
+**What happened:** `tools/v88-clip.sh` applied the rough + jump EDLs only to
+`bottom.mp4`. Templates with a top frame (T01, T05, T06, T08, T09) reference
+`assets/intermediates/top_visual_master.mp4` — every such job errored at render
+or (worse) rendered with a stale/unsynced top. The fix was done BY HAND on at
+least 4 jobs (claude-code-class-online, claude-code-for-everyone,
+claude-collect-data, context-window): run `apply:edits` twice on `top.mp4`
+(edl-rough-safe → edl-jump), then ffprobe both masters for identical
+`nb_frames`.
+
+**Fix (2026-07-02):** Step 7b added to `v88-clip.sh` — for T01/05/06/08/09 it
+requires `input/top.mp4`, applies both EDLs, and hard-fails if top/bottom frame
+counts differ (lip-sync zero tolerance, per the v72 edit-first rule).
+
+Never again:
+
+```text
+ห้าม render template ที่มี top frame โดยไม่มี master proof (top nb_frames == bottom nb_frames)
+ถ้าเพิ่ม template ใหม่ที่ใช้ top_visual_master ต้องเพิ่มเลข template ใน case ของ Step 7b ด้วย
+```

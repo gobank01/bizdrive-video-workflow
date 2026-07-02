@@ -24,10 +24,13 @@ when to add a template. Every rule there applies to Claude Code.
 
 ## Quick map
 
-- `templates/NN-*/` — the 5 locked templates; each `manifest.json` has a
+- `templates/NN-*/` — the 10 locked templates; each `manifest.json` has a
   `features[]` block (the Template Manager's toggle surface)
 - `templates/_shared/` — pipeline scripts, docs, schemas, BGM/SFX/B-roll, and
   `manager-ui.json` (UI labels)
-- `tools/` — `new-job.sh`, `new-template.sh`, `build-manager.py`,
-  `build-catalog.sh`, `template-manager.html`
+- `tools/` — `new-job.sh`, `new-template.sh`, `v88-clip.sh`, `clean-job.sh`,
+  `build-manager.py`, `build-catalog.sh`, `template-manager.html`,
+  `inbox-sync.py`/`inbox-dashboard.py`, plus the numbered tool pipelines
+  `01-longform-shorts/`, `02-rough-cut/`, `03-deprompter/`, `04-serial-drama/`
+  (each has its own README)
 - `jobs/` — per-clip work orders, intermediates and renders

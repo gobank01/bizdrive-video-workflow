@@ -56,3 +56,7 @@ render-checks/
 reports/
 sample-pack-v88.zip
 .sample-pack-stage/
+
+# Python bytecode
+__pycache__/
+*.pyc
