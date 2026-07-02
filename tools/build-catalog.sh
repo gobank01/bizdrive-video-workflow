@@ -11,6 +11,9 @@
 #      callouts (via tools/build-mockups.py);
 #   4. writes a markdown gallery row from the template's manifest.json.
 #
+# If a template has no available render, the already-committed mockup.svg /
+# thumbnail.jpg in the template folder is reused so its preview survives.
+#
 # Run it any time you add or change a template:
 #   bash tools/build-catalog.sh
 #
@@ -84,6 +87,7 @@ cands=[]
 for jm in glob.glob('jobs/*/manifest.json'):
     try: jd=json.load(open(jm))
     except Exception: continue
+    if not isinstance(jd, dict): continue   # skip malformed local job manifests
     if jd.get('template')=='$tid':
         f=os.path.join(os.path.dirname(jm),'output/finals/final.mp4')
         if os.path.isfile(f): cands.append(f)
@@ -103,7 +107,17 @@ print(sorted(cands)[-1] if cands else '')")
       echo "  ✓ $tname  ← $(basename "$(dirname "$(dirname "$(dirname "$src")")")")"
     fi
   fi
-  if [ -z "$thumb_rel" ]; then
+  # Fallback: no fresh render this run, but the template already ships a
+  # committed mockup.svg / thumbnail.jpg — reuse it so the preview survives even
+  # when the source job render is gone (jobs/ is gitignored and gets pruned).
+  if [ -z "$mockup_rel" ] && [ -f "$tdir/mockup.svg" ]; then
+    mockup_rel="$tname/mockup.svg"
+    [ -n "$src" ] || echo "  ↺ $tname  (reused committed mockup.svg — no fresh render)"
+  fi
+  if [ -z "$thumb_rel" ] && [ -f "$tdir/thumbnail.jpg" ]; then
+    thumb_rel="$tname/thumbnail.jpg"
+  fi
+  if [ -z "$mockup_rel" ] && [ -z "$thumb_rel" ]; then
     echo "  ⚠ $tname  (no render yet — no preview)"
   fi
 
@@ -130,7 +144,7 @@ cat >> "$CATALOG" <<EOF
 - **Layout** — \`stacked\` (screen recording on top + face circle) · \`fullscreen\` (single talking-head) · \`top-insert\` (full-screen + floating B-roll card)
 - **Captions** — \`particle-burst\` (white/gold text + dot burst, calmer premium) · \`caption-highlight\` / Karaoke (red/gold box sweep, punchy CapCut style)
 
-See each template's \`DESIGN.md\` for the full spec.
+See each template's \`frame.md\` for the full spec.
 EOF
 
 echo "✓ Wrote $CATALOG ($count templates)"

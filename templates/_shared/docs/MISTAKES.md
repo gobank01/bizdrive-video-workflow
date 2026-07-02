@@ -34,7 +34,7 @@ torchaudio 2.11.0 requires torchcodec for audio I/O. Install torchcodec or pin t
 Fix (locked at v88):
 ```text
 After bash scripts/clean-cut/install_vad.sh:
-  ~/.ii23/vad-env/bin/pip install --quiet torchcodec
+  ~/.bizdrive/vad-env/bin/pip install --quiet torchcodec
 If a fresh install fails again, pin torchaudio<2.9 in install_vad.sh or pre-install torchcodec there.
 ```
 
@@ -495,5 +495,5 @@ Never again:
 
 ```text
 ห้าม render template ที่มี top frame โดยไม่มี master proof (top nb_frames == bottom nb_frames)
-ถ้าเพิ่ม template ใหม่ที่ใช้ top_visual_master ต้องเพิ่มเลข template ใน case ของ Step 7b ด้วย
+ถ้าเพิ่ม template ใหม่ที่ใช้ top_visual_master ต้องเพิ่มเลข template ใน case ของ Step 7b ด้วย (ปัจจุบัน: 01 05 06 08 09 11)
 ```

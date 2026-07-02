@@ -1,0 +1,195 @@
+{
+  "id": "11-stacked-vertical-weightshift",
+  "version": "v1",
+  "createdAt": "2026-06-01",
+  "name": "Stacked Vertical with Weight-Shift Captions",
+  "description": "BIZDRIVE-style vertical talking-head video: top frame is screen recording, bottom is face on a circle, with optional B-roll inserts in the top frame. Same stacked layout as Template 05 — the only difference is the caption system: Weight-Shift (caption-weightshift), minimal typography where the font-weight travels word-by-word — the currently-spoken word shifts to bold (700) + a slight scale, the rest stay light (300); gold tokens keep a persistent gold colour so keywords always pop. Adapted from the HyperFrames caption-weight-shift catalog component for Thai + 1080x1920. Uses the EV Car brand background (assets/bg.png).",
+
+  "output": {
+    "width": 1080,
+    "height": 1920,
+    "aspect": "9:16",
+    "fps": 30,
+    "codec": "h264",
+    "audioCodec": "aac",
+    "audioSampleRate": 48000,
+    "audioBitrate": "192k"
+  },
+
+  "layout": {
+    "background": "full-frame bg.png image",
+    "topFrame": { "width": 1080, "height": 607.5, "radius": 30, "border": "4px gold gradient" },
+    "bottomFrame": { "shape": "circle", "diameter": 607.5, "border": "4px gold gradient" },
+    "gap": 40,
+    "captionPosition": "in the band below the bottom circle, bottom: 360px (build-weightshift-captions.py arg 4)"
+  },
+
+  "captions": {
+    "system": "caption-weightshift",
+    "style": "Weight-Shift (minimal typography)",
+    "subComposition": "compositions/captions-weightshift.html",
+    "buildScript": "scripts/build-weightshift-captions.py",
+    "referenceComponent": "compositions/components/caption-weight-shift.html",
+    "font": "IBM Plex Sans Thai",
+    "fontWeight": "300 light (rest) / 700 bold (active word)",
+    "fontSize": "78px, auto-fit down if a group overflows",
+    "bottomPx": 360,
+    "mechanic": "font-weight travels word-by-word — at each word's start it shifts 300 -> 700 + scale 1.0 -> 1.08, then settles back to 300 as the next word takes over; the whole group fades up on enter and out on exit",
+    "colors": {
+      "text": "#ffffff (light/bold weight carries the emphasis, no box)",
+      "gold": "#f4c20f — gold tokens keep a persistent gold colour + soft gold glow so keywords always pop"
+    },
+    "tokensPerGroup": "1-3",
+    "maxCharsPerGroup": 32,
+    "goldTokenRules": "numbers, monetary figures, durations, brand/tech names, headline terms — these render gold (no box)",
+    "perWordTiming": "interpolated inside each group by character weight (caption-groups.json carries group start/end + token text+gold only)",
+    "adaptedFrom": "HyperFrames catalog component caption-weight-shift (npx hyperframes add caption-weight-shift) — ported from 1920x1080 English/Montserrat/lowercase to 1080x1920 Thai/IBM Plex Sans Thai, and from line-level to word-level weight travel"
+  },
+
+  "audio": {
+    "master": "bottom",
+    "topMuted": true,
+    "targetLoudness": -16,
+    "loudnessTolerance": [-18, -14],
+    "truePeakMax": -1.5,
+    "polishChain": "highpass80, lowpass12k, afftdn, agate, acompressor, loudnorm 2-pass, alimiter, apad",
+    "bgm": {
+      "enabled": true,
+      "gainPercent": 5,
+      "intent": "barely audible ambient bed",
+      "mixNote": "mix BGM with ffmpeg amix normalize=0 so the voice keeps its polished level",
+      "defaultFallback": "mixkit-480 Curiosity",
+      "techFallback": "mixkit-1167 Close Up"
+    }
+  },
+
+  "broll": {
+    "enabled": true,
+    "maxPerMinute": 4,
+    "duration": 3,
+    "minSpacingSeconds": 6,
+    "minTopFootageBetweenInserts": 3,
+    "transitionMode": { "soft": 0.22, "bridge": 0.26 },
+    "aiGenModelOrder": ["bytedance/seedance-1-5-pro", "bytedance/seedance-2.0-fast", "google/veo-3.1-lite"],
+    "aiGenNote": "B-roll fills the top frame (16:9-ish), not the whole screen — generate clips at 720p, 16:9, generate_audio false.",
+    "providerOrder": ["pexels-stock", "pexels-fresh", "openrouter-seedance-1-5-pro", "openrouter-seedance-2.0-fast"]
+  },
+
+  "sfx": {
+    "enabled": true,
+    "library": "templates/_shared/sfx/sfx-library.json",
+    "maxPerClip": 5,
+    "pacing": "~1 SFX per 12s of final video; fewer for clips under 60s",
+    "minSpacingSeconds": 4,
+    "contextMatched": true,
+    "targetPeakDb": -5,
+    "mixScript": "scripts/mix-sfx.py",
+    "plan": "assets/intermediates/sfx-plan.json",
+    "note": "Every clip gets SFX but kept sparse — at most 5, each context-matched to the beat it lands on. mix-sfx.py enforces the rule and writes output/finals/final.mp4."
+  },
+
+  "features": [
+    {
+      "id": "dead_air_cut",
+      "label": { "th": "ตัดช่วงเงียบ (dead air)", "en": "Dead-air jump cut" },
+      "section": "edit",
+      "step": "6",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 6 (Silero VAD); Step 7 ใช้แค่ rough EDL — คงจังหวะพูดเดิมไว้"
+    },
+    {
+      "id": "audio_polish",
+      "label": { "th": "ปรับแต่งเสียงพูด (polish)", "en": "Audio polish" },
+      "section": "audio",
+      "step": "8",
+      "default": true,
+      "advanced": true,
+      "whenOff": "ข้าม Step 8 — ใช้เสียงดิบจาก visual master; Step 9 re-transcribe ใช้เสียงดิบแทน"
+    },
+    {
+      "id": "captions",
+      "label": { "th": "ซับ / คำบรรยายไทย", "en": "Thai captions" },
+      "section": "captions",
+      "step": "9-11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 9-11 ส่วน caption (re-transcribe, post-process subagent, build-*-captions.py); ไม่ mount caption track"
+    },
+    {
+      "id": "broll",
+      "label": { "th": "B-roll แทรกภาพ", "en": "B-roll inserts" },
+      "section": "broll",
+      "step": "11",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม generate-broll + add-broll.py — ไม่มีภาพแทรก",
+      "options": [
+        { "id": "mode", "type": "enum", "label": { "th": "แหล่ง B-roll", "en": "Source" }, "values": ["ai-gen", "stock"], "default": "ai-gen" },
+        { "id": "max", "type": "number", "label": { "th": "จำนวนสูงสุด", "en": "Max inserts" }, "default": 4, "min": 0, "max": 8 }
+      ]
+    },
+    {
+      "id": "bgm",
+      "label": { "th": "เพลงประกอบ (BGM)", "en": "Background music" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "mix-sfx.py ข้าม BGM — final.mp4 = speech (+ SFX) เท่านั้น",
+      "options": [
+        { "id": "gain", "type": "number", "label": { "th": "ระดับเสียง", "en": "Gain" }, "default": 5, "min": 0, "max": 20, "unit": "%" }
+      ]
+    },
+    {
+      "id": "sfx",
+      "label": { "th": "เอฟเฟกต์เสียง (SFX)", "en": "Sound effects" },
+      "section": "audio",
+      "step": "14",
+      "default": true,
+      "advanced": false,
+      "whenOff": "sfx-plan.json มี sfx: [] ว่าง — ไม่มีเอฟเฟกต์เสียง"
+    },
+    {
+      "id": "thumbnail",
+      "label": { "th": "ภาพปก (thumbnail)", "en": "Thumbnail + cover art" },
+      "section": "extras",
+      "step": "16",
+      "default": true,
+      "advanced": false,
+      "whenOff": "ข้าม Step 16 — ส่งมอบ output/finals/final.mp4 โดยไม่ฝัง cover art",
+      "options": [
+        { "id": "main", "type": "text", "label": { "th": "บรรทัดบน (ขาว)", "en": "Main line" }, "default": "" },
+        { "id": "hero", "type": "text", "label": { "th": "บรรทัดเด่น (ทอง)", "en": "Hero line" }, "default": "" },
+        { "id": "sub", "type": "text", "label": { "th": "บรรทัดล่าง (ฟ้า)", "en": "Sub line" }, "default": "" }
+      ]
+    }
+  ],
+
+  "pipeline": {
+    "playbook": "templates/_shared/docs/V88_PLAYBOOK.md",
+    "subagentPrompts": "templates/_shared/docs/SUBAGENT_PROMPTS.md",
+    "stt": "elevenlabs-scribe-v2",
+    "language": "th",
+    "vad": "silero-vad",
+    "editorialRules": "templates/_shared/references/editorial-rules.md",
+    "postProcessProtocol": "templates/_shared/references/post-process-protocol.md",
+    "differenceFromTemplate05": "Identical stacked layout (top screen frame + bottom face circle), motion, audio, B-roll and pipeline. Two changes: (1) Step 11 builds captions with scripts/build-weightshift-captions.py (word-by-word font-weight travel) instead of build-highlight-captions.py (karaoke box sweep); (2) the default background is the EV Car brand bg (assets/bg.png). The caption-groups.json schema is the same — all caption systems consume it.",
+    "step11": "python3 scripts/set-duration.py <DURATION> && python3 scripts/build-weightshift-captions.py assets/intermediates/transcript/caption-groups.json compositions/captions-weightshift.html <DURATION> 360"
+  },
+
+  "compatibility": {
+    "hyperframes": ">=0.6.25",
+    "python": ">=3.10",
+    "nodejs": ">=18",
+    "ffmpeg": ">=4.0"
+  },
+
+  "reference": {
+    "job": "(none yet — first job will become the reference)",
+    "goldenTest": {
+      "durationTolerance": 0.05,
+      "frameCountExact": true
+    }
+  }
+}

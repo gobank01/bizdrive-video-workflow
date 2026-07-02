@@ -46,13 +46,13 @@ python3 -m pip install --user --upgrade pythainlp nlpo3 certifi
 
 ```bash
 bash scripts/clean-cut/install_vad.sh
-# Creates ~/.ii23/vad-env with silero-vad, torch, torchaudio, torchcodec, soundfile, numpy
+# Creates ~/.bizdrive/vad-env with silero-vad, torch, torchaudio, torchcodec, soundfile, numpy
 ```
 
 If the VAD script fails with `torchcodec` import error after install, run:
 
 ```bash
-~/.ii23/vad-env/bin/pip install --quiet torchcodec
+~/.bizdrive/vad-env/bin/pip install --quiet torchcodec
 ```
 
 ### API keys — `.env` (gitignored)
@@ -196,7 +196,7 @@ npm run apply:edits -- <INPUT_DIR>/bottom.mp4 assets/<JOB>/v88-test/edl-rough-sa
 ```bash
 mkdir -p assets/<JOB>/v88-test/.tmp
 ffmpeg -y -i assets/<JOB>/v88-test/cleaned-rough.mp4 -ac 1 -ar 16000 assets/<JOB>/v88-test/.tmp/post-rough.wav
-$HOME/.ii23/vad-env/bin/python3 scripts/clean-cut/vad_detect.py \
+$HOME/.bizdrive/vad-env/bin/python3 scripts/clean-cut/vad_detect.py \
   assets/<JOB>/v88-test/.tmp/post-rough.wav \
   --min-silence-ms 300 --pad-ms 200 \
   --output assets/<JOB>/v88-test/.tmp/speech.json

@@ -5,7 +5,7 @@
 ![Python](https://img.shields.io/badge/Python-3.10%2B-3776ab)
 ![Node](https://img.shields.io/badge/Node-18%2B-339933)
 ![STT](https://img.shields.io/badge/STT-ElevenLabs%20Scribe%20v2-orange)
-![templates](https://img.shields.io/badge/templates-4-lightgrey)
+![templates](https://img.shields.io/badge/templates-8-lightgrey)
 
 Multi-template HyperFrames video production. Each template is a reusable pattern (aspect ratio, layout, caption style). Each job is one rendered video.
 
@@ -22,9 +22,18 @@ bash tools/setup.sh                       # installs deps + Silero VAD + .env
 # then edit templates/_shared/env/.env — add your ElevenLabs + OpenRouter keys
 ```
 
+For non-technical users, double-click the OS installer instead:
+`tools/install/mac/1-INSTALL.command` or `tools/install/windows/1-INSTALL.bat`,
+then run the matching `2-CHECK` file.
+
 In a hurry? **[QUICKSTART.md](QUICKSTART.md)** is the one-page version.
 Full walkthrough: [ONBOARDING.md](ONBOARDING.md). Optional: ask the maintainer
 for `sample-pack-v88.zip` to run the golden test.
+
+> **On Windows / Mac / non-technical?** See **[INSTALL.md](INSTALL.md)**. The
+> one-click installers ask for API keys and install the tools. Windows uses
+> native `winget`; Mac uses existing Homebrew if present, otherwise user-level
+> tools in `~/.bizdrive/bin`. Then use the Claude Code VS Code extension.
 
 Contributing? See [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -51,7 +60,7 @@ Video V3/
 │   ├── 01-stacked-vertical-burst/      ⭐ Template 1: v88 stacked vertical + burst captions
 │   │   ├── README.md                   เมื่อไหร่ใช้, output spec
 │   │   ├── manifest.json               machine-readable spec
-│   │   ├── DESIGN.md                   colors/fonts/position
+│   │   ├── frame.md                   colors/fonts/position
 │   │   ├── index.html                  composition source-of-truth
 │   │   ├── compositions/               sub-compositions (captions-burst.html)
 │   │   ├── scripts/                    per-template build scripts
@@ -115,7 +124,7 @@ bash tools/new-job.sh 01 my-slug
 ```bash
 bash tools/new-template.sh 02 horizontal-talking-head
 # Clones templates/_starter/ → templates/02-horizontal-talking-head/
-# Customize manifest.json, index.html, DESIGN.md before first job
+# Customize manifest.json, index.html, frame.md before first job
 ```
 
 ---
@@ -146,7 +155,7 @@ jobs/2026-05-19-bizdrive-video-div/output/finals/final.mp4
 
 ## 📚 Required reading (in order)
 
-1. `templates/_shared/docs/V88_PLAYBOOK.md` — 15-step pipeline
+1. `templates/_shared/docs/V88_PLAYBOOK.md` — 16-step pipeline
 2. `templates/_shared/docs/SUBAGENT_PROMPTS.md` — verbatim AI prompts
 3. `templates/_shared/docs/WORKFLOW.md` — full BIZDRIVE workflow
 4. `templates/_shared/docs/MISTAKES.md` — past incidents + fixes (v67-v88)

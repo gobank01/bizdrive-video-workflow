@@ -19,6 +19,7 @@ Reusable HyperFrames patterns. Each template solves a specific shape of video.
 | 08 | split-vertical-burst        | 1080×1920    | top/bottom split — screen (top) + person as full-width rectangle (bottom) | **karaoke** highlight, centered over seam | ✅ ready (2026-06-08) |
 | 09 | split-vertical-burst        | 1080×1920    | top/bottom split — screen (top) + person as full-width rectangle (bottom) | particle burst + gold, centered over seam | ✅ ready (2026-06-08) |
 | 10 | multimode-vertical-sweep    | 1080×1920    | single face that **cuts** between full-screen and split-top (B-roll on top half, face on bottom) | **blue word-sweep** (white→blue, no box, centered) | ✅ ready · locked (2026-06-25) |
+| 11 | stacked-vertical-weightshift | 1080×1920    | talking-head + screen recording + B-roll (stacked, = T05 layout) | **weight-shift** word emphasis | ✅ ready (2026-06-01, renumbered from a parallel "08") |
 | _starter_ | _skeleton_           | -            | copy via `tools/new-template.sh` for a new pattern | -                     | template          |
 
 ### Which to pick
@@ -54,6 +55,11 @@ Two axes: **layout** (do you have a screen recording?) and **caption style**
   colors) centered over the seam, instead of karaoke. The burst↔karaoke pair, like
   01 ↔ 05. (Note: Template 08's folder is named `…-burst` but it is the *karaoke*
   one — historical mislabel; T09 is the actual particle-burst split.)
+- **Template 11** — same stacked layout as Template 05, but captions use
+  **weight-shift** typography: the active word becomes bold while the rest stay
+  light. Cleaner and more premium than karaoke. (Authored upstream as a parallel
+  "Template 08"; renumbered to 11 at merge because 08 was already the split
+  karaoke in production.)
 
 - **Template 10** — one full-screen face that **cuts between two display
   states** within a single clip: full-screen, and **split-top** (B-roll/screen
@@ -95,7 +101,7 @@ bash tools/new-template.sh 02 horizontal-talking-head
 # Customize templates/02-horizontal-talking-head/:
 #   - manifest.json  (aspect, fps, caption style, gold rule, features[])
 #   - index.html     (composition layout)
-#   - DESIGN.md      (colors, fonts, position)
+#   - frame.md      (colors, fonts, position)
 #   - prompts/       (subagent slot defaults specific to this template)
 ```
 

@@ -64,6 +64,6 @@ Step 3 เป็น pause จุดเดียว — spawn general-purpose sub
 
 ## Requirements
 
-ffmpeg · python3 · VAD env ที่ `~/.ii23/vad-env`
+ffmpeg · python3 · VAD env ที่ `~/.bizdrive/vad-env`
 (ถ้ายังไม่มี: `bash templates/_shared/scripts/clean-cut/install_vad.sh`) ·
 `templates/_shared/env/.env` ที่มี `ELEVENLABS_API_KEY`

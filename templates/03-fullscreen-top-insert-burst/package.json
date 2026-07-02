@@ -12,7 +12,7 @@
     "transcribe:el": "bash -lc 'set -a && source .env 2>/dev/null; set +a && export SSL_CERT_FILE=$(python3 -c \"import certifi; print(certifi.where())\") && python3 scripts/transcribe/transcribe.py'",
     "rough:cut:format": "python3 scripts/clean-cut/format_transcript.py",
     "rough:cut:padbleed": "python3 scripts/clean-cut/editorial_pass.py",
-    "jump:cut:vad": "$HOME/.ii23/vad-env/bin/python3 scripts/clean-cut/vad_detect.py",
+    "jump:cut:vad": "$HOME/.bizdrive/vad-env/bin/python3 scripts/clean-cut/vad_detect.py",
     "jump:cut:edl": "python3 scripts/clean-cut/speech_to_edl.py",
     "apply:edits": "python3 scripts/clean-cut/apply_edits.py",
     "check": "npx --yes hyperframes@0.6.25 lint && npx --yes hyperframes@0.6.25 validate && npx --yes hyperframes@0.6.25 inspect",

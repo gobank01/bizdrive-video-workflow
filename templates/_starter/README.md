@@ -34,7 +34,7 @@ Follow the 15-step pipeline in `templates/_shared/docs/V88_PLAYBOOK.md`.
 ```
 manifest.json   machine-readable spec
 README.md       this file
-DESIGN.md       colors / fonts / position
+frame.md       colors / fonts / position
 index.html      composition source-of-truth
 hyperframes.json
 meta.json

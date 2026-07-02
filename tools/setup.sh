@@ -9,7 +9,7 @@
 # What it does:
 #   1. Checks ffmpeg / ffprobe / python3 / node
 #   2. Installs Python deps (pythainlp, nlpo3, certifi) to user site-packages
-#   3. Installs the Silero VAD venv (~437 MB) into ~/.ii23/vad-env
+#   3. Installs the Silero VAD venv (~437 MB) into ~/.bizdrive/vad-env
 #   4. Creates templates/_shared/env/.env from .env.example (if missing)
 #   5. Runs preflight to confirm everything is ready
 
@@ -19,74 +19,366 @@ REPO_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 cd "$REPO_ROOT"
 
 echo "=================================================="
-echo " BIZDRIVE video workflow — environment setup"
+echo " BIZDRIVE Video — installing all tools"
 echo "=================================================="
 echo ""
 
-# --- 1. System tools ---
-echo "→ Checking system tools..."
-MISSING=""
-command -v ffmpeg  >/dev/null 2>&1 || MISSING="$MISSING ffmpeg"
-command -v ffprobe >/dev/null 2>&1 || MISSING="$MISSING ffprobe"
-command -v python3 >/dev/null 2>&1 || MISSING="$MISSING python3"
-command -v node    >/dev/null 2>&1 || MISSING="$MISSING node"
-if [ -n "$MISSING" ]; then
-  echo "✗ Missing:$MISSING" >&2
-  echo "  macOS:  brew install ffmpeg python node" >&2
-  echo "  Linux:  apt-get install ffmpeg python3 nodejs" >&2
+ENV_FILE="templates/_shared/env/.env"
+ENV_EXAMPLE="templates/_shared/env/.env.example"
+
+# trim — strip leading/trailing whitespace and any CR (users paste keys with a
+# trailing space or a Windows newline; an untrimmed key silently fails auth).
+trim() {
+  s="$1"
+  s="${s%$'\r'}"
+  s="${s#"${s%%[![:space:]]*}"}"
+  s="${s%"${s##*[![:space:]]}"}"
+  printf '%s' "$s"
+}
+
+# set_env_line <file> <KEY> <value> — set or replace KEY=value, uncommenting it.
+set_env_line() {
+  f="$1"; k="$2"; v="$3"
+  if grep -qE "^\s*#?\s*$k=" "$f"; then
+    tmp="$f.tmp.$$"; sed "s|^[[:space:]]*#\{0,1\}[[:space:]]*$k=.*|$k=$v|" "$f" > "$tmp" && mv "$tmp" "$f"
+  else
+    printf '%s=%s\n' "$k" "$v" >> "$f"
+  fi
+}
+
+# key_filled <KEY> — true if that key already has a non-empty value in .env.
+key_filled() {
+  [ -f "$ENV_FILE" ] && grep -qE "^[[:space:]]*$1=[[:space:]]*[^[:space:]]" "$ENV_FILE"
+}
+
+# --- API keys FIRST, before the long installs, so the user pastes them up
+# front and can walk away while everything downloads. ---
+echo "→ API keys (paste them now — the install runs while you wait)..."
+[ -f "$ENV_FILE" ] || { cp "$ENV_EXAMPLE" "$ENV_FILE"; echo "  ✓ created the API-key file"; }
+
+NEED_EL=1; key_filled "ELEVENLABS_API_KEY" && NEED_EL=0
+NEED_OR=1; key_filled "OPENROUTER_API_KEY" && NEED_OR=0
+
+if [ "$NEED_EL" = 0 ] && [ "$NEED_OR" = 0 ]; then
+  echo "  ✓ API keys already in .env — not asking again"
+elif [ -t 0 ]; then
+  echo "    ElevenLabs (required — speech to text): https://elevenlabs.io/app/settings/api-keys"
+  echo "    OpenRouter (for AI B-roll)            : https://openrouter.ai/keys"
+  if [ "$NEED_EL" = 1 ]; then
+    printf "  Paste your ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
+    while [ -z "$EL_KEY" ]; do
+      printf "  (required, cannot be blank) ElevenLabs API key: "; read -r EL_KEY; EL_KEY=$(trim "$EL_KEY")
+    done
+    set_env_line "$ENV_FILE" "ELEVENLABS_API_KEY" "$EL_KEY"
+  fi
+  if [ "$NEED_OR" = 1 ]; then
+    printf "  Paste your OpenRouter API key (press Enter to skip): "; read -r OR_KEY; OR_KEY=$(trim "$OR_KEY")
+    [ -n "$OR_KEY" ] && set_env_line "$ENV_FILE" "OPENROUTER_API_KEY" "$OR_KEY"
+  fi
+  echo "  ✓ keys saved — starting the install"
+else
+  echo "  ⚠ No interactive console — add your keys to $ENV_FILE before making a video:"
+  [ "$NEED_EL" = 1 ] && echo "      ELEVENLABS_API_KEY=  (required)"
+  [ "$NEED_OR" = 1 ] && echo "      OPENROUTER_API_KEY=  (for B-roll)"
+fi
+echo ""
+
+# --- 0. Detect OS + package manager (for auto-install) ---
+case "$(uname -s)" in
+  Darwin*) OS="macos" ;;
+  Linux*)  OS="linux" ;;          # includes WSL (Windows users run inside WSL/Ubuntu)
+  MINGW*|MSYS*|CYGWIN*) OS="gitbash" ;;
+  *) OS="unknown" ;;
+esac
+
+BIZDRIVE_BIN="$HOME/.bizdrive/bin"
+ensure_bin_on_path() {
+  mkdir -p "$BIZDRIVE_BIN"
+  case ":$PATH:" in *":$BIZDRIVE_BIN:"*) : ;; *) PATH="$BIZDRIVE_BIN:$PATH"; export PATH ;; esac
+  for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+    if [ ! -e "$rc" ]; then
+      [ "$rc" = "$HOME/.zshrc" ] || continue
+      touch "$rc"
+    fi
+    grep -qF '.bizdrive/bin' "$rc" 2>/dev/null || printf '\n%s\n' "export PATH=\"\$HOME/.bizdrive/bin:\$PATH\"" >> "$rc"
+  done
+}
+
+macos_nobrew_install() {
+  tool="$1"
+  arch="$(uname -m)"
+  ensure_bin_on_path
+  case "$tool" in
+    git|curl)
+      command -v "$tool" >/dev/null 2>&1 ;;
+    ffmpeg|ffprobe)
+      command -v "$BIZDRIVE_BIN/ffmpeg" >/dev/null 2>&1 && command -v "$BIZDRIVE_BIN/ffprobe" >/dev/null 2>&1 && return 0
+      tmp="$(mktemp -d)"
+      for b in ffmpeg ffprobe; do
+        curl -fsSL -o "$tmp/$b.zip" "https://evermeet.cx/ffmpeg/getrelease/$b/zip" || { rm -rf "$tmp"; return 1; }
+        (cd "$tmp" && unzip -oq "$b.zip") || { rm -rf "$tmp"; return 1; }
+        mv -f "$tmp/$b" "$BIZDRIVE_BIN/$b" && chmod +x "$BIZDRIVE_BIN/$b"
+      done
+      rm -rf "$tmp"
+      command -v "$BIZDRIVE_BIN/ffmpeg" >/dev/null 2>&1 ;;
+    node)
+      node_ok && return 0
+      ver="v20.18.1"
+      case "$arch" in arm64) na="arm64" ;; x86_64) na="x64" ;; *) return 1 ;; esac
+      tmp="$(mktemp -d)"
+      url="https://nodejs.org/dist/$ver/node-$ver-darwin-$na.tar.gz"
+      curl -fsSL -o "$tmp/node.tgz" "$url" || { rm -rf "$tmp"; return 1; }
+      tar -xzf "$tmp/node.tgz" -C "$tmp" || { rm -rf "$tmp"; return 1; }
+      dir="$tmp/node-$ver-darwin-$na"
+      mkdir -p "$HOME/.bizdrive/node"
+      cp -R "$dir/." "$HOME/.bizdrive/node/"
+      ln -sf "$HOME/.bizdrive/node/bin/node" "$BIZDRIVE_BIN/node"
+      ln -sf "$HOME/.bizdrive/node/bin/npm"  "$BIZDRIVE_BIN/npm"
+      ln -sf "$HOME/.bizdrive/node/bin/npx"  "$BIZDRIVE_BIN/npx"
+      rm -rf "$tmp"
+      node_ok ;;
+    python3)
+      python_stack_ok && return 0
+      if ! command -v uv >/dev/null 2>&1 && [ ! -x "$HOME/.local/bin/uv" ]; then
+        curl -fsSL https://astral.sh/uv/install.sh | sh >/dev/null 2>&1 || return 1
+      fi
+      UV="$(command -v uv 2>/dev/null || echo "$HOME/.local/bin/uv")"
+      [ -x "$UV" ] || return 1
+      "$UV" python install 3.12 >/dev/null 2>&1 || return 1
+      uvpy="$("$UV" python find 3.12 2>/dev/null)"
+      [ -x "$uvpy" ] || return 1
+      ln -sf "$uvpy" "$BIZDRIVE_BIN/python3"
+      "$BIZDRIVE_BIN/python3" -m ensurepip >/dev/null 2>&1 || true
+      python_stack_ok ;;
+    *) return 1 ;;
+  esac
+}
+
+macos_brew_install() {
+  tool="$1"
+  case "$tool" in
+    ffmpeg|ffprobe) brew install ffmpeg || return 1 ;;
+    node) brew install node || return 1 ;;
+    python3) brew install python || return 1 ;;
+    git) brew install git || return 1 ;;
+    curl) brew install curl || return 1 ;;
+    *) return 1 ;;
+  esac
+}
+
+ensure_local_bin_on_path() {
+  mkdir -p "$HOME/.local/bin"
+  case ":$PATH:" in *":$HOME/.local/bin:"*) : ;; *) PATH="$HOME/.local/bin:$PATH"; export PATH ;; esac
+  for rc in "$HOME/.zshrc" "$HOME/.bashrc" "$HOME/.bash_profile" "$HOME/.profile"; do
+    if [ ! -e "$rc" ]; then
+      [ "$rc" = "$HOME/.zshrc" ] || continue
+      touch "$rc"
+    fi
+    grep -qF '.local/bin' "$rc" 2>/dev/null || printf '\n%s\n' "export PATH=\"\$HOME/.local/bin:\$PATH\"" >> "$rc"
+  done
+}
+
+# NOTE: We do NOT install the Claude Code CLI. Students use the Claude Code
+# VS Code extension (installed separately), which drives this setup. This
+# mirrors the Windows installer.
+
+# auto_install <tool> — try to install a missing system tool for the current OS.
+# Returns 0 if installed (or already adequate), 1 if it could not.
+# "adequate" is tool-specific: python3 must also have pip+venv, node must be
+# >= 18. A bare `command -v` is NOT enough — a fresh WSL has python3 without
+# pip/venv, and apt may already have an old node; in both cases we must still
+# install/upgrade rather than return early on the binary alone.
+auto_install() {
+  tool="$1"
+  case "$tool" in
+    python3) python_stack_ok && return 0 ;;
+    node)    node_ok && return 0 ;;
+    *)       command -v "$tool" >/dev/null 2>&1 && return 0 ;;
+  esac
+  echo "  → installing $tool..."
+  case "$OS" in
+    macos)
+      if command -v brew >/dev/null 2>&1 && macos_brew_install "$tool"; then
+        :
+      elif macos_nobrew_install "$tool"; then
+        echo "    ✓ installed $tool without a password (in ~/.bizdrive/bin)"
+      else
+        return 1
+      fi ;;
+    linux)
+      if command -v apt-get >/dev/null 2>&1; then
+        sudo apt-get update -qq
+        case "$tool" in
+          ffmpeg|ffprobe) sudo apt-get install -y ffmpeg ;;
+          node) install_node_apt ;;
+          python3) sudo apt-get install -y python3 python3-pip python3-venv ;;
+          git) sudo apt-get install -y git ;;
+          curl) sudo apt-get install -y curl ;;
+        esac
+      elif command -v dnf >/dev/null 2>&1; then
+        case "$tool" in
+          ffmpeg|ffprobe) sudo dnf install -y ffmpeg ;;
+          node) sudo dnf install -y nodejs npm ;;
+          python3) sudo dnf install -y python3 python3-pip ;;
+          git) sudo dnf install -y git ;;
+          curl) sudo dnf install -y curl ;;
+        esac
+      else
+        return 1
+      fi ;;
+    *) return 1 ;;
+  esac
+  # Final verdict uses the same tool-specific adequacy check as the entry guard.
+  case "$tool" in
+    python3) python_stack_ok ;;
+    node)    node_ok ;;
+    *)       command -v "$tool" >/dev/null 2>&1 ;;
+  esac
+}
+
+# Repo needs Node 18+. Ubuntu's apt often ships an older Node, so install the
+# current LTS from NodeSource. Falls back to apt if the NodeSource setup fails.
+install_node_apt() {
+  curl -fsSL https://deb.nodesource.com/setup_20.x | sudo -E bash - 2>/dev/null \
+    && sudo apt-get install -y nodejs && return 0
+  sudo apt-get install -y nodejs npm
+}
+
+# node_ok — true only if node exists AND is >= 18.
+node_ok() {
+  command -v node >/dev/null 2>&1 || return 1
+  ver=$(node -p "process.versions.node.split('.')[0]" 2>/dev/null || echo 0)
+  [ "$ver" -ge 18 ] 2>/dev/null
+}
+
+# py_ge_310 <cmd> — true if the given python command is >= 3.10.
+py_ge_310() {
+  "$1" -c "import sys; sys.exit(0 if sys.version_info >= (3,10) else 1)" >/dev/null 2>&1
+}
+
+# pick_python — echo the best python command on this machine: the first one
+# that is >= 3.10 AND has pip+venv. macOS ships /usr/bin/python3 = 3.9, so we
+# must NOT trust a bare `python3` — we scan the versioned names Homebrew/apt
+# install (python3.13 … python3.10) and prefer those. Echoes nothing if none
+# qualify (caller then installs one).
+pick_python() {
+  for c in python3.13 python3.12 python3.11 python3.10 python3 python; do
+    command -v "$c" >/dev/null 2>&1 || continue
+    py_ge_310 "$c" || continue
+    "$c" -c "import ensurepip, venv" >/dev/null 2>&1 || continue
+    "$c" -m pip --version >/dev/null 2>&1 || continue
+    echo "$c"; return 0
+  done
+  return 1
+}
+
+# python_stack_ok — true if SOME python >= 3.10 with pip+venv exists. Used as
+# the auto_install guard so we don't reinstall when a good python is present
+# under a versioned name even if bare `python3` is the old system 3.9.
+python_stack_ok() { pick_python >/dev/null 2>&1; }
+
+# --- 1. System tools (auto-install what's missing) ---
+echo "→ Checking system tools (will auto-install any that are missing)..."
+STILL_MISSING=""
+auto_install git     || STILL_MISSING="$STILL_MISSING git"
+auto_install curl    || STILL_MISSING="$STILL_MISSING curl"
+auto_install ffmpeg  || STILL_MISSING="$STILL_MISSING ffmpeg"
+auto_install ffprobe || STILL_MISSING="$STILL_MISSING ffprobe"
+
+# python3: must have pip + venv too, not just the binary. A fresh WSL ships
+# python3 without them, so command -v alone is not enough.
+if ! python_stack_ok; then
+  auto_install python3 || true
+fi
+python_stack_ok || STILL_MISSING="$STILL_MISSING python3(+pip/venv)"
+
+# node: must be >= 18, not just present. apt may have an old node already.
+if ! node_ok; then
+  auto_install node || true
+fi
+node_ok || STILL_MISSING="$STILL_MISSING node(>=18)"
+
+if [ -n "$STILL_MISSING" ]; then
+  echo "✗ Could not auto-install:$STILL_MISSING" >&2
+  echo "  Install them, then re-run:" >&2
+  echo "    macOS:        check your internet and re-open 1-INSTALL.command, or: brew install ffmpeg python node" >&2
+  echo "    Linux / WSL:  sudo apt-get install -y ffmpeg python3 python3-pip python3-venv" >&2
+  echo "                  Node 18+: https://github.com/nodesource/distributions" >&2
   exit 1
 fi
-PY_OK=$(python3 -c "import sys; print('yes' if sys.version_info >= (3,10) else 'no')")
-if [ "$PY_OK" != "yes" ]; then
-  echo "✗ Python 3.10+ required (found $(python3 --version))" >&2
+# Resolve the python we'll actually use everywhere below. By here auto_install
+# has run, so a good one should exist; if not, fail with a clear message.
+PY=$(pick_python || true)
+if [ -z "$PY" ]; then
+  echo "✗ Python 3.10+ (with pip+venv) is required but was not found." >&2
+  echo "  Current python3: '$(command -v python3 >/dev/null 2>&1 && python3 --version 2>&1 || echo none)'" >&2
+  echo "  Install Python, then re-run:" >&2
+  echo "    macOS:        re-open 1-INSTALL.command, or: brew install python@3.12" >&2
+  echo "    Linux / WSL:  sudo apt-get install -y python3 python3-pip python3-venv" >&2
   exit 1
 fi
-echo "  ✓ ffmpeg, ffprobe, python3 ($(python3 --version | cut -d' ' -f2)), node"
+echo "  ✓ ffmpeg, ffprobe, Python ($("$PY" --version | cut -d' ' -f2)), Node installed"
+export BIZDRIVE_PYTHON="$PY"   # so child scripts (install_vad.sh) reuse it
+
+# python3 shim — the pipeline (v88-clip.sh etc.) calls `python3` ~20 times. On
+# macOS that resolves to /usr/bin/python3 = 3.9, which does NOT have the deps we
+# just installed into $PY (3.10+). Drop a shim at ~/.bizdrive/bin/python3 pointing at
+# the right interpreter and put that dir first on PATH (via the shell rc) so the
+# pipeline always gets the python that owns pythainlp/certifi. Mirrors the
+# Windows installer's shim.
+if [ "$(command -v python3 2>/dev/null)" != "$PY" ] && ! py_ge_310 "$(command -v python3 2>/dev/null || echo /nonexistent)"; then
+  BIN_DIR="$HOME/.bizdrive/bin"
+  mkdir -p "$BIN_DIR"
+  PY_ABS="$(command -v "$PY")"
+  printf '#!/usr/bin/env bash\nexec "%s" "$@"\n' "$PY_ABS" > "$BIN_DIR/python3"
+  chmod +x "$BIN_DIR/python3"
+  # Prepend to PATH for this run + persist in the user's rc files.
+  case ":$PATH:" in *":$BIN_DIR:"*) : ;; *) PATH="$BIN_DIR:$PATH" ;; esac
+  for rc in "$HOME/.bashrc" "$HOME/.zshrc" "$HOME/.profile"; do
+    [ -f "$rc" ] || continue
+    grep -qF '.bizdrive/bin' "$rc" 2>/dev/null || printf '\n%s\n' "export PATH=\"\$HOME/.bizdrive/bin:\$PATH\"" >> "$rc"
+  done
+  echo "  ✓ python3 now points at the right interpreter ($PY_ABS)"
+fi
 
 # --- 2. Python deps ---
 echo ""
-echo "→ Installing Python deps (pythainlp, nlpo3, certifi)..."
-python3 -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi
-echo "  ✓ Thai NLP libs + certifi installed"
+echo "→ Installing Thai NLP libraries (pythainlp, nlpo3, certifi)..."
+# --user fails on PEP 668 "externally-managed" Python (common on Ubuntu/WSL);
+# fall back to --break-system-packages, which is safe for these pure-Python libs.
+"$PY" -m pip install --user --quiet --upgrade pythainlp nlpo3 certifi 2>/dev/null \
+  || "$PY" -m pip install --user --break-system-packages --quiet --upgrade pythainlp nlpo3 certifi
+echo "  ✓ Thai NLP libs installed"
 
 # --- 3. Silero VAD venv ---
 echo ""
-echo "→ Installing Silero VAD venv (~437 MB, one-time)..."
-if [ -d "$HOME/.ii23/vad-env" ] && "$HOME/.ii23/vad-env/bin/python3" -c "from silero_vad import load_silero_vad" 2>/dev/null; then
+echo "→ Installing Silero VAD (voice detection, ~437 MB — one time)..."
+if [ -d "$HOME/.bizdrive/vad-env" ] && "$HOME/.bizdrive/vad-env/bin/python3" -c "from silero_vad import load_silero_vad" 2>/dev/null; then
   echo "  ✓ Silero VAD already installed"
 else
   bash templates/_shared/scripts/clean-cut/install_vad.sh
   # torchaudio 2.11+ needs torchcodec for audio I/O
-  "$HOME/.ii23/vad-env/bin/pip" install --quiet torchcodec 2>/dev/null || true
+  "$HOME/.bizdrive/vad-env/bin/pip" install --quiet torchcodec 2>/dev/null || true
   echo "  ✓ Silero VAD installed"
 fi
 
-# --- 4. .env ---
+# --- 4. Preflight ---
 echo ""
-echo "→ Setting up API key file..."
-ENV_FILE="templates/_shared/env/.env"
-ENV_EXAMPLE="templates/_shared/env/.env.example"
-if [ -f "$ENV_FILE" ]; then
-  echo "  ✓ $ENV_FILE already exists (left untouched)"
-else
-  cp "$ENV_EXAMPLE" "$ENV_FILE"
-  echo "  ✓ Created $ENV_FILE from template"
-  echo "  ⚠ EDIT IT — add your ELEVENLABS_API_KEY (and OPENROUTER_API_KEY for B-roll)"
-fi
-
-# --- 5. Preflight ---
-echo ""
-echo "→ Running preflight..."
+echo "→ Running the final readiness check..."
 bash templates/_shared/scripts/clean-cut/preflight.sh
 
 echo ""
 echo "=================================================="
-echo " Setup complete."
+echo " Setup complete — ready to make videos."
+echo "=================================================="
 echo ""
 echo " Next steps:"
-echo "   1. Edit templates/_shared/env/.env — add your API keys"
-echo "      ElevenLabs: https://elevenlabs.io/app/settings/api-keys"
-echo "      OpenRouter: https://openrouter.ai/keys"
-echo "   2. Read ONBOARDING.md"
-echo "   3. Start a job:  bash tools/new-job.sh 01 <slug> --raw <raw-slug>"
+if ! key_filled "ELEVENLABS_API_KEY"; then
+  echo "   1. Add your ElevenLabs API key to templates/_shared/env/.env"
+  echo "      Get one at https://elevenlabs.io/app/settings/api-keys"
+else
+  echo "   1. (API key already set)"
+fi
+echo "   2. Open this folder in VS Code and use the Claude Code panel."
+echo "   3. Drop in your clips and tell Claude, e.g. \"edit this clip with Template 01\""
 echo "=================================================="
