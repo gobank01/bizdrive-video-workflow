@@ -68,3 +68,7 @@ __pycache__/
 .agents/
 .claude/skills/
 skills-lock.json
+
+# private content library (lives in bizdrive-video-v3 only)
+/content-brain/
+/tools/build-content-brain.py
