@@ -70,13 +70,13 @@ TEMPLATE = """<!doctype html>
         font-family: "IBM Plex Sans Thai", sans-serif;
       }
       .t-main {
-        font-weight: 900; font-size: 110px; line-height: 1.04; color: #ffffff;
+        font-weight: 900; font-size: 110px; line-height: 1.144; color: #ffffff;
         text-shadow: 0 8px 34px rgba(0,0,0,.85), 0 0 44px rgba(0,0,0,.6);
         white-space: nowrap;
       }
       .t-hero {
-        font-weight: 900; font-size: 210px; line-height: 1.0;
-        margin: 4px 0 6px;
+        font-weight: 900; font-size: 210px; line-height: 1.1;
+        margin: 4px 0 7px;
         background: linear-gradient(180deg, #ffe87a 0%, #ffd93d 42%, #f4c20f 70%, #b8860b 100%);
         -webkit-background-clip: text; background-clip: text;
         -webkit-text-fill-color: transparent; color: transparent;
@@ -84,8 +84,8 @@ TEMPLATE = """<!doctype html>
         white-space: nowrap;
       }
       .t-sub {
-        font-weight: 800; font-size: 76px; line-height: 1.12; color: #cdd8f2;
-        margin-top: 14px;
+        font-weight: 800; font-size: 76px; line-height: 1.232; color: #cdd8f2;
+        margin-top: 15px;
         text-shadow: 0 4px 20px rgba(0,0,0,.85);
         white-space: nowrap;
       }
