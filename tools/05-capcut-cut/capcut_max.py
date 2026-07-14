@@ -207,6 +207,15 @@ def main():
     if os.path.isdir(otd): os.rename(otd, os.path.join(dst, "Timelines", tl_id))
     d["id"] = tl_id
 
+    # media กล้องต้องอยู่ในอาณาเขต CapCut (~/Movies/CapCut) ไม่งั้นโดน sandbox
+    # บล็อกถ้าไฟล์ไม่เคยผ่านหน้าต่าง import — ก๊อปเข้า draft folder แล้วชี้ใหม่
+    for v in vids.values():
+        if not v["path"].startswith(dst + os.sep):
+            local = os.path.join(dst, os.path.basename(v["path"]))
+            if not os.path.exists(local):
+                shutil.copy2(v["path"], local)
+            v["path"] = local
+
     # ---- video tracks: jump cuts + keyframe punch-in (Ken Burns สลับทิศ เฉพาะกล้องหน้า)
     mat_index = {}
     for kind, lst in d["materials"].items():

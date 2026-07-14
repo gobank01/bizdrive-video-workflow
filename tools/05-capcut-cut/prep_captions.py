@@ -11,6 +11,8 @@ from pythainlp import word_tokenize
 
 FIX = [(r"[Qq]uod\s*Code", "Claude Code"), (r"คอร์สโค้ช|คลอสโค้ด|Cloud Code", "Claude Code"),
        (r"^[Qq]uod$", "Claude"), (r"^คลอด$", "Claude"),
+       (r"[Ff]a[- ]?[Ff]aber", "Fable"), (r"[Ff]aber|[Ff]iber", "Fable"),  # EL ถอด Fable ผิดทุกจุด (Faber/Fiber แล้วแต่รอบ)
+       (r"\b[Cc]ord\b", "Claude"),                                  # EL ถอด Claude→Cord
        (r"[Ww]rite\s*Code", "Vibe Code"), (r"นะครับผม|นะครับ|นะคับ", " ")]
 MAXC = 14
 
